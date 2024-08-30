@@ -40,7 +40,6 @@ function NavBar({ currentPage }) {
                 <li>
                   <a 
                     className="dropdown-item gradient-text-" 
-                    href="#" 
                     onClick={() => {
                       localStorage.removeItem('token');
                       window.location.href = '/signin';

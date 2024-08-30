@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Alert from '../components/Alert';
-import data from '../data.json';
-
-const path = data.backend;
 
 function SignUp() {
   const [fullName, setFullName] = useState('');

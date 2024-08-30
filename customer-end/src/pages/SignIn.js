@@ -1,11 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
-import data from '../data.json'; 
+
 import axios from 'axios';
 import Alert from '../components/Alert';
 
 
-const path = data.backend;
+
 
 function SignIn() {
   const [username, setUsername] = useState('');

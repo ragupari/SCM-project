@@ -7,6 +7,7 @@ import AccessDenied from './pages/AccessDenied';
 import { useState, useEffect } from 'react';
 import login from './Login';
 import Profile from './pages/Profile';
+import Product from './pages/Product';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -31,7 +32,6 @@ export default function AppRoutes() {
                 <Routes>
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
-                    <Route path="/" element={<Home />} />
                     <Route path="*" element={<SignIn/>} />  {/* Catch-all route */}
                 </Routes>
             </Router>);
@@ -45,6 +45,7 @@ export default function AppRoutes() {
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="products" element={<Product />} />
 
                 <Route path="/access-denied" element={<AccessDenied />} />
                 <Route path="*" element={<NotFound />} />  {/* Catch-all route */}
