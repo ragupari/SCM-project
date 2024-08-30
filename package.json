@@ -1,0 +1,20 @@
+{
+  "name": "scm-project",
+  "version": "1.0.0",
+  "description": "Group 40 Database System Project",
+  "main": "index.js",
+  "author": "Parishith R",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.4",
+    "concurrently": "^8.2.0" 
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "backend": "cd back-end && npm start",
+    "frontend": "cd customer-end && npm start",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "dev": "nodemon index.js"
+  }
+}

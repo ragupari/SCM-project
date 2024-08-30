@@ -1,0 +1,80 @@
+.gradient-background {
+    background-color: #ffffff;
+    
+  }
+
+.background {
+    background-image: url('https://images.pexels.com/photos/6985132/pexels-photo-6985132.jpeg');
+    background-size: cover; /* Adjust to 'contain' if needed */
+    background-position: center; /* Adjust to 'top', 'bottom', etc., if needed */
+    background-repeat: no-repeat;
+  }
+  .card-font {
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 3.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center; /* Center align text */
+  }
+  
+  @media (max-width: 768px) {
+    .card-font {
+      font-size: 1.5rem; /* Adjust the font size for smaller screens */
+    }
+  }
+  
+
+  .gradient-text-active {
+    font-weight: 900;
+    background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)); /* Adjust gradient colors and direction */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* For non-WebKit browsers */
+    color: transparent; /* Fallback color */
+}
+.gradient-text- {
+  font-weight: 500;
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)); /* Adjust gradient colors and direction */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* For non-WebKit browsers */
+  color: transparent; /* Fallback color */
+}
+
+.gradient-text-0 {
+  font-size : 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)); /* Adjust gradient colors and direction */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* For non-WebKit browsers */
+  color: transparent; /* Fallback color */
+}
+
+
+
+.gradient-form {
+  border: 2px solid rgb(37, 21, 126); /* Change this color to your desired border color */
+  border-radius: 6px;
+  padding: 0.5rem;
+  color: #333; /* Change this to your desired text color */
+}
+
+.gradient-form::placeholder {
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)); /* Adjust gradient colors and direction */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* For non-WebKit browsers */
+  color: transparent; /* Fallback color */
+}
+
+.gradient-btn {
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128));
+  color: white;
+  border: none;
+}
+
+.gradient-btn:hover {
+  opacity: 0.9;
+}
