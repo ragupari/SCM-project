@@ -5,7 +5,7 @@ import data from './data.json';
 
 const path = data.backend;
 
-axios.defaults.baseURL = 'http://localhost:9000/';
+axios.defaults.baseURL = path;
 
 function App() {
     return (

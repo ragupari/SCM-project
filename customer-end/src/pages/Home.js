@@ -10,7 +10,7 @@ const Home = ({user}) => {
 
       <div>
         <NavBar currentPage={'Home'} />
-        <DisplayCard />
+        <DisplayCard title = "Welcome" />
         <SearchBar />
         <AllCategoryCards />
 

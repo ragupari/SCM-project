@@ -4,8 +4,7 @@ import axios from "axios";
 
 function AllCategoryCards() {
   const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     axios.get('/getcategories')

@@ -11,7 +11,7 @@ function CategoryCard({ category_ID, category, description }) {
         <img 
           src="https://static.vecteezy.com/system/resources/thumbnails/002/539/942/small/dark-purple-smart-blurred-pattern-abstract-illustration-with-gradient-blur-design-new-design-for-applications-vector.jpg" 
           className="card-img-top" 
-          alt={`Image for ${category}`} 
+          alt={'Card img displayed here'} 
         />
         <div className="card-body gradient-text-">
           <h5 className="card-title">{category}</h5>
