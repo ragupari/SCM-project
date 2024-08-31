@@ -16,8 +16,8 @@ function ProductCard({ product_ID, product_name, price }) {
         <div className="card-body gradient-text-">
           <h5 className="card-title">{product_name}</h5>
           <p className="card-text">
-            Unit price: {price}
-          </p>
+  Unit price: {price} $
+</p>
         </div>
       </a>
     </div>

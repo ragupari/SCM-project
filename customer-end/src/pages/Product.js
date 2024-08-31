@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Sidebar from '../components/SideBar';
 import SearchBar from '../components/SearchBar';
-import DisplayCard from '../components/DisplayCard'; 
+import DisplayCard from '../components/PageTitleCard'; 
 import NavBar from '../components/NavBar';
 import ProductCard from '../components/ProductCard';
 
@@ -14,18 +14,15 @@ const Products = () => {
 
   const [products, setProducts] = useState([]);
   const [categoryName, setCategoryName] = useState('');
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       if (!categoryID) {
         setError('Category ID is missing.');
-        setLoading(false);
         return;
       }
 
-      setLoading(true);
       try {
         const response = await axios.post('/getproducts', { categoryID });
         setProducts(response.data.products);
@@ -34,16 +31,14 @@ const Products = () => {
       } catch (err) {
         console.error('Failed to fetch products:', err);
         setError('An error occurred while fetching products. Please try again later.');
-      } finally {
-        setLoading(false);
+        window.location.href = '/notfound';
       }
     };
 
     fetchProducts();
   }, [categoryID]);
 
-  if (loading) return <div className="text-center">Loading...</div>;
-  if (error) return <div className="text-center text-danger">Error: {error}</div>;
+
 
   return (
     <div>
@@ -53,11 +48,10 @@ const Products = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-12 col-md-3">
-            <Sidebar />
+            <Sidebar active_category_ID={categoryID}/> 
           </div>
           <div className="col-12 col-md-9">
             <div className="container">
-              <h1 className="my-4">Products</h1>
               {products.length === 0 ? (
                 <p>No products found for this category.</p>
               ) : (
@@ -67,7 +61,7 @@ const Products = () => {
                       <ProductCard
                         product_ID={product.product_ID}
                         product_name={product.product_name}
-                        price={product.price}
+                        price={product.unit_price}
                       />
                     </div>
                   ))}
