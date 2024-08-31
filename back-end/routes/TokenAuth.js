@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser'); // Make sure this is added in your main app file
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+dotenv.config();
+const secretkey = process.env.SECRET_KEY;
 
 // Middleware to parse cookies
 router.use(cookieParser());
@@ -15,7 +18,7 @@ router.get('/', (req, res, next) => {
         });
         return;
     } else {
-        jwt.verify(token, 'secretkey', (err, decoded) => {
+        jwt.verify(token, secretkey, (err, decoded) => {
             if (err) {
                 res.json({
                     success: false,

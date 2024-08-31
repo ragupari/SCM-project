@@ -1,5 +1,5 @@
 import NavBar from '../components/NavBar';
-import DisplayCard from '../components/DisplayCard'; 
+import DisplayCard from '../components/PageTitleCard'; 
 import SearchBar from '../components/SearchBar';
 import AllCategoryCards from '../components/AllCategoryCards';
 
@@ -10,7 +10,7 @@ const Home = ({user}) => {
 
       <div>
         <NavBar currentPage={'Home'} />
-        <DisplayCard />
+        <DisplayCard title = "Welcome" />
         <SearchBar />
         <AllCategoryCards />
 

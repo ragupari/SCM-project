@@ -18,7 +18,7 @@ function NavBar({ currentPage }) {
             <a 
               className={` nav-link gradient-text-${isActive('Home', currentPage)}`} 
               href="/" 
-              style={{ pointerEvents: 'none' }}>
+              >
               Home
             </a>
             <a className={`nav-link gradient-text-${isActive('Link', currentPage)}`} href="#">Link</a>
@@ -40,7 +40,6 @@ function NavBar({ currentPage }) {
                 <li>
                   <a 
                     className="dropdown-item gradient-text-" 
-                    href="#" 
                     onClick={() => {
                       localStorage.removeItem('token');
                       window.location.href = '/signin';

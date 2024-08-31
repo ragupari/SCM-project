@@ -3,17 +3,21 @@ const router = express.Router();
 const db = require('../dbconfig');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
 
+dotenv.config(); // Ensure this line is added to load environment variables
+const secretkey = process.env.SECRET_KEY;
 router.use(express.json());
 
 router.post('/', (req, res) => {
     const { username, password } = req.body;
 
     // Query to find the user by username
-    const sql = 'SELECT * FROM users WHERE username = ?';
+    const sql = 'SELECT * FROM customers WHERE username = ?';
     db.query(sql, [username], (err, result) => {
         if (err) {
-            res.json({
+            console.error('Database error:', err); // Added logging
+            res.status(500).json({
                 status: 'Server side error',
                 success: false
             });
@@ -27,7 +31,8 @@ router.post('/', (req, res) => {
             // Compare the provided password with the hashed password in the database
             bcrypt.compare(password, user.password, (err, isMatch) => {
                 if (err) {
-                    res.json({
+                    console.error('Bcrypt error:', err); // Added logging
+                    res.status(500).json({
                         status: 'Server side error',
                         success: false
                     });
@@ -35,8 +40,8 @@ router.post('/', (req, res) => {
                 }
 
                 if (isMatch) {
-                    // If passwords match, generate a JWT token
-                    const token = jwt.sign({ username: user.username }, 'secretkey');
+                    // If passwords match, generate a JWT token with an expiry of 1 hour
+                    const token = jwt.sign({ username: user.username }, secretkey, { expiresIn: '1h' });
                     res.json({
                         status: 'Login Successful!',
                         success: true,
@@ -44,7 +49,7 @@ router.post('/', (req, res) => {
                     });
                 } else {
                     // If passwords do not match
-                    res.json({
+                    res.status(401).json({
                         status: 'Username or password is incorrect',
                         success: false
                     });
@@ -52,7 +57,7 @@ router.post('/', (req, res) => {
             });
         } else {
             // If user does not exist
-            res.json({
+            res.status(401).json({
                 status: 'Username or password is incorrect',
                 success: false
             });

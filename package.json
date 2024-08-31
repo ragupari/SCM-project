@@ -13,8 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "backend": "cd back-end && npm start",
-    "frontend": "cd customer-end && npm start",
-    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "dev": "nodemon index.js"
+    "customerend": "cd customer-end && npm start",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  
   }
 }

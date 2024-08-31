@@ -1,8 +1,11 @@
 import React from 'react';
 import Routes from './Routes';
 import axios from 'axios';
+import data from './data.json'; 
 
-axios.defaults.baseURL = 'http://localhost:9000/';
+const path = data.backend;
+
+axios.defaults.baseURL = path;
 
 function App() {
     return (
