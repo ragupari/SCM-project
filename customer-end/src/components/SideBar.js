@@ -16,7 +16,7 @@ const SideBar = ({active_category_ID}) => {
   }, []); // Empty dependency array ensures this runs once on mount
 
   function isActive(category_ID){
-    console.log(active_category_ID, category_ID, (active_category_ID === category_ID));
+
     
     if (active_category_ID == category_ID){
       return "active";
