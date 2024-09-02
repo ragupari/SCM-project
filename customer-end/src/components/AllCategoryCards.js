@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CategoryCard from "./CategoryCard";
 import axios from "axios";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function AllCategoryCards() {
   const [categories, setCategories] = useState([]);
