@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import login from './Login';
 import Profile from './pages/Profile';
 import Product from './pages/Product';
+import ViewProduct from './pages/ViewProduct';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -46,7 +47,7 @@ export default function AppRoutes() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/products" element={<Product />} />
-
+                <Route path="/viewproduct" element={<ViewProduct />} />
                 <Route path="/notfound" element={<NotFound />} />
                 <Route path="/access-denied" element={<AccessDenied />} />
                 <Route path="*" element={<NotFound />} />  {/* Catch-all route */}

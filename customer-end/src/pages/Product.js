@@ -14,12 +14,11 @@ const Products = () => {
 
   const [products, setProducts] = useState([]);
   const [categoryName, setCategoryName] = useState('');
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       if (!categoryID) {
-        setError('Category ID is missing.');
+        window.location.href = '/notfound';
         return;
       }
 
@@ -30,7 +29,6 @@ const Products = () => {
         setCategoryName(response.data.category_name);
       } catch (err) {
         console.error('Failed to fetch products:', err);
-        setError('An error occurred while fetching products. Please try again later.');
         window.location.href = '/notfound';
       }
     };
@@ -38,12 +36,10 @@ const Products = () => {
     fetchProducts();
   }, [categoryID]);
 
-
-
   return (
     <div>
       <NavBar currentPage={'Products'} />
-      <DisplayCard title ={categoryName} />
+      <DisplayCard title={categoryName} />
       <SearchBar />
       <div className="container-fluid">
         <div className="row">
