@@ -9,6 +9,7 @@ import login from './Login';
 import Profile from './pages/Profile';
 import Product from './pages/Product';
 import ViewProduct from './pages/ViewProduct';
+import Cart from './pages/Cart';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -46,6 +47,7 @@ export default function AppRoutes() {
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/cart" element={<Cart />} />
                 <Route path="/products" element={<Product />} />
                 <Route path="/viewproduct" element={<ViewProduct />} />
                 <Route path="/notfound" element={<NotFound />} />

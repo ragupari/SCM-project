@@ -1,7 +1,7 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Alert({message, success}) {
-  if (message === '' && success === ''){
+  if (message === '' || success === ''){
     return null;
   }
   if (success){

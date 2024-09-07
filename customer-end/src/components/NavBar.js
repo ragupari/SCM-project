@@ -34,8 +34,8 @@ function NavBar({ currentPage }) {
                 Account
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a className="dropdown-item gradient-text-" href="/profile"> <i className="bi bi-person"></i> Profile</a></li>
-                <li><a className="dropdown-item gradient-text-" href="">Another action</a></li>
+                <li><a className="dropdown-item gradient-text-" href="/profile"> <i className="bi bi-person"></i> Profile </a></li>
+                <li><a className="dropdown-item gradient-text-" href="/cart"> <i class="bi bi-cart"></i> Cart </a></li>
                 <li><hr className="dropdown-divider"></hr></li>
                 <li>
                   <a 

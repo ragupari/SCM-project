@@ -1,11 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-
 import axios from 'axios';
 import Alert from '../components/Alert';
-
-
-
 
 function SignIn() {
   const [username, setUsername] = useState('');
@@ -37,9 +33,7 @@ function SignIn() {
             setStatus('An error occurred. Please try again.');
             setSuccess(false);
         });
-}
-
-
+  }
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">

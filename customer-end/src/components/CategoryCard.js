@@ -5,7 +5,7 @@ function CategoryCard({ category_ID, category, description }) {
     <div className="col">
       <a 
         href={`/products?categoryID=${category_ID}`} 
-        className="card"
+        className="card product-card"
         style={{ textDecoration: 'none' }}
       >
         <img 
