@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.use('/signin', require('./routes/Login'));
 app.use('/signup', require('./routes/Signup'));
 app.use('/tokenauth', require('./routes/TokenAuth'));
+app.use('/profile', require('./routes/Profile'));
 app.use('/getcategories', require('./routes/ProductCategories'));
 app.use('/getproducts', require('./routes/Products'));
 app.use('/getproductdetails', require('./routes/ProductDetails'));

@@ -25,7 +25,6 @@ const Products = () => {
       try {
         const response = await axios.post('/getproducts', { categoryID });
         setProducts(response.data.products);
-        console.log(response.data.category_name); 
         setCategoryName(response.data.category_name);
       } catch (err) {
         console.error('Failed to fetch products:', err);

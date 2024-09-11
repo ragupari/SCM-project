@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../dbconfig');
 
 // Initialize an empty cart
 let cart = [];
@@ -31,7 +32,6 @@ router.put('/:itemId', (req, res) => {
     const { quantity } = req.body;
 
     const item = cart.find(item => item.id === parseInt(itemId));
-    console.log(cart);
 
     if (item) {
         item.quantity = quantity;
@@ -49,9 +49,56 @@ router.delete('/:itemId', (req, res) => {
 });
 
 // Clear the cart
-router.delete('/', (req, res) => {
-    cart = [];
-    res.json(cart);
+router.post('/checkout', (req, res) => {
+    const { username } = req.body;
+
+    const sqlGetCustomerID = 'SELECT customer_ID FROM customers WHERE username = ?';
+    db.query(sqlGetCustomerID, [username], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error fetching customer ID' });
+        }
+
+        const customerID = result[0].customer_ID;
+        const sqlInsertOrder = `
+            INSERT INTO orders (customer_ID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity)
+            VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'Pending', ?, ?)
+        `;
+
+        let totalPrice = 0;
+        let totalCapacity = 0;
+
+        cart.forEach(item => {
+            totalPrice += item.price * item.quantity;
+            totalCapacity += item.quantity;
+        });
+
+        db.query(sqlInsertOrder, [customerID, totalPrice, totalCapacity], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error inserting order' });
+            }
+
+            const orderID = result.insertId;
+            const sqlInsertOrderItems = `
+                INSERT INTO orderitems (OrderID, product_ID, Quantity, Cost)
+                VALUES ?
+            `;
+            const orderItems = cart.map(item => [
+                orderID,
+                item.id,
+                item.quantity,
+                item.price * item.quantity
+            ]);
+
+            db.query(sqlInsertOrderItems, [orderItems], (err, result) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error inserting order items' });
+                }
+
+                cart = [];
+                res.json({ message: 'Order placed successfully', cart });
+            });
+        });
+    });
 });
 
 module.exports = router;

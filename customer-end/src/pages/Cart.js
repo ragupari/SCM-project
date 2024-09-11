@@ -5,20 +5,36 @@ import NavBar from '../components/NavBar';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [username, setUsername] = useState('');
 
-    useEffect(() => {
-        fetchCartItems();
-    }, []);
+    const getUsernameFromToken = async () => {
+        try {
+          const res = await axios.get('/tokenauth', {
+            headers: {
+              'x-access-token': localStorage.getItem('token')
+            }
+          });
+          setUsername(res.data.username);
+          return res.data.username;
+        } catch (error) {
+          console.error(error);
+        }
+    };
 
     // Fetch all items in the cart
     const fetchCartItems = async () => {
         try {
-            const response = await axios.get('/cart');
-            setCartItems(response.data);
+            const res = await axios.get('/cart');
+            setCartItems(res.data);
         } catch (error) {
             console.error('Error fetching cart items:', error);
         }
     };
+
+    useEffect(() => {
+        fetchCartItems();
+        getUsernameFromToken();
+    }, []);
 
     // Update item quantity in the cart
     const updateCartItem = async (itemId, quantity) => {
@@ -43,7 +59,7 @@ const Cart = () => {
     // Proceed to checkout (clears the cart)
     const checkout = async () => {
         try {
-            await axios.delete('/cart');
+            await axios.post('/cart/checkout',{ username });
             alert('Checkout successful!');
             fetchCartItems();
         } catch (error) {
