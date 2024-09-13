@@ -52,6 +52,7 @@ const ProductDisplayCard = ({ id, name, price, description, image }) => {
                             className="form-control text-center me-0 me-sm-3 mb-3 mb-sm-0"
                             id="inputQuantity"
                             type="number"
+                            min="1"
                             defaultValue="1"
                             onChange={(e) => setQuantity(parseInt(e.target.value))}
                             style={{ maxWidth: "5rem" }}
