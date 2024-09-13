@@ -53,7 +53,7 @@ const ViewProduct = () => {
                       id={details.product_ID}
                       name={details.product_name}
                       price={details.unit_price}
-                      description={details.product_detail}
+                      description={details.Description}
                       image={details.product_img}
                   />
                 </div>
