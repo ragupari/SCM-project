@@ -1,11 +1,11 @@
 INSERT INTO product_categories (category_ID, category_name, category_description) VALUES
-(1, 'Green Tea', 'Products including different varieties of green tea such as matcha, sencha, and jasmine green tea'),
-(2, 'Black Tea', 'Assortment of black tea products including Earl Grey, English Breakfast, and Darjeeling tea'),
-(3, 'Herbal Tea', 'Herbal teas such as chamomile, peppermint, and rooibos, known for their caffeine-free properties'),
-(4, 'Oolong Tea', 'Oolong tea products that offer a unique balance between green and black tea varieties'),
-(5, 'White Tea', 'Delicate and lightly processed white tea varieties including Silver Needle and White Peony'),
-(6, 'Chai Tea', 'Spiced chai tea blends that combine black tea with traditional spices like cardamom and cinnamon'),
-(7, 'Iced Tea', 'Tea products designed specifically for making iced tea, including flavored and sweetened options'),
-(8, 'Fruit Tea', 'Fruit-infused teas such as hibiscus, apple, and berry blends for a fruity flavor experience'),
-(9, 'Loose Leaf Tea', 'Loose leaf tea varieties from different categories, including black, green, and herbal teas'),
-(10, 'Tea Accessories', 'Accessories for tea preparation and consumption including teapots, strainers, and infusers');
+(1, 'Black Tea', 'Traditional black tea grown and processed in the highlands of Sri Lanka, offering a rich, robust flavor'),
+(2, 'Green Tea', 'Green tea cultivated in Sri Lanka, known for its fresh and slightly grassy taste'),
+(3, 'Herbal Tea', 'A variety of herbal teas made from locally sourced herbs and flowers native to Sri Lanka'),
+(4, 'Flavored Tea', 'Black and green teas infused with natural Sri Lankan flavors like cinnamon, vanilla, and cardamom'),
+(5, 'White Tea', 'Exquisite white tea, handpicked and minimally processed in Sri Lanka for a delicate flavor'),
+(6, 'Organic Tea', 'Certified organic tea grown in Sri Lanka without the use of synthetic fertilizers or pesticides'),
+(7, 'Iced Tea', 'Specially blended teas designed for making iced tea, using Ceylon black and green tea leaves'),
+(8, 'Fruit Tea', 'Fruit-infused teas featuring Sri Lankan fruits such as mango, pineapple, and passion fruit'),
+(9, 'Loose Leaf Tea', 'Premium loose leaf teas from Sri Lanka, including black, green, and white tea varieties'),
+(10, 'Tea Accessories', 'Locally made accessories for tea preparation and consumption, such as clay teapots and wooden tea strainers');

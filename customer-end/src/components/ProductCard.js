@@ -17,9 +17,9 @@ function ProductCard({ product_ID, product_name, price }) {
         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
         <img
-          src="https://images.pexels.com/photos/7135037/pexels-photo-7135037.jpeg"
+          src={`/assets/Products/${product_name}.jpg`}
           className="card-img-top"
-          alt="Product image"
+          alt={product_name}
           style={{
             objectFit: 'cover',
             height: '180px',

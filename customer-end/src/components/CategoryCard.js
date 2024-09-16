@@ -19,9 +19,9 @@ function CategoryCard({ category_ID, category, description }) {
         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
         <img
-          src="https://static.vecteezy.com/system/resources/thumbnails/002/539/942/small/dark-purple-smart-blurred-pattern-abstract-illustration-with-gradient-blur-design-new-design-for-applications-vector.jpg"
+          src={`/assets/Product Category/${category}.jpg`}
           className="card-img-top"
-          alt="Card img displayed here"
+          alt={category}
           style={{
             objectFit: 'cover',
             height: '200px',

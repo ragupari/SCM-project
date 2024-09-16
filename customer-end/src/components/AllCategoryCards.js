@@ -19,7 +19,7 @@ function AllCategoryCards() {
         console.log(err);
       });
   }, []);   // Empty dependency array to run once on mount
-  
+
   return (
     <div className="mx-5 mt-4">
       <div className="row row-cols-1 row-cols-md-5 g-4">

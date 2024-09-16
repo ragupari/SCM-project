@@ -5,7 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Style.css"; // Custom styles, if needed
 import Alert from '../components/Alert';
 
-const ProductDisplayCard = ({ id, name, price, description, image }) => {
+
+const ProductDisplayCard = ({ id, name, price, description }) => {
 
     const [quantity, setQuantity] = useState(1);
     const [status, setStatus] = useState('');
@@ -36,7 +37,7 @@ const ProductDisplayCard = ({ id, name, price, description, image }) => {
       
                         <img
                             className="card-img-top mb-5 mb-md-0"
-                            src={image}
+                            src={`/assets/Products/${name}.jpg`}
                             alt={name}
                         />
                     </div>
