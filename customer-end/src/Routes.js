@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import Product from './pages/Product';
 import ViewProduct from './pages/ViewProduct';
 import Cart from './pages/Cart';
+import AboutUs from './pages/AboutUs';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -52,6 +53,7 @@ export default function AppRoutes() {
                 <Route path="/viewproduct" element={<ViewProduct />} />
                 <Route path="/notfound" element={<NotFound />} />
                 <Route path="/access-denied" element={<AccessDenied />} />
+                <Route path="/about" element={<AboutUs />} />
                 <Route path="*" element={<NotFound />} />  {/* Catch-all route */}
             </Routes>
         </Router>
