@@ -6,7 +6,7 @@ import "./Style.css"; // Custom styles, if needed
 import Alert from '../components/Alert';
 
 
-const ProductDisplayCard = ({ id, name, price, description }) => {
+const ProductDisplayCard = ({ id, name, price, description, capacityperunit }) => {
 
     const [quantity, setQuantity] = useState(1);
     const [status, setStatus] = useState('');
@@ -19,6 +19,7 @@ const ProductDisplayCard = ({ id, name, price, description }) => {
                 productName: name,
                 quantity: quantity,
                 price: price,
+                CapacityPerUnit: capacityperunit
             }).then(res => {
                 setStatus(`${name} has been added to your cart.`);
                 setSuccess(true);

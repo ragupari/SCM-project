@@ -24,3 +24,16 @@ body {
     background-color: #0056b3;
     transform: translateY(-2px);
 }
+
+.gradient-text-0 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important;
+    /* Adjust gradient colors and direction */
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    /* For non-WebKit browsers */
+    color: transparent !important;
+    /* Fallback color */
+}

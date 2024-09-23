@@ -18,7 +18,7 @@ function SignIn() {
         return;
     }
 
-    axios.post(`/signin`, { username, password })
+    axios.post(`/adminsignin`, { username, password })
         .then(res => {
             console.log(res.data.status); 
             setStatus(res.data.status);

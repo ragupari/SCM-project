@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../dbconfig');
+const db = require('../../dbconfig');
 
 router.get('/:searchTerm', (req, res) => {
     const { searchTerm } = req.params;

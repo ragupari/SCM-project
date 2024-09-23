@@ -26,7 +26,7 @@ function SignUp() {
         return;
     }
 
-    axios.post(`/signup`, { fullName, email, username, password, confirmPassword })
+    axios.post(`/adminsignup`, { fullName, email, username, password, confirmPassword })
         .then(res => {
             console.log(res.data.status);
             console.log(res.data.err);

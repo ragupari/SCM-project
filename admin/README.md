@@ -32,6 +32,7 @@ Previews the production build locally using Vite.
 
 ### File Structure
 
+```bash
 admin/
 ├── node_modules/              
 ├── public/                    
@@ -60,6 +61,7 @@ admin/
 ├── package-lock.json          
 ├── package.json               # Project metadata and dependencies
 └── README.md                  # Project documentation
+```
 
 ## Learn More
 

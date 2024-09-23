@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../dbconfig');
+const db = require('../../dbconfig');
 const bcrypt = require('bcrypt');
 
 router.post('/', (req, res) => {
