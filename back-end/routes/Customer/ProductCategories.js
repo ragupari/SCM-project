@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../dbconfig'); // Assuming dbconfig is where you configure your MySQL connection
+const db = require('../../dbconfig'); // Assuming dbconfig is where you configure your MySQL connection
 
 router.use(express.json());
 

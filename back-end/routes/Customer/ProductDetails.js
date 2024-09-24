@@ -1,28 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../dbconfig'); // Ensure dbconfig is correctly configured
+const db = require('../../dbconfig'); // Ensure dbconfig is correctly configured
 router.use(express.json());
 
 router.post('/', async (req, res) => {
-    const category_ID = req.body.categoryID;
-
-    console.log(category_ID);
-    if (!category_ID) {
+    const product_ID = req.body.productID;
+    if (!product_ID) {
         return res.status(400).json({
             status: 'Bad Request',
             success: false,
-            message: 'Category ID is required'
+            message: 'Product ID is required'
         });
     }
 
     const sql = `
-        SELECT p.*, c.category_name
-        FROM products p
-        JOIN product_categories c ON p.category_ID = c.category_ID
-        WHERE p.category_ID = ?
+        SELECT *
+        FROM products
+        WHERE product_ID = ?
     `;
 
-    db.query(sql, [category_ID], (err, results) => {
+    db.query(sql, [product_ID], (err, results) => {
         if (err) {
             return res.status(500).json({
                 status: 'Server side error',
@@ -35,14 +32,11 @@ router.post('/', async (req, res) => {
             return res.status(404).json({
                 status: 'Not Found',
                 success: false,
-                message: 'No products found for the given category ID'
+                message: 'No details found for the given product ID'
             });
         }
-        console.log(results);
-        res.json({
-            category_name: results[0].category_name,
-            products: results
-        });
+      
+        res.json(results[0]);
     });
 });
 

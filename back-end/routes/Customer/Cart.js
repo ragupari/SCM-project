@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../dbconfig');
+const db = require('../../dbconfig');
 
 // Initialize an empty cart
 let cart = [];
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 // Add an item to the cart
 router.post('/', (req, res) => {
-    const { id, productName, quantity, price } = req.body;
+    const { id, productName, quantity, price, CapacityPerUnit } = req.body;
     const existingItem = cart.find(item => item.id === id);
 
     if (existingItem) {
@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
         existingItem.quantity += quantity;
     } else {
         // Add new item to the cart
-        const newItem = { id, productName, quantity, price };
+        const newItem = { id, productName, quantity, price, CapacityPerUnit };
         cart.push(newItem);
     }
     res.json(cart);
@@ -69,7 +69,7 @@ router.post('/checkout', (req, res) => {
 
         cart.forEach(item => {
             totalPrice += item.price * item.quantity;
-            totalCapacity += item.quantity;
+            totalCapacity += item.quantity * item.CapacityPerUnit;
         });
 
         db.query(sqlInsertOrder, [customerID, totalPrice, totalCapacity], (err, result) => {

@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import SignIn from './pages/auth/SignIn';
 import SignUp from './pages/auth/SignUp';
 import NotFound from './pages/NotFound';
+import PendingOrders from './pages/PendingOrders';
+import TrainTrips from './pages/TrainTrips';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -43,6 +45,8 @@ export default function AppRoutes() {
                     {/* Routes using FullLayout */}
                     <Route element={<FullLayout />}>
                         <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/orders" element={<PendingOrders />} />
+                        <Route path="/orders/traintrip" element={<TrainTrips />} />
                         <Route path="/" element={<Dashboard />} />
                     </Route >
 

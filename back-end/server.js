@@ -8,15 +8,22 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/signin', require('./routes/Login'));
-app.use('/signup', require('./routes/Signup'));
+// Customer-end routes
+app.use('/signin', require('./routes/Customer/Login'));
+app.use('/signup', require('./routes/Customer/Signup'));
 app.use('/tokenauth', require('./routes/TokenAuth'));
-app.use('/profile', require('./routes/Profile'));
-app.use('/getcategories', require('./routes/ProductCategories'));
-app.use('/getproducts', require('./routes/Products'));
-app.use('/getproductdetails', require('./routes/ProductDetails'));
-app.use('/cart', require('./routes/Cart'));
-app.use('/search', require('./routes/SearchProducts'));
+app.use('/profile', require('./routes/Customer/Profile'));
+app.use('/getcategories', require('./routes/Customer/ProductCategories'));
+app.use('/getproducts', require('./routes/Customer/Products'));
+app.use('/getproductdetails', require('./routes/Customer/ProductDetails'));
+app.use('/cart', require('./routes/Customer/Cart'));
+app.use('/search', require('./routes/Customer/SearchProducts'));
+
+// admin-end routes
+app.use('/adminsignin', require('./routes/Admin/AdminLogin'));
+app.use('/adminsignup', require('./routes/Admin/AdminSignup'));
+app.use('/orders', require('./routes/Admin/getPendingOrders'));
+app.use('/traintrips', require('./routes/Admin/getTrainTrips'));
 
 // Example route
 app.get('/', (req, res) => {

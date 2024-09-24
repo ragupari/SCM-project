@@ -54,7 +54,7 @@ const ViewProduct = () => {
                       name={details.product_name}
                       price={details.unit_price}
                       description={details.Description}
-                      image={details.product_img}
+                      capacityperunit={details.CapacityPerUnit}
                   />
                 </div>
               )}
