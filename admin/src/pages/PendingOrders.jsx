@@ -7,7 +7,7 @@ const Orders = () => {
 
     // Fetch pending orders
     useEffect(() => {
-        axios.get('/orders?status=pending')
+        axios.get(`/orders?status=pending`)
             .then(response => setOrders(response.data))
             .catch(error => console.error("Error fetching orders: ", error));
     }, []);

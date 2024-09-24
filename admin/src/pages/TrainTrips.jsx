@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 
 const TrainTripsPage = () => {
+    const { shipmentDetails, updateShipmentDetails } = useOutletContext();
     const [trainTrips, setTrainTrips] = useState([]);
     const [date, setDate] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
+
+    console.log(shipmentDetails);
 
     const query = new URLSearchParams(location.search);
     const orderID = query.get('OrderID');
@@ -64,14 +67,21 @@ const TrainTripsPage = () => {
         fetchTrainTrips(nextDateStr);
     };
 
-    const handleSelectTrain = (trainId) => {
-        navigate(`/orders/confirm-train?OrderID=${orderID}&TrainID=${trainId}`);
+    const handleSelectTrain = async (trainId, reqCapacity) => {
+        try {
+            // Update the shipment details with the selected train ID
+            updateShipmentDetails({ trainTripID: trainId });
+            await axios.put(`/traintrips/${trainId}`, { reqCapacity });
+            console.log('Train trip updated successfully');
+            navigate(`/orders/driver?OrderID=${orderID}&TrainID=${trainId}`);
+        } catch (error) {
+            console.error('Error updating train trip:', error);
+        }
     };
 
     return (
         <Container fluid className="py-4">
             <h2 className="text-center mb-4">Train Trips for {date}</h2>
-
             {trainTrips.length > 0 ? (
                 <Row>
                     {trainTrips.map((train) => (
@@ -87,7 +97,7 @@ const TrainTripsPage = () => {
                                     <Button
                                         variant="success"
                                         className="w-100 rounded"
-                                        onClick={() => handleSelectTrain(train.TrainTripID)}
+                                        onClick={() => handleSelectTrain(train.TrainTripID, shipmentDetails.totalCapacity)}
                                     >
                                         Select Train
                                     </Button>

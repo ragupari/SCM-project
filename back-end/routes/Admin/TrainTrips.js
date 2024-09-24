@@ -19,4 +19,18 @@ router.get('/', (req, res) => {
     });
 });
 
+router.put(`/:trainTripID`, (req, res) => {
+    const { reqCapacity } = req.body;
+    const trainTripID = req.params.trainTripID;
+
+    const query = `UPDATE traintrips SET AvailableCapacity = AvailableCapacity - ? WHERE TrainTripID = ?`;
+    db.query(query, [reqCapacity, trainTripID], (error, results) => {
+        if (error) {
+            console.error("Error updating available capacity: ", error);
+            return res.status(500).json({ error: "Database error" });
+        }
+        res.status(200).json({ message: "Available capacity updated successfully" });
+    });
+});
+
 module.exports = router;

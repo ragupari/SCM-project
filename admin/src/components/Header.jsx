@@ -22,7 +22,7 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="navbar-nav" />
                 <Navbar.Collapse id="navbar-nav" className="bg-white w-100 rounded-3 p-3">
                     <Nav className="ms-auto">
-                        <NavDropdown title="Account" id="basic-nav-dropdown" align="end" menuAlign="right" className="dropdown-menu-end">
+                        <NavDropdown title="Account" id="basic-nav-dropdown" drop="end" className="dropdown-menu-end">
                             <NavDropdown.Item href="/profile">
                                 <i className="bi bi-person"></i> Profile
                             </NavDropdown.Item>

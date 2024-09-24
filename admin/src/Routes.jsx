@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import login from './Login';
 import FullLayout from './layout/FullLayout';
@@ -8,6 +8,7 @@ import SignUp from './pages/auth/SignUp';
 import NotFound from './pages/NotFound';
 import PendingOrders from './pages/PendingOrders';
 import TrainTrips from './pages/TrainTrips';
+import OrdersSubLayout from './layout/OrdersSubLayout';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -44,10 +45,14 @@ export default function AppRoutes() {
                 <Routes>
                     {/* Routes using FullLayout */}
                     <Route element={<FullLayout />}>
+                        <Route path="/" element={<Dashboard />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/orders" element={<PendingOrders />} />
-                        <Route path="/orders/traintrip" element={<TrainTrips />} />
-                        <Route path="/" element={<Dashboard />} />
+
+                        {/* Nested layout for orders routes */}
+                        <Route path="/orders" element={<OrdersSubLayout />}>
+                            <Route path="traintrip" element={<TrainTrips />} />
+                        </Route>
                     </Route >
 
                     {/* Routes without FullLayout */}

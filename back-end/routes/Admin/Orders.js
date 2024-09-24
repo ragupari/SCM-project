@@ -21,4 +21,20 @@ router.get('/', (req, res) => {
     }
 });
 
+router.get('/:orderID', (req, res) => {
+    const orderID = req.params.orderID;
+    const query =  `SELECT OrderID, fullName, address, city, TotalCapacity FROM orders o
+                    LEFT JOIN customers c ON o.customer_ID = c.customer_ID
+                    WHERE OrderID = ?`;
+ 
+    db.query(query, [orderID], (err, results) => {
+        if (err) {
+            console.error('Error fetching order:', err);
+            return res.status(500).send('Error fetching order');
+        }
+        res.json(results[0]);
+    });
+
+});
+
 module.exports = router;

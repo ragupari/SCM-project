@@ -22,8 +22,8 @@ app.use('/search', require('./routes/Customer/SearchProducts'));
 // admin-end routes
 app.use('/adminsignin', require('./routes/Admin/AdminLogin'));
 app.use('/adminsignup', require('./routes/Admin/AdminSignup'));
-app.use('/orders', require('./routes/Admin/getPendingOrders'));
-app.use('/traintrips', require('./routes/Admin/getTrainTrips'));
+app.use('/orders', require('./routes/Admin/Orders'));
+app.use('/traintrips', require('./routes/Admin/TrainTrips'));
 
 // Example route
 app.get('/', (req, res) => {
