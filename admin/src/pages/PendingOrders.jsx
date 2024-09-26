@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
 
     // Fetch pending orders
     useEffect(() => {
@@ -16,6 +18,19 @@ const Orders = () => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    const handleAssign = async (orderID, totalCapacity, deliveryDate) => {
+        try {
+            await Promise.all([
+                await axios.delete(`/shipments`),
+                await axios.put(`/shipments`, { orderID: orderID, totalCapacity: totalCapacity })
+            ]);
+            navigate(`/orders/traintrip?OrderID=${orderID}&date=${deliveryDate}`);
+        }
+        catch (error) {
+            console.error('Error updating shipment details:', error);
+        }
     };
 
     return (
@@ -47,7 +62,7 @@ const Orders = () => {
                             <td>{order.TotalPrice}</td>
                             <td>{order.TotalCapacity}</td>
                             <td>
-                                <Button href={`/orders/traintrip?OrderID=${order.OrderID}&date=${order.DeliveryDate}`}
+                                <Button onClick={() => handleAssign(order.OrderID, order.TotalCapacity, order.DeliveryDate)}
                                     variant="primary" className="rounded">
                                     Assign
                                 </Button>

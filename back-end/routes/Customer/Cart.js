@@ -61,7 +61,7 @@ router.post('/checkout', (req, res) => {
         const customerID = result[0].customer_ID;
         const sqlInsertOrder = `
             INSERT INTO orders (customer_ID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity)
-            VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'Pending', ?, ?)
+            VALUES (?, DATE(NOW()), DATE(DATE_ADD(NOW(), INTERVAL 7 DAY)), 'Pending', ?, ?);
         `;
 
         let totalPrice = 0;

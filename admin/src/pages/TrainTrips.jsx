@@ -7,14 +7,21 @@ const TrainTripsPage = () => {
     const { shipmentDetails, updateShipmentDetails } = useOutletContext();
     const [trainTrips, setTrainTrips] = useState([]);
     const [date, setDate] = useState('');
-    const location = useLocation();
     const navigate = useNavigate();
 
-    console.log(shipmentDetails);
-
+    const location = useLocation();
     const query = new URLSearchParams(location.search);
     const orderID = query.get('OrderID');
     const orderDate = query.get('date');
+
+    const fetchTrainTrips = async (selectedDate) => {
+        try {
+            const response = await axios.get(`/traintrips?selectedDate=${selectedDate}`);
+            setTrainTrips(response.data);
+        } catch (error) {
+            console.error('Error fetching train trips:', error);
+        }
+    };
 
     // Function to format date
     const formatDate = (dateString) => {
@@ -42,15 +49,6 @@ const TrainTripsPage = () => {
         }
     }, [orderDate]);
 
-    const fetchTrainTrips = async (selectedDate) => {
-        try {
-            const response = await axios.get(`/traintrips?selectedDate=${selectedDate}`);
-            setTrainTrips(response.data);
-        } catch (error) {
-            console.error('Error fetching train trips:', error);
-        }
-    };
-
     const handleNextDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
@@ -67,13 +65,16 @@ const TrainTripsPage = () => {
         fetchTrainTrips(nextDateStr);
     };
 
-    const handleSelectTrain = async (trainId, reqCapacity) => {
+    const handleSelectTrain = async (trainId) => {
         try {
-            // Update the shipment details with the selected train ID
-            updateShipmentDetails({ trainTripID: trainId });
-            await axios.put(`/traintrips/${trainId}`, { reqCapacity });
+            const reqCapacity = parseInt(shipmentDetails[0].totalCapacity);
+            await Promise.all([
+                axios.put(`/traintrips/${trainId}`, { reqCapacity }),
+                axios.put('/shipments', { trainTripID: trainId })
+            ]);
+            updateShipmentDetails();
             console.log('Train trip updated successfully');
-            navigate(`/orders/driver?OrderID=${orderID}&TrainID=${trainId}`);
+            navigate(`/orders/roadways?OrderID=${orderID}&TrainID=${trainId}`);
         } catch (error) {
             console.error('Error updating train trip:', error);
         }
@@ -95,9 +96,9 @@ const TrainTripsPage = () => {
                                         Capacity: {train.AvailableCapacity}
                                     </Card.Text>
                                     <Button
-                                        variant="success"
+                                        variant="info"
                                         className="w-100 rounded"
-                                        onClick={() => handleSelectTrain(train.TrainTripID, shipmentDetails.totalCapacity)}
+                                        onClick={() => handleSelectTrain(train.TrainTripID)}
                                     >
                                         Select Train
                                     </Button>

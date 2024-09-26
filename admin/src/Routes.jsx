@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import PendingOrders from './pages/PendingOrders';
 import TrainTrips from './pages/TrainTrips';
 import OrdersSubLayout from './layout/OrdersSubLayout';
+import Roadways from './pages/Roadways';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -52,6 +53,7 @@ export default function AppRoutes() {
                         {/* Nested layout for orders routes */}
                         <Route path="/orders" element={<OrdersSubLayout />}>
                             <Route path="traintrip" element={<TrainTrips />} />
+                            <Route path="roadways" element={<Roadways />} />
                         </Route>
                     </Route >
 

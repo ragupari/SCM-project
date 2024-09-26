@@ -7,7 +7,6 @@ async function login() {
         'x-access-token': localStorage.getItem('token')
       }
     });
-    console.log(res.data.username);
     console.log(res.data.success);
     return res.data; // Return the full data object
   } catch (err) {
