@@ -16,17 +16,17 @@ const Orders = () => {
 
     // Function to format date
     const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+        const tempDate = new Date(dateString);
+        return tempDate.toISOString().split('T')[0];
     };
 
     const handleAssign = async (orderID, totalCapacity, deliveryDate) => {
         try {
             await Promise.all([
-                await axios.delete(`/shipments`),
-                await axios.put(`/shipments`, { orderID: orderID, totalCapacity: totalCapacity })
+                axios.delete(`/shipments`),
+                axios.put(`/shipments`, { orderID: orderID, totalCapacity: totalCapacity, deliveryDate: formatDate(deliveryDate) })
             ]);
-            navigate(`/orders/traintrip?OrderID=${orderID}&date=${deliveryDate}`);
+            navigate(`/orders/traintrip?OrderID=${orderID}&date=${deliveryDate}&reqCapacity=${totalCapacity}`);
         }
         catch (error) {
             console.error('Error updating shipment details:', error);

@@ -6,6 +6,7 @@ const db = require('../../dbconfig');
 let shipmentDetails = [{
     orderID: null,
     totalCapacity: null,
+    deliveryDate: null,
     trainTripID: null,
     truckID: null,
     driverID: null,
@@ -39,6 +40,7 @@ router.delete('/', (req, res) => {
     shipmentDetails = [{
         orderID: null,
         totalCapacity: null,
+        deliveryDate: null,
         trainTripID: null,
         truckID: null,
         driverID: null,
@@ -71,6 +73,7 @@ router.post('/submit', (req, res) => {
         shipmentDetails = [{
             orderID: null,
             totalCapacity: null,
+            deliveryDate: null,
             trainTripID: null,
             truckID: null,
             driverID: null,

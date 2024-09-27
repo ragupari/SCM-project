@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Button, ListGroup, Image } from 'react-bootstrap';
-import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
+import OrderDetailsCard from '../components/OrderDetailsCard';
 
 const RouteSelector = () => {
-    const { updateShipmentDetails } = useOutletContext();
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState(null);
     const location = useLocation();
@@ -32,9 +32,8 @@ const RouteSelector = () => {
     const handleNextPage = () => {
         try {
             axios.put(`/shipments`, { routeID: selectedRoute.RouteID });
-            updateShipmentDetails();
             console.log('RouteID updated successfully:');
-            navigate(`/orders/driver?OrderID=${orderID}&storeID=${selectedRoute.StoreID}`);
+            navigate(`/orders/resource?OrderID=${orderID}&storeID=${selectedRoute.StoreID}`);
         }
         catch (error) {
             console.error('Error updating shipment details:', error);
@@ -43,6 +42,7 @@ const RouteSelector = () => {
 
     return (
         <Container fluid>
+            <OrderDetailsCard orderID={orderID} />
             <Row>
                 <Col md={4}>
                     <h4>Select a Route</h4>
@@ -65,7 +65,7 @@ const RouteSelector = () => {
                         <>
                             <h4>Route Information</h4>
                             <p><strong>Destination:</strong> {selectedRoute.Destination}</p>
-                            <p><strong>Time to Completion:</strong> {selectedRoute.TimeToCompletion} h</p>
+                            <p><strong>'Time to Completion (avg):</strong> {selectedRoute.TimeToCompletion} h</p>
                             <p><strong>Main Towns:</strong> {selectedRoute.MainTowns}</p>
 
                             <div className="d-flex mt-3">

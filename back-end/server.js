@@ -26,6 +26,9 @@ app.use('/orders', require('./routes/Admin/Orders'));
 app.use('/traintrips', require('./routes/Admin/TrainTrips'));
 app.use('/roadways', require('./routes/Admin/Roadways'));
 app.use('/shipments', require('./routes/Admin/Shipments'));
+app.use('/trucks', require('./routes/Admin/Trucks'));
+app.use('/drivers', require('./routes/Admin/Drivers'));
+app.use('/assistants', require('./routes/Admin/Assistants'));
 
 // Example route
 app.get('/', (req, res) => {

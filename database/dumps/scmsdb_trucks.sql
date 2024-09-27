@@ -24,14 +24,12 @@ DROP TABLE IF EXISTS `trucks`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `trucks` (
   `TruckID` int NOT NULL AUTO_INCREMENT,
-  `Available` tinyint(1) NOT NULL,
   `Capacity` int NOT NULL,
   `StoreID` int NOT NULL,
-  `LastHoursUsed` int NOT NULL,
   PRIMARY KEY (`TruckID`),
   KEY `StoreID` (`StoreID`),
   CONSTRAINT `trucks_ibfk_1` FOREIGN KEY (`StoreID`) REFERENCES `store` (`StoreID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +38,7 @@ CREATE TABLE `trucks` (
 
 LOCK TABLES `trucks` WRITE;
 /*!40000 ALTER TABLE `trucks` DISABLE KEYS */;
+INSERT INTO `trucks` VALUES (1,500,1),(2,500,1),(3,500,1),(4,500,1),(5,500,2),(6,500,2),(7,500,2),(8,500,2),(9,500,3),(10,500,3),(11,500,3),(12,500,3),(13,500,4),(14,500,4),(15,500,4),(16,500,4),(17,500,5),(18,500,5),(19,500,5),(20,500,5),(21,500,6),(22,500,6),(23,500,6),(24,500,6);
 /*!40000 ALTER TABLE `trucks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-26 12:11:04
+-- Dump completed on 2024-09-27 12:20:15

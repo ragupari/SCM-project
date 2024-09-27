@@ -25,12 +25,11 @@ DROP TABLE IF EXISTS `driverassistants`;
 CREATE TABLE `driverassistants` (
   `DriverAssistantID` int NOT NULL AUTO_INCREMENT,
   `StoreID` int NOT NULL,
-  `WorkHours` time NOT NULL,
-  `ConsecutiveTurns` int NOT NULL,
+  `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`DriverAssistantID`),
   KEY `StoreID` (`StoreID`),
   CONSTRAINT `driverassistants_ibfk_1` FOREIGN KEY (`StoreID`) REFERENCES `store` (`StoreID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +38,7 @@ CREATE TABLE `driverassistants` (
 
 LOCK TABLES `driverassistants` WRITE;
 /*!40000 ALTER TABLE `driverassistants` DISABLE KEYS */;
+INSERT INTO `driverassistants` VALUES (1,1,'Alice Cooper'),(2,1,'Benjamin Foster'),(3,1,'Catherine Patel'),(4,1,'Derek Chang'),(5,2,'Evelyn Morales'),(6,2,'Felix Nguyen'),(7,2,'Grace O\'Brien'),(8,2,'Henry Kim'),(9,3,'Isabelle Wong'),(10,3,'Jack Thompson'),(11,3,'Karen Gupta'),(12,3,'Liam Murphy'),(13,4,'Monica Singh'),(14,4,'Nathan Chow'),(15,4,'Olivia Rossi'),(16,4,'Patrick Okafor'),(17,5,'Quinn Larsson'),(18,5,'Rachel Sanchez'),(19,5,'Samuel Bianchi'),(20,5,'Tara McLean'),(21,6,'Uma Patel'),(22,6,'Victor Kowalski'),(23,6,'Wendy Tanaka'),(24,6,'Xavier Dubois');
 /*!40000 ALTER TABLE `driverassistants` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-26 12:11:03
+-- Dump completed on 2024-09-27 12:20:12

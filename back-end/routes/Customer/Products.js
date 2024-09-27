@@ -6,7 +6,6 @@ router.use(express.json());
 router.post('/', async (req, res) => {
     const category_ID = req.body.categoryID;
 
-    console.log(category_ID);
     if (!category_ID) {
         return res.status(400).json({
             status: 'Bad Request',
@@ -38,7 +37,6 @@ router.post('/', async (req, res) => {
                 message: 'No products found for the given category ID'
             });
         }
-        console.log(results);
         res.json({
             category_name: results[0].category_name,
             products: results
