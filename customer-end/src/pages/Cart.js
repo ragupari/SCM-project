@@ -73,7 +73,7 @@ const Cart = () => {
 
     return (
         <div>
-            <NavBar currentPage={'Products'} />
+            <NavBar currentPage={'Cart'} />
             <DisplayCard title={'Cart'} />
             <div className="container py-5">
                 {cartItems.length === 0 ? (

@@ -63,12 +63,9 @@ const TrainTripsPage = () => {
         fetchTrainTrips(prevDateStr);
     };
 
-    const handleSelectTrain = async (trainId) => {
+    const handleSelectTrain = (trainId) => {
         try {
-            await Promise.all([
-                axios.put(`/traintrips/${trainId}`, { reqCapacity }),
-                axios.put('/shipments', { trainTripID: trainId })
-            ]);
+            axios.put('/shipments', { trainTripID: trainId })
             console.log('Train trip updated successfully');
             navigate(`/orders/roadways?OrderID=${orderID}&TrainID=${trainId}`);
         } catch (error) {
@@ -96,6 +93,8 @@ const TrainTripsPage = () => {
                                         variant="info"
                                         className="w-100 rounded"
                                         onClick={() => handleSelectTrain(train.TrainTripID)}
+                                        // Disable button if train capacity is less than required capacity
+                                        disabled={train.AvailableCapacity < reqCapacity} 
                                     >
                                         Select Train
                                     </Button>

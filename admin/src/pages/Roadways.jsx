@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Button, ListGroup, Card } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderDetailsCard from '../components/OrderDetailsCard';
 
@@ -44,47 +44,54 @@ const RouteSelector = () => {
         <Container fluid>
             <OrderDetailsCard orderID={orderID} />
             <Row>
-                <Col md={4}>
-                    <h4>Select a Route</h4>
-                    <ListGroup>
-                        {routes.map((route, index) => (
-                            <ListGroup.Item
-                                key={index}
-                                action
-                                onClick={() => handleRouteSelect(route)}
-                                active={selectedRoute && selectedRoute.Destination === route.Destination}
-                            >
-                                {`${route.City} -> ${route.MainTowns !== 'N/A' ? route.MainTowns + '->' : ''}${route.Destination}`}
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup>
+                <Col md={6} className='mb-4'>
+                    <Card>
+                        <Card.Header>Available Routes</Card.Header>
+                        <Card.Body>
+                            <ListGroup>
+                                {routes.map((route, index) => (
+                                    <ListGroup.Item
+                                        key={index}
+                                        action
+                                        onClick={() => handleRouteSelect(route)}
+                                        active={selectedRoute && selectedRoute.Destination === route.Destination}
+                                    >
+                                        {`${route.City} -> ${route.MainTowns !== 'N/A' ? route.MainTowns + '->' : ''}${route.Destination}`}
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                        </Card.Body>
+                    </Card>
                 </Col>
-
-                <Col md={4}>
+                <Col md={6} className='mb-4'>
                     {selectedRoute ? (
-                        <>
-                            <h4>Route Information</h4>
-                            <p><strong>Destination:</strong> {selectedRoute.Destination}</p>
-                            <p><strong>'Time to Completion (avg):</strong> {selectedRoute.TimeToCompletion} h</p>
-                            <p><strong>Main Towns:</strong> {selectedRoute.MainTowns}</p>
+                        <Card>
+                            <Card.Header>Route Information</Card.Header>
+                            <Card.Body>
+                                <p><strong>Destination:</strong> {selectedRoute.Destination}</p>
+                                <p><strong>Time to Completion (avg):</strong> {selectedRoute.TimeToCompletion} h</p>
+                                <p><strong>Main Towns:</strong> {selectedRoute.MainTowns}</p>
 
-                            <div className="d-flex mt-3">
-                                <Button variant="primary" onClick={handleNextPage}>
-                                    Select Route
-                                </Button>
-                            </div>
-                        </>
+                                <div className="d-flex mt-3">
+                                    <Button variant="primary" onClick={handleNextPage}>
+                                        Select Route
+                                    </Button>
+                                </div>
+                            </Card.Body>
+                        </Card>
                     ) : (
                         <p>Please select a route to see the details.</p>
                     )}
                 </Col>
-                <Col md={4}>
+            </Row>
+            <Row>
+                <Col>
                     {/* Google Maps iFrame */}
                     <iframe
                         title="Google Map"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63314.33732268998!2d79.81088162240182!3d6.927078585202556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2595f9b0a3af5%3A0xf60e3bf69be38a3a!2sColombo!5e0!3m2!1sen!2slk!4v1608237056450!5m2!1sen!2slk"
                         width="100%"
-                        height="100%"
+                        height="700px"
                         style={{ border: 0 }}
                         allowFullScreen=""
                         loading="lazy"

@@ -16,4 +16,29 @@ router.get('/available/:storeID', (req, res) => {
     });
 });
 
+router.get('/logs/:truckID', (req, res) => {
+    const { truckID } = req.params;
+
+    const query =  `SELECT 
+                        TruckID AS ID,
+                        Date, 
+                        StartTime, 
+                        EndTime
+                    FROM 
+                        shipment
+                    WHERE 
+                        TruckID = ?
+                    ORDER BY 
+                        Date DESC
+                    LIMIT 4;`;
+
+    db.query(query, [truckID], (err, results) => {
+        if (err) {
+            console.error('Error fetching assistant logs:', err);
+            return res.status(500).send('Error fetching assistant logs');
+        }
+        res.json(results);
+    });
+});
+
 module.exports = router;

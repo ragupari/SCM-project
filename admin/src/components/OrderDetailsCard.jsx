@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const OrderDetailsCard = ({ orderID, submissionStatus }) => {
     const [selectedOrder, setOrder] = useState({});
     const [shipmentDetails, setShipmentDetails] = useState({});
     const shipment = shipmentDetails[0] || {};
     const [isFormValid, setIsFormValid] = useState(false);
+    const navigate = useNavigate();
 
     // Fetch the order details
     useEffect(() => {
@@ -34,12 +36,17 @@ const OrderDetailsCard = ({ orderID, submissionStatus }) => {
     };
 
     // Submit all details to the backend
-    const handleSubmit = () => {
-        axios.post('/shipments/submit', shipmentDetails)
-            .then(response => {
-                console.log("Shipment details submitted successfully:", response.data);
-            })
-            .catch(error => console.error("Error submitting shipment details: ", error));
+    const handleSubmit = async() => {
+        try {
+            await Promise.all ([
+                axios.put(`/traintrips/${shipment.trainTripID}`,{ reqCapacity: shipment.totalCapacity }),
+                axios.post(`orders/status/${orderID}`, { status: 'OnTheWay' }),
+                axios.post('/shipments/submit'),
+            ]);
+            navigate('/orders');
+        } catch (error) {
+            console.error("Error submitting shipment: ", error);
+        }
     };
 
     return (

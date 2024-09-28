@@ -35,7 +35,8 @@ function NavBar({ currentPage }) {
               </a>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a className="dropdown-item gradient-text-" href="/profile"> <i className="bi bi-person"></i> Profile </a></li>
-                <li><a className="dropdown-item gradient-text-" href="/cart"> <i class="bi bi-cart"></i> Cart </a></li>
+                <li><a className="dropdown-item gradient-text-" href="/cart"> <i className="bi bi-cart"></i> Cart </a></li>
+                <li><a className="dropdown-item gradient-text-" href="/orders"> <i className="bi bi-box2"></i> My Orders </a></li>
                 <li><hr className="dropdown-divider"></hr></li>
                 <li>
                   <a
