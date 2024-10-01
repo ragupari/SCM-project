@@ -1,6 +1,6 @@
 import './Style.css'; // Custom styles, if needed
 
-function ProductCard({ product_ID, product_name, price }) {
+function ProductCard({ product_ID, product_name, price, available }) {
   return (
     <div className="col">
       <a
@@ -29,7 +29,8 @@ function ProductCard({ product_ID, product_name, price }) {
           }}
         />
         <div className="card-body d-flex flex-column justify-content-between" style={{ padding: '20px' }}>
-          <h5 className="card-title gradient-text-" style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '10px' }}>{product_name}</h5>
+          <h5 className="card-title gradient-text-" style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '5px' }}>{product_name}</h5>
+          <p className="card-text text-muted" style={{ fontSize: '1rem', marginBottom: '0' }}> Available: {available ? available : 'Out of stock'}</p>
           <p className="card-text text-muted" style={{ fontSize: '1rem', marginBottom: '0' }}>
             Unit price: {price} $
           </p>

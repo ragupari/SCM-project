@@ -57,6 +57,7 @@ const Products = () => {
                         product_ID={product.product_ID}
                         product_name={product.product_name}
                         price={product.unit_price}
+                        available={product.available}
                       />
                     </div>
                   ))}

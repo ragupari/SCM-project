@@ -12,7 +12,7 @@ const OrderDetailsCard = ({ orderID, submissionStatus }) => {
 
     // Fetch the order details
     useEffect(() => {
-        axios.get(`/orders/${orderID}`)
+        axios.get(`/orders/getbyid/${orderID}`)
             .then(response => setOrder(response.data))
             .catch(error => console.error("Error fetching orders: ", error));
 

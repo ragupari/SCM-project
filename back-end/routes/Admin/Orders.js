@@ -50,7 +50,7 @@ router.put('/:orderID', (req, res) => {
     });
 });
 
-router.get('/:orderID', (req, res) => {
+router.get('/getbyid/:orderID', (req, res) => {
     const orderID = req.params.orderID;
     const query =  `SELECT OrderID, fullName, address, city, TotalCapacity FROM orders o
                     LEFT JOIN customers c ON o.customer_ID = c.customer_ID
