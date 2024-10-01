@@ -25,7 +25,6 @@ const Products = () => {
       try {
         const response = await axios.post('/getproducts', { categoryID });
         setProducts(response.data.products);
-        console.log(response.data.category_name); 
         setCategoryName(response.data.category_name);
       } catch (err) {
         console.error('Failed to fetch products:', err);
@@ -58,6 +57,7 @@ const Products = () => {
                         product_ID={product.product_ID}
                         product_name={product.product_name}
                         price={product.unit_price}
+                        available={product.available}
                       />
                     </div>
                   ))}

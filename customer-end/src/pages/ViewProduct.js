@@ -49,14 +49,13 @@ const ViewProduct = () => {
                 <p>No products found for this category.</p>
               ) : (
                 <div className="row">
-
-<ProductDisplayCard
-            name={details.product_name}
-            price={details.unit_price}
-            description={details.product_detail}
-            image={details.product_img}
-        />
-            
+                  <ProductDisplayCard
+                      id={details.product_ID}
+                      name={details.product_name}
+                      price={details.unit_price}
+                      description={details.Description}
+                      capacityperunit={details.CapacityPerUnit}
+                  />
                 </div>
               )}
             </div>
