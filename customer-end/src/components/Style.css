@@ -27,7 +27,7 @@
 
   .gradient-text-active  {
     font-weight : 900 !important;
-    background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+    background: linear-gradient(45deg, rgb(1, 70, 38), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important; /* For non-WebKit browsers */
@@ -35,7 +35,7 @@
 }
 .gradient-text- {
   font-weight : 500 !important;
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important; /* For non-WebKit browsers */
@@ -45,7 +45,7 @@
 .gradient-text-0 {
   font-size : 1.5rem !important;
   font-weight : 700 !important;
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important; /* For non-WebKit browsers */
@@ -60,7 +60,7 @@
 }
 
 .gradient-form::placeholder {
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important;  /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important; /* For non-WebKit browsers */
@@ -68,7 +68,7 @@
 }
 
 .gradient-btn {
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important;
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; 
   color: white;
   border: none;
 }

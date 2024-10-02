@@ -22,7 +22,7 @@ function AllCategoryCards() {
 
   return (
     <div className="mx-5 mt-4">
-      <div className="row row-cols-1 row-cols-md-5 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
       {categories.map((category) => (
       <CategoryCard 
             key={category.category_ID}
