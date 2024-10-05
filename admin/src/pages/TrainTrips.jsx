@@ -40,7 +40,7 @@ const TrainTripsPage = () => {
     useEffect(() => {
         if (orderDate) {
             const newDate = new Date(orderDate);
-            newDate.setDate(newDate.getDate() - 1); 
+            newDate.setDate(newDate.getDate() + 1); 
             const prevDateStr = newDate.toISOString().split('T')[0];
             setDate(prevDateStr);
             fetchTrainTrips(prevDateStr);
@@ -63,13 +63,15 @@ const TrainTripsPage = () => {
         fetchTrainTrips(prevDateStr);
     };
 
-    const handleSelectTrain = (trainId) => {
-        try {
-            axios.put('/shipments', { trainTripID: trainId })
-            console.log('Train trip updated successfully');
-            navigate(`/orders/roadways?OrderID=${orderID}&TrainID=${trainId}`);
+    const handleSelectTrain = async(trainId) => {
+        try{
+            await Promise.all([
+                axios.put(`/orders/assigntraintrip/${orderID}`, { trainTripID: trainId }),
+                axios.put(`/traintrips/decreasecapacity/${trainId}`, { reqCapacity })
+            ]);
+            navigate('/orders');
         } catch (error) {
-            console.error('Error updating train trip:', error);
+            console.error('Error assigning train trip:', error);
         }
     };
 
@@ -106,8 +108,7 @@ const TrainTripsPage = () => {
             ) : (
                 <p className="text-center">No train trips available for this date.</p>
             )}
-
-            <div className="d-flex justify-content-center mt-4">
+            <div className="d-flex justify-content-center mt-4 mb-4">
                 <Button variant="primary" className="rounded me-4" onClick={handlePrevDate}>
                     Prev Date
                 </Button>
@@ -115,7 +116,20 @@ const TrainTripsPage = () => {
                     Next Date
                 </Button>
             </div>
-
+            <Row>
+                <Col>
+                    {/* Google Maps iFrame */}
+                    <iframe
+                        title="Google Map"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63314.33732268998!2d79.81088162240182!3d6.927078585202556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2595f9b0a3af5%3A0xf60e3bf69be38a3a!2sColombo!5e0!3m2!1sen!2slk!4v1608237056450!5m2!1sen!2slk"
+                        width="100%"
+                        height="700px"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                    ></iframe>
+                </Col>
+            </Row>
         </Container>
     );
 };

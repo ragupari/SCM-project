@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
     const { username, password } = req.body;
 
     // Query to find the user by username
-    const sql = 'SELECT * FROM admin WHERE username = ?';
+    const sql = 'SELECT * FROM StoreManagers WHERE Username = ?';
     db.query(sql, [username], (err, result) => {
         if (err) {
             console.error('Database error:', err); // Added logging
@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
             const user = result[0];
 
             // Compare the provided password with the hashed password in the database
-            bcrypt.compare(password, user.password, (err, isMatch) => {
+            bcrypt.compare(password, user.Password, (err, isMatch) => {
                 if (err) {
                     console.error('Bcrypt error:', err); // Added logging
                     res.status(500).json({
@@ -41,12 +41,23 @@ router.post('/', (req, res) => {
 
                 if (isMatch) {
                     // If passwords match, generate a JWT token with an expiry of 1 hour
-                    const token = jwt.sign({ username: user.username }, secretkey, { expiresIn: '1h' });
-                    res.json({
-                        status: 'Login Successful!',
-                        success: true,
-                        token: token
-                    });
+                    if(user.StoreID === 7){
+                        const token = jwt.sign({ username: user.Username, role: 'admin' }, secretkey, { expiresIn: '1h' });
+                        res.json({
+                            status: 'Login Successful!',
+                            success: true,
+                            token: token,
+                            storeID: user.StoreID
+                        });
+                    } else {
+                        const token = jwt.sign({ username: user.Username, role: 'manager' }, secretkey, { expiresIn: '1h' });
+                        res.json({
+                            status: 'Login Successful!',
+                            success: true,
+                            token: token,
+                            storeID: user.StoreID
+                        });
+                    }
                 } else {
                     // If passwords do not match
                     res.status(401).json({

@@ -10,7 +10,7 @@ const Orders = () => {
 
     // Fetch pending orders
     useEffect(() => {
-        axios.get(`/orders?status=pending&storeID=${storeID}`)
+        axios.get(`/orders?status=processing&storeID=${storeID}`)
             .then(response => setOrders(response.data))
             .catch(error => console.error("Error fetching orders: ", error));
     }, []);
@@ -21,8 +21,10 @@ const Orders = () => {
         return tempDate.toISOString().split('T')[0];
     };
 
-    const handleAssign = (orderID, totalCapacity, orderDate) => {
-        navigate(`/orders/traintrips?OrderID=${orderID}&date=${orderDate}&reqCapacity=${totalCapacity}`);
+    const handleAssign = (orderID, departureTime, routeID, reqCapacity) => {
+        const newDate = new Date(departureTime);
+        newDate.setDate(newDate.getDate() + 1);
+        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${newDate.toISOString().split('T')[0]}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
     return (
@@ -38,6 +40,7 @@ const Orders = () => {
                         <th>Order ID</th>
                         <th>Customer ID</th>
                         <th>Order Date</th>
+                        <th>Arrival Date</th>
                         <th>Delivery Date</th>
                         <th>Total Price</th>
                         <th>Total Capacity</th>
@@ -50,13 +53,14 @@ const Orders = () => {
                             <td>{order.OrderID}</td>
                             <td>{order.CustomerID}</td>
                             <td>{formatDate(order.OrderDate)}</td>
+                            <td>{formatDate(order.DepartureTime)}</td>
                             <td>{formatDate(order.DeliveryDate)}</td>
                             <td>{order.TotalPrice}</td>
                             <td>{order.TotalCapacity}</td>
                             <td>
-                                <Button onClick={() => handleAssign(order.OrderID, order.TotalCapacity, order.OrderDate)}
+                                <Button onClick={() => handleAssign(order.OrderID, order.DepartureTime, order.RouteID, order.TotalCapacity)}
                                     variant="primary" className="rounded">
-                                    Ready
+                                    Schedule
                                 </Button>
                             </td>
                         </tr>

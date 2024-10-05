@@ -6,12 +6,12 @@ router.use(express.json());
 
 
 router.post('/', async (req, res) => {
-    const { fullName, email, username, password, confirmPassword } = req.body;
+    const { fullName, email, username, password, confirmPassword, storeID } = req.body;
 
     // Check if all required fields are provided
-    if (!fullName || !email || !username || !password || !confirmPassword) {
+    if (!fullName || !email || !username || !password || !confirmPassword || !storeID) {
         return res.json({
-            status: 'Please provide fullName, email, username, password, and confirmPassword',
+            status: 'Please provide store, fullName, email, username, password, and confirmPassword',
             success: false
         });
     }
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
 
     try {
         // Check if the email or username already exists
-        const sqlCheck = 'SELECT * FROM admin WHERE email = ? OR username = ?';
+        const sqlCheck = 'SELECT * FROM StoreManagers WHERE Email = ? OR Username = ?';
         db.query(sqlCheck, [email, username], (err, result) => {
             if (err) {
                 res.json({
@@ -53,8 +53,8 @@ router.post('/', async (req, res) => {
                     }
 
                     // Insert new user into the database
-                    const sqlInsert = 'INSERT INTO admin (fullName, email, username, password) VALUES (?, ?, ?, ?)';
-                    db.query(sqlInsert, [fullName, email, username, hashedPassword], (err, result) => {
+                    const sqlInsert = 'INSERT INTO StoreManagers (StoreID, FullName, Email, Username, Password) VALUES (?, ?, ?, ?, ?)';
+                    db.query(sqlInsert, [storeID, fullName, email, username, hashedPassword], (err, result) => {
                         if (err) {
                             res.json({
                                 status: 'Server side error',

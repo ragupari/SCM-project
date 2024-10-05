@@ -1,70 +1,90 @@
 .gradient-background {
-    background-color: #ffffff;
-    
-  }
+  background-color: #ffffff;
+}
 
 .background {
-    background-image: url('https://static.vecteezy.com/system/resources/previews/026/493/927/non_2x/abstract-gradient-dark-green-liquid-wave-background-free-vector.jpg');
-    background-size: cover; /* Adjust to 'contain' if needed */
-    background-position: center; /* Adjust to 'top', 'bottom', etc., if needed */
-    background-repeat: no-repeat;
-  }
-  .card-font {
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 3.5rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-align: center; /* Center align text */
-  }
-  
-  @media (max-width: 768px) {
-    .card-font {
-      font-size: 1.5rem; /* Adjust the font size for smaller screens */
-    }
-  }
-  
-
-  .gradient-text-active  {
-    font-weight : 900 !important;
-    background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important; /* For non-WebKit browsers */
-    color: transparent !important; /* Fallback color */
+  background-image: url('https://images.pexels.com/photos/6985132/pexels-photo-6985132.jpeg');
+  background-size: cover;
+  /* Adjust to 'contain' if needed */
+  background-position: center;
+  /* Adjust to 'top', 'bottom', etc., if needed */
+  background-repeat: no-repeat;
 }
-.gradient-text- {
-  font-weight : 500 !important;
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+
+.card-font {
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  /* Center align text */
+}
+
+
+@media (max-width: 768px) {
+  .card-font {
+    font-size: 1.5rem;
+    /* Adjust the font size for smaller screens */
+  }
+}
+
+
+.gradient-text-active {
+  font-weight: 900 !important;
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important;
+  /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  background-clip: text !important; /* For non-WebKit browsers */
-  color: transparent !important; /* Fallback color */
+  background-clip: text !important;
+  /* For non-WebKit browsers */
+  color: transparent !important;
+  /* Fallback color */
+}
+
+.gradient-text- {
+  font-weight: 500 !important;
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important;
+  /* Adjust gradient colors and direction */
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  /* For non-WebKit browsers */
+  color: transparent !important;
+  /* Fallback color */
 }
 
 .gradient-text-0 {
-  font-size : 1.5rem !important;
-  font-weight : 700 !important;
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important;
+  /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  background-clip: text !important; /* For non-WebKit browsers */
-  color: transparent !important; /* Fallback color */
+  background-clip: text !important;
+  /* For non-WebKit browsers */
+  color: transparent !important;
+  /* Fallback color */
 }
 
 .gradient-form {
-  border: 2px solid rgb(37, 21, 126) !important; /* Change this color to your desired border color */
+  border: 2px solid rgb(37, 21, 126) !important;
+  /* Change this color to your desired border color */
   border-radius: 6px !important;
   padding: 0.5rem !important;
-  color: #333 !important; /* Change this to your desired text color */
+  color: #333 !important;
+  /* Change this to your desired text color */
 }
 
 .gradient-form::placeholder {
-  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important; /* Adjust gradient colors and direction */
+  background: linear-gradient(45deg, rgb(37, 21, 126), rgb(183, 8, 128)) !important;
+  /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  background-clip: text !important; /* For non-WebKit browsers */
-  color: transparent !important; /* Fallback color */
+  background-clip: text !important;
+  /* For non-WebKit browsers */
+  color: transparent !important;
+  /* Fallback color */
 }
 
 .gradient-btn {
@@ -80,8 +100,10 @@
 .image-wrapper {
   position: relative;
   width: 100%;
-  height: auto;         /* Make the wrapper responsive */
-  padding-top: 56.25%; /* Aspect ratio (16:9) */
+  height: auto;
+  /* Make the wrapper responsive */
+  padding-top: 56.25%;
+  /* Aspect ratio (16:9) */
   overflow: hidden;
 }
 
@@ -91,8 +113,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;   /* Ensure the image covercs the container */
+  object-fit: contain;
+  /* Ensure the image covercs the container */
 }
-
-
-
