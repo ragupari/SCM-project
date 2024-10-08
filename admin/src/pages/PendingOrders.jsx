@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const navigate = useNavigate();
+    const storeID = localStorage.getItem('storeID');
 
     // Fetch pending orders
     useEffect(() => {
-        axios.get(`/orders?status=pending`)
+        axios.get(`/orders?status=pending&storeID=${storeID}`)
             .then(response => setOrders(response.data))
             .catch(error => console.error("Error fetching orders: ", error));
     }, []);
@@ -20,17 +21,8 @@ const Orders = () => {
         return tempDate.toISOString().split('T')[0];
     };
 
-    const handleAssign = async (orderID, totalCapacity, deliveryDate) => {
-        try {
-            await Promise.all([
-                axios.delete(`/shipments`),
-                axios.put(`/shipments`, { orderID: orderID, totalCapacity: totalCapacity, deliveryDate: formatDate(deliveryDate) })
-            ]);
-            navigate(`/orders/traintrip?OrderID=${orderID}&date=${deliveryDate}&reqCapacity=${totalCapacity}`);
-        }
-        catch (error) {
-            console.error('Error updating shipment details:', error);
-        }
+    const handleAssign = (orderID, totalCapacity, orderDate) => {
+        navigate(`/orders/traintrips?OrderID=${orderID}&date=${orderDate}&reqCapacity=${totalCapacity}`);
     };
 
     return (
@@ -56,15 +48,15 @@ const Orders = () => {
                     {orders.map(order => (
                         <tr key={order.OrderID}>
                             <td>{order.OrderID}</td>
-                            <td>{order.customer_ID}</td>
+                            <td>{order.CustomerID}</td>
                             <td>{formatDate(order.OrderDate)}</td>
                             <td>{formatDate(order.DeliveryDate)}</td>
                             <td>{order.TotalPrice}</td>
                             <td>{order.TotalCapacity}</td>
                             <td>
-                                <Button onClick={() => handleAssign(order.OrderID, order.TotalCapacity, order.DeliveryDate)}
+                                <Button onClick={() => handleAssign(order.OrderID, order.TotalCapacity, order.OrderDate)}
                                     variant="primary" className="rounded">
-                                    Assign
+                                    Ready
                                 </Button>
                             </td>
                         </tr>
