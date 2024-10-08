@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 router.post('/', (req, res) => {
     const { username } = req.body;
-    const sql = 'SELECT * FROM customers WHERE username = ?';
+    const sql = 'SELECT * FROM Customers WHERE Username = ?';
 
     db.query(sql, [username], (err, result) => {
         if (err) {
@@ -14,11 +14,11 @@ router.post('/', (req, res) => {
         if (result.length > 0) {
             const user = result[0];
             res.json({ 
-                'name': user.fullName, 
-                'email': user.email, 
-                'img': user.img, 
-                'address': user.address, 
-                'city': user.city 
+                'name': user.FullName, 
+                'email': user.Email, 
+                'img': user.Img, 
+                'address': user.Address, 
+                'city': user.City 
             });
         }
     });
@@ -37,7 +37,7 @@ router.put('/', (req, res) => {
             if (err) {
                 return res.status(404).json({ message: 'Error in hashing password' });
             }
-            const sqlUpdate = 'UPDATE customers SET fullName = ?, email = ?, password = ?, Img = ?, address = ?, city = ? WHERE (username = ?)';
+            const sqlUpdate = 'UPDATE Customers SET FullName = ?, Email = ?, Password = ?, Img = ?, Address = ?, City = ? WHERE (Username = ?)';
             db.query(sqlUpdate, [name, email, hashedPassword, profileImg, address, city, username], (err, result) => {
                 if (err) {
                     return res.status(500).json({ message: 'Server side error' });

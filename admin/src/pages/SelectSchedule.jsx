@@ -10,7 +10,8 @@ const SelectSchedule = () => {
     const storeID = localStorage.getItem('storeID');
     const orderID = query.get('OrderID');
     const routeID = query.get('routeID');
-    const date = query.get('arrivalDate');
+    const date = query.get('date');
+    const arrivalDate = query.get('arrivalDate');
     const reqCapacity = query.get('reqCapacity');
     const [truckSchedules, setTruckSchedules] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -23,6 +24,7 @@ const SelectSchedule = () => {
         Date: `${date}`,
         StartTime: '',
         EndTime: '',
+        RemainingCapacity: 0,
     });
     const navigate = useNavigate();
 
@@ -30,9 +32,19 @@ const SelectSchedule = () => {
         fetchTruckSchedules(date);
     }, [date]);
 
+    const validateSchedule = () => {
+        const { TruckID, DriverID, DrivingAssistantID, Date, StartTime, EndTime } = newSchedule;
+        return TruckID && DriverID && DrivingAssistantID && Date && StartTime && EndTime;
+    };
+
+    const formatDate = (dateString) => {
+        const tempDate = new Date(dateString);
+        return tempDate.toISOString().split('T')[0];
+    };
+
     const fetchTruckSchedules = async (selectedDate) => {
         try {
-            const response = await axios.get(`/truck-schedules?date=${selectedDate}&storeID=${storeID}`);
+            const response = await axios.get(`/truck-schedules?selectedDate=${selectedDate}&storeID=${storeID}`);
             setTruckSchedules(response.data);
         } catch (error) {
             console.error('Error fetching truck schedules:', error);
@@ -40,7 +52,15 @@ const SelectSchedule = () => {
     };
 
     const handleCreateSchedule = async () => {
+        if (!validateSchedule()) {
+            alert('Please fill in all fields');
+            return;
+        }
+
         try {
+            const res = await axios.get(`/trucks/${newSchedule.TruckID}`);
+            const truck = res.data;
+            newSchedule.RemainingCapacity = truck.Capacity;
             await axios.post('/truck-schedules', newSchedule);
             setShowCreateModal(false);
             fetchTruckSchedules(date);
@@ -56,12 +76,17 @@ const SelectSchedule = () => {
         } else if (direction === 'next') {
             newDate.setDate(newDate.getDate() + 1);
         }
-        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${newDate.toISOString().split('T')[0]}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
+        const newDateStr = newDate.toISOString().split('T')[0];
+        if (newDateStr < arrivalDate) return;
+        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${arrivalDate}&date=${newDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
-    const handleSelectTruck = (deliveryID) => {
+    const handleSelectTruck = async (deliveryID) => {
         try {
-            axios.put(`/orders/assignschedule/${orderID}`, { deliveryID });
+            await Promise.all([
+                axios.put(`/orders/assignschedule/${orderID}`, { deliveryID }),
+            ]);
+            await axios.put(`/truck-schedules/decreasecapacity/${deliveryID}`, { reqCapacity })
             navigate(`/orders`);
         } catch (error) {
             console.error('Error selecting truck schedule:', error);
@@ -72,15 +97,15 @@ const SelectSchedule = () => {
         <Container>
             <Row className="my-4">
                 <Col>
-                    <Button variant="outline-primary" onClick={() => handleDateChange('prev')}>
+                    <Button variant="primary" onClick={() => handleDateChange('prev')}>
                         Previous Date
                     </Button>
                 </Col>
                 <Col className="text-center">
-                    <h4>Truck Schedules for {date}</h4>
+                    <h2>Truck Schedules for {date}</h2>
                 </Col>
                 <Col className="text-end">
-                    <Button variant="outline-primary" onClick={() => handleDateChange('next')}>
+                    <Button variant="primary" onClick={() => handleDateChange('next')}>
                         Next Date
                     </Button>
                 </Col>
@@ -105,7 +130,7 @@ const SelectSchedule = () => {
                                 <Card.Text>Truck ID: {schedule.TruckID}</Card.Text>
                                 <Card.Text>Driver ID: {schedule.DriverID}</Card.Text>
                                 <Card.Text>Assistant ID: {schedule.DrivingAssistantID}</Card.Text>
-                                <Card.Text>Date: {schedule.Date}</Card.Text>
+                                <Card.Text>Date: {formatDate(schedule.Date)}</Card.Text>
                                 <Card.Text>Start Time: {schedule.StartTime}</Card.Text>
                                 <Card.Text>End Time: {schedule.EndTime}</Card.Text>
                                 <Card.Text>Remaining Capacity: {schedule.RemainingCapacity}</Card.Text>
@@ -113,7 +138,7 @@ const SelectSchedule = () => {
                                     variant="info"
                                     className="w-100 rounded"
                                     onClick={() => handleSelectTruck(schedule.DeliveryID)}
-                                    disabled={routeID !== schedule.RouteID || reqCapacity > schedule.RemainingCapacity}
+                                    disabled={routeID != schedule.RouteID || reqCapacity > schedule.RemainingCapacity}
                                 >
                                     Select Truck
                                 </Button>

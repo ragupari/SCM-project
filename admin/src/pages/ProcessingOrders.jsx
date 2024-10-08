@@ -24,7 +24,8 @@ const Orders = () => {
     const handleAssign = (orderID, departureTime, routeID, reqCapacity) => {
         const newDate = new Date(departureTime);
         newDate.setDate(newDate.getDate() + 1);
-        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${newDate.toISOString().split('T')[0]}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
+        const nextDateStr = newDate.toISOString().split('T')[0];
+        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${nextDateStr}&date=${nextDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
     return (

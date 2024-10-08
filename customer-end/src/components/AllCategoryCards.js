@@ -25,10 +25,10 @@ function AllCategoryCards() {
       <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
       {categories.map((category) => (
       <CategoryCard 
-            key={category.category_ID}
-            category={category.category_name}
-            description={category.category_description}
-            category_ID={category.category_ID}
+            key={category.CategoryID}
+            category={category.CategoryName}
+            description={category.Description}
+            category_ID={category.CategoryID}
           />
         ))}
       </div>

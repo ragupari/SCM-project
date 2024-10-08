@@ -41,9 +41,9 @@ const TrainTripsPage = () => {
         if (orderDate) {
             const newDate = new Date(orderDate);
             newDate.setDate(newDate.getDate() + 1); 
-            const prevDateStr = newDate.toISOString().split('T')[0];
-            setDate(prevDateStr);
-            fetchTrainTrips(prevDateStr);
+            const nextDateStr = newDate.toISOString().split('T')[0];
+            setDate(nextDateStr);
+            fetchTrainTrips(nextDateStr); // Fetch train trips for the next day
         }
     }, [orderDate]);
 
@@ -59,6 +59,9 @@ const TrainTripsPage = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() - 1);
         const prevDateStr = newDate.toISOString().split('T')[0];
+        // Prevent fetching train trips for past dates
+        if (prevDateStr < orderDate.toString().split('T')[0]) return;
+
         setDate(prevDateStr);
         fetchTrainTrips(prevDateStr);
     };

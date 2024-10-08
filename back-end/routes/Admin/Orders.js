@@ -51,6 +51,20 @@ router.put('/assigntraintrip/:orderID', (req, res) => {
     });
 });
 
+router.put('/assignschedule/:orderID', (req, res) => {
+    const { deliveryID } = req.body;
+    const orderID = req.params.orderID;
+
+    const query = "UPDATE Orders SET DeliveryID = ?, Status = ? WHERE OrderID = ?";
+    db.query(query, [deliveryID, 'OntheWay', orderID], (err, results) => {
+        if (err) {
+            console.error('Error assigning schedule:', err);
+            return res.status(500).send('Error assigning schedule');
+        }
+        res.send('Schedule assigned');
+    });
+});
+
 router.get('/:username', (req, res) => {
     const username = req.params.username;
     const query = `SELECT OrderID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity FROM orders o

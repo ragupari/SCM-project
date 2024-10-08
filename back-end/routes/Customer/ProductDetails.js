@@ -15,8 +15,8 @@ router.post('/', async (req, res) => {
 
     const sql = `
         SELECT *
-        FROM products
-        WHERE product_ID = ?
+        FROM Products
+        WHERE ProductID = ?
     `;
 
     db.query(sql, [product_ID], (err, results) => {

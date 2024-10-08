@@ -83,7 +83,7 @@ const ProfilePage = () => {
               <div className="row">
                 <div className="col-md-4 text-center">
                   <img
-                    src="https://via.placeholder.com/150"
+                    src="https://i.pinimg.com/736x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg"
                     alt="Profile"
                     className="rounded-circle img-fluid"
                   />
@@ -106,6 +106,7 @@ const ProfilePage = () => {
                       className="form-control"
                       id="email"
                       value={email}
+                      disabled
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>

@@ -2,6 +2,20 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../dbconfig');
 
+router.get('/:truckID', (req, res) => {
+    const { truckID } = req.params;
+
+    const query = `SELECT * FROM Trucks WHERE TruckID = ?;`;
+
+    db.query(query, [truckID], (err, results) => {
+        if (err) {
+            console.error('Error fetching truck details:', err);
+            return res.status(500).send('Error fetching truck details');
+        }
+        res.json(results[0]);
+    });
+});
+
 router.get('/available/:storeID', (req, res) => {
     const { storeID } = req.params;
 

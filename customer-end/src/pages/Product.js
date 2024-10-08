@@ -52,12 +52,12 @@ const Products = () => {
               ) : (
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                   {products.map(product => (
-                    <div className="col" key={product.product_ID}>
+                    <div className="col" key={product.ProductID}>
                       <ProductCard
-                        product_ID={product.product_ID}
-                        product_name={product.product_name}
-                        price={product.unit_price}
-                        available={product.available}
+                        product_ID={product.ProductID}
+                        product_name={product.ProductName}
+                        price={product.UnitPrice}
+                        available={product.AvailableStock}
                       />
                     </div>
                   ))}
