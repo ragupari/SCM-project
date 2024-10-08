@@ -2,7 +2,7 @@ import axios from 'axios';
 
 async function login() {
   try {
-    const res = await axios.get('/tokenauth', {
+    const res = await axios.get('/admintokenauth', {
       headers: {
         'x-access-token': localStorage.getItem('token')
       }

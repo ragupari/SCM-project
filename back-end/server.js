@@ -20,15 +20,16 @@ app.use('/cart', require('./routes/Customer/Cart'));
 app.use('/search', require('./routes/Customer/SearchProducts'));
 
 // admin-end routes
+app.use('/admintokenauth', require('./routes/Admin/AdminTokenAuth'));
 app.use('/adminsignin', require('./routes/Admin/AdminLogin'));
 app.use('/adminsignup', require('./routes/Admin/AdminSignup'));
 app.use('/orders', require('./routes/Admin/Orders'));
 app.use('/traintrips', require('./routes/Admin/TrainTrips'));
 app.use('/roadways', require('./routes/Admin/Roadways'));
-app.use('/shipments', require('./routes/Admin/Shipments'));
 app.use('/trucks', require('./routes/Admin/Trucks'));
 app.use('/drivers', require('./routes/Admin/Drivers'));
 app.use('/assistants', require('./routes/Admin/Assistants'));
+app.use('/truck-schedules', require('./routes/Admin/TruckSchedule'));
 
 // Example route
 app.get('/', (req, res) => {
