@@ -20,14 +20,14 @@ router.get('/logs/:assistantID', (req, res) => {
     const { assistantID } = req.params;
 
     const query =  `SELECT 
-                        DriverAssistantID AS ID,
+                        DrivingAssistantID AS ID,
                         Date, 
                         StartTime, 
                         EndTime
                     FROM 
-                        shipment
+                        Shipments
                     WHERE 
-                        DriverAssistantID = ?
+                        DrivingAssistantID = ?
                     ORDER BY 
                         Date DESC
                     LIMIT 4;`;

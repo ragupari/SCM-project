@@ -6,8 +6,8 @@ const db = require('../../dbconfig');
 router.get('/', (req, res) => {
     const { selectedDate } = req.query;
 
-    const query =  `SELECT * FROM traintrips t
-                    LEFT JOIN store s ON t.Destination = s.StoreID
+    const query =  `SELECT * FROM TrainTrips t
+                    LEFT JOIN Stores s ON t.Destination = s.StoreID
                     WHERE DATE(DepartureTime) = ?`;
 
     db.query(query, [selectedDate], (err, results) => {
@@ -19,17 +19,17 @@ router.get('/', (req, res) => {
     });
 });
 
-router.put(`/:trainTripID`, (req, res) => {
+router.put('/decreasecapacity/:trainTripID', (req, res) => {
+    const { trainTripID } = req.params;
     const { reqCapacity } = req.body;
-    const trainTripID = req.params.trainTripID;
+    const query = "UPDATE TrainTrips SET AvailableCapacity = AvailableCapacity - ? WHERE TrainTripID = ?";
 
-    const query = `UPDATE traintrips SET AvailableCapacity = AvailableCapacity - ? WHERE TrainTripID = ?`;
-    db.query(query, [reqCapacity, trainTripID], (error, results) => {
-        if (error) {
-            console.error("Error updating available capacity: ", error);
-            return res.status(500).json({ error: "Database error" });
+    db.query(query, [reqCapacity, trainTripID], (err, results) => {
+        if (err) {
+            console.error('Error decreasing train trip capacity:', err);
+            return res.status(500).send('Error decreasing train trip capacity');
         }
-        res.status(200).json({ message: "Available capacity updated successfully" });
+        res.send('Train trip capacity decreased');
     });
 });
 

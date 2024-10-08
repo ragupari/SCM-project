@@ -54,12 +54,12 @@ const SearchBar = () => {
           <ul className="list-group position-absolute w-100 shadow-lg rounded" style={{ zIndex: 1000, top: '100%', left: 0 }}>
             {suggestions.map((product) => (
               <li
-                key={product.product_ID}
+                key={product.ProductID}
                 className="list-group-item list-group-item-action"
                 style={{ cursor: 'pointer' }}
-                onClick={() => handleSelect(product.product_ID)}
+                onClick={() => handleSelect(product.ProductID)}
               >
-                {product.product_name}
+                {product.ProductName}
               </li>
             ))}
           </ul>

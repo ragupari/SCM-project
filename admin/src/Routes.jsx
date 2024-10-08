@@ -8,10 +8,10 @@ import FullLayout from './layout/FullLayout';
 
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
+import ProcessingOrders from './pages/ProcessingOrders';
 import PendingOrders from './pages/PendingOrders';
 import TrainTrips from './pages/TrainTrips';
-import Roadways from './pages/Roadways';
-import SelectResource from './pages/SelectResource';
+import SelectSchedule from './pages/SelectSchedule';
 
 export default function AppRoutes() {
     const [loginInfo, setLoginInfo] = useState(null);
@@ -50,13 +50,24 @@ export default function AppRoutes() {
                     <Route element={<FullLayout />}>
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/orders" element={<PendingOrders />} />
-                        {/* Nested layout for orders routes */}
-                        <Route path="/orders">
-                            <Route path="traintrip" element={<TrainTrips />} />
-                            <Route path="roadways" element={<Roadways />} />
-                            <Route path="resource" element={<SelectResource />} />
-                        </Route>
+                        {loginInfo.role === 'admin' && (
+                            <>
+                                <Route path="/orders" element={<PendingOrders />} />
+                                {/* Nested layout for orders routes */}
+                                <Route path="/orders">
+                                    <Route path="traintrips" element={<TrainTrips />} />
+                                </Route>
+                            </>
+                        )}
+                        {loginInfo.role === 'manager' && (
+                            <>
+                                <Route path="/orders" element={<ProcessingOrders />} />
+                                {/* Nested layout for orders routes */}
+                                <Route path="/orders">
+                                    <Route path="truck-schedules" element={<SelectSchedule />} />
+                                </Route>
+                            </>
+                        )}
                     </Route >
 
                     {/* Routes without FullLayout */}

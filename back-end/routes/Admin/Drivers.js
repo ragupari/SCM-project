@@ -25,7 +25,7 @@ router.get('/logs/:driverID', (req, res) => {
                         StartTime, 
                         EndTime
                     FROM 
-                        shipment
+                        Shipments
                     WHERE 
                         DriverID = ?
                     ORDER BY 

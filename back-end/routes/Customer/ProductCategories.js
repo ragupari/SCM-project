@@ -6,7 +6,7 @@ router.use(express.json());
 
 // Handle GET request to fetch categories
 router.get('/', (req, res) => {
-    db.query('SELECT * FROM product_categories', (err, rows) => {
+    db.query('SELECT * FROM ProductCategories', (err, rows) => {
         if (err) {
             res.json({ status: 'An error occurred. Please try again.' });
             return;

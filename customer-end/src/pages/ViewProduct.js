@@ -36,23 +36,23 @@ const ViewProduct = () => {
   return (
     <div>
       <NavBar currentPage={'Products'} />
-      <DisplayCard title={details.product_name || 'Product Details'} />
+      <DisplayCard title={details.ProductName || 'Product Details'} />
       <SearchBar />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12 col-md-3 mb-4">
-            <Sidebar active_category_ID={details.category_ID}/> 
+            <Sidebar active_category_ID={details.CategoryID}/> 
           </div>
           <div className="col-12 col-md-9">
             <div className="container-fluid">
-              {!details.product_name ? (
+              {!details.ProductName ? (
                 <p>No products found for this category.</p>
               ) : (
                 <div className="row">
                   <ProductDisplayCard
-                      id={details.product_ID}
-                      name={details.product_name}
-                      price={details.unit_price}
+                      id={details.ProductID}
+                      name={details.ProductName}
+                      price={details.UnitPrice}
                       description={details.Description}
                       capacityperunit={details.CapacityPerUnit}
                   />

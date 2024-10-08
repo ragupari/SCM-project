@@ -15,10 +15,10 @@ router.post('/', async (req, res) => {
     }
 
     const sql = `
-        SELECT p.*, c.category_name
-        FROM products p
-        JOIN product_categories c ON p.category_ID = c.category_ID
-        WHERE p.category_ID = ?
+        SELECT p.*, c.CategoryName
+        FROM Products p
+        JOIN ProductCategories c ON p.CategoryID = c.CategoryID
+        WHERE p.CategoryID = ?
     `;
 
     db.query(sql, [category_ID], (err, results) => {
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
             });
         }
         res.json({
-            category_name: results[0].category_name,
+            category_name: results[0].CategoryName,
             products: results
         });
     });

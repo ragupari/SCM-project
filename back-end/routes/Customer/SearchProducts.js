@@ -5,7 +5,7 @@ const db = require('../../dbconfig');
 router.get('/:searchTerm', (req, res) => {
     const { searchTerm } = req.params;
 
-    const sql = `SELECT * FROM products WHERE product_name LIKE ?`;
+    const sql = `SELECT * FROM Products WHERE ProductName LIKE ?`;
     db.query(sql, [`%${searchTerm}%`], (err, results) => {
         if (err) {
             console.log('Error fetching data:', err);

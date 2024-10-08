@@ -8,41 +8,54 @@ function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [storeID, setStoreID] = useState('');
   const [status, setStatus] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Store options
+  const storeOptions = [
+    { storeID: 1, name: 'Colombo' },
+    { storeID: 2, name: 'Negombo' },
+    { storeID: 3, name: 'Galle' },
+    { storeID: 4, name: 'Matara' },
+    { storeID: 5, name: 'Jaffna' },
+    { storeID: 6, name: 'Trinco' },
+    { storeID: 7, name: 'Main - Kandy' },
+  ];
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!fullName || !email || !username || !password || !confirmPassword) {
-        setStatus('Please fill in all fields.');
-        setSuccess(false);
-        return;
+    if (!fullName || !email || !username || !password || !confirmPassword || !storeID) {
+      setStatus('Please fill in all fields.');
+      setSuccess(false);
+      return;
     }
 
     if (password !== confirmPassword) {
-        setStatus('Passwords do not match.');
-        setSuccess(false);
-        return;
+      setStatus('Passwords do not match.');
+      setSuccess(false);
+      return;
     }
 
-    axios.post(`/adminsignup`, { fullName, email, username, password, confirmPassword })
-        .then(res => {
-            console.log(res.data.status);
-            console.log(res.data.err);
-            setStatus(res.data.status);
-            setSuccess(res.data.success);
+    axios.post(`/adminsignup`, { fullName, email, username, password, confirmPassword, storeID })
+      .then(res => {
+        console.log(res.data.status);
+        console.log(res.data.err);
+        setStatus(res.data.status);
+        setSuccess(res.data.success);
 
-            if (res.data.success) {
-                localStorage.setItem('token', res.data.token);
-                window.location.href = '/dashboard';
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            setStatus('An error occurred. Please try again.');
-            setSuccess(false);
-        });
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('storeID', storeID);
+          window.location.href = '/dashboard';
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setStatus('An error occurred. Please try again.');
+        setSuccess(false);
+      });
   }
 
   return (
@@ -51,6 +64,22 @@ function SignUp() {
         <h3 className="text-center mb-4">Sign Up</h3>
         <form onSubmit={handleSubmit}>
           <Alert message={status} success={success} />
+          <div className="mb-3">
+            <label htmlFor="storeID" className="form-label">Select Store</label>
+            <select
+              className="form-select"
+              id="storeID"
+              value={storeID}
+              onChange={(e) => setStoreID(e.target.value)}
+            >
+              <option value="">Select a store</option>
+              {storeOptions.map((store) => (
+                <option key={store.storeID} value={store.storeID}>
+                  {store.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="mb-3">
             <label htmlFor="fullName" className="form-label">
               Full Name
