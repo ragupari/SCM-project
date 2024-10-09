@@ -18,7 +18,7 @@ const navigation = [
   {
     title: "Products",
     href: "/products",
-    icon: "bi bi-cup",
+    icon: "bi bi-cup-hot",
     roles: ["admin"],
   },
   {
@@ -31,7 +31,7 @@ const navigation = [
     title: "Assistant",
     href: "/assistant",
     icon: "bi bi-people",
-    roles: ["admin"],
+    roles: ["manager"],
   },
 ];
 
@@ -40,7 +40,6 @@ const Sidebar = () => {
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    // Get the user's role from localStorage (assuming it's saved as 'role')
     const role = localStorage.getItem("role");
     setUserRole(role);
   }, []);
