@@ -22,12 +22,27 @@
   .card-font {
     font-size: 1.5rem; /* Adjust the font size for smaller screens */
   }
+
+  
+  @media (max-width: 768px) {
+    .card-font {
+      font-size: 1.5rem; /* Adjust the font size for smaller screens */
+    }
+  }
+  
+
+  .gradient-text-active  {
+    font-weight : 900 !important;
+    background: linear-gradient(45deg, rgb(1, 70, 38), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important; /* For non-WebKit browsers */
+    color: transparent !important; /* Fallback color */
 }
+.gradient-text- {
+  font-weight : 500 !important;
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
 
-
-.gradient-text-active  {
-  font-weight : 900 !important;
-  background: linear-gradient(45deg, rgb(1, 70, 38), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important; /* For non-WebKit browsers */
@@ -43,13 +58,14 @@ color: transparent !important; /* Fallback color */
 }
 
 .gradient-text-0 {
-font-size : 1.5rem !important;
-font-weight : 700 !important;
-background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
--webkit-background-clip: text !important;
--webkit-text-fill-color: transparent !important;
-background-clip: text !important; /* For non-WebKit browsers */
-color: transparent !important; /* Fallback color */
+  font-size : 1.5rem !important;
+  font-weight : 700 !important;
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important; /* For non-WebKit browsers */
+  color: transparent !important; /* Fallback color */
+
 }
 
 .gradient-form {
@@ -60,17 +76,19 @@ color: #333 !important; /* Change this to your desired text color */
 }
 
 .gradient-form::placeholder {
-background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important;  /* Adjust gradient colors and direction */
--webkit-background-clip: text !important;
--webkit-text-fill-color: transparent !important;
-background-clip: text !important; /* For non-WebKit browsers */
-color: transparent !important; /* Fallback color */
+
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important;  /* Adjust gradient colors and direction */
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important; /* For non-WebKit browsers */
+  color: transparent !important; /* Fallback color */
 }
 
 .gradient-btn {
-background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; 
-color: white;
-border: none;
+  background: linear-gradient(45deg, rgb(1, 60, 33), rgb(17, 137, 23)) !important; 
+  color: white;
+  border: none;
+
 }
 
 .gradient-btn:hover {
