@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../dbconfig');
 
-router.get('/available/:storeID', (req, res) => {
-    const { storeID } = req.params;
+router.get('/available', (req, res) => {
+    const { storeID, date } = req.query;
 
-    const query = `CALL GetAvailableDriver(?);`;
+    const query = `CALL GetAvailableDriver(?,?);`;
 
-    db.query(query, [storeID], (err, results) => {
+    db.query(query, [storeID, date], (err, results) => {
         if (err) {
             console.error('Error fetching available drivers:', err);
             return res.status(500).send('Error fetching available drivers');

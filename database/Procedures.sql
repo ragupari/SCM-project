@@ -1,11 +1,19 @@
 DELIMITER $$
-CREATE PROCEDURE GetAvailableDriver(IN specified_storeID INT)
+CREATE PROCEDURE GetAvailableDriver(
+    IN specified_storeID INT,
+    IN specified_date DATE
+)
 BEGIN
     SELECT
         d.DriverID, 
-        DATE_ADD(s.LastShiftEnd, INTERVAL 1 HOUR) AS DriverAvailableTime,  -- 1-hour gap, can be NULL if no shipments
-        IFNULL(dwh.TotalHours, 0) AS WorkHours,                            -- Work hours, default to 0 if NULL
-        s2.Date AS DriverAvailableDate                                     -- Date corresponding to the last EndTime, can be NULL
+        IFNULL(
+            CASE 
+                WHEN s.LastShiftEnd IS NULL THEN '09:00:00'   -- If no shipment, show 9:00 AM
+                ELSE DATE_FORMAT(DATE_ADD(s.LastShiftEnd, INTERVAL 1 HOUR), '%H:%i:%s') 
+            END, 
+            '09:00:00'   -- Default to 9:00 AM if no shipment exists at all
+        ) AS DriverAvailableTime,
+        IFNULL(dwh.TotalHours, 0) AS WorkHours  -- Work hours, default to 0 if NULL
     FROM 
         -- Filter drivers by StoreID
         (SELECT 
@@ -16,34 +24,52 @@ BEGIN
          WHERE 
             StoreID = specified_storeID) d
     LEFT JOIN
-        -- Subquery to get DriverID and the latest EndTime
+        -- Subquery to get DriverID and the latest EndTime for the given date and store
         (SELECT 
             DriverID, 
             MAX(EndTime) AS LastShiftEnd
          FROM 
             Shipments
+         WHERE 
+            Date = specified_date   -- Filter shipments for the specified date
+            AND StoreID = specified_storeID   -- Ensure we match StoreID as well
          GROUP BY 
             DriverID) s ON d.DriverID = s.DriverID
     LEFT JOIN
-        DriverWeeklyHours dwh ON d.DriverID = dwh.PersonID
-    LEFT JOIN
-        Shipments s2 ON s.DriverID = s2.DriverID AND s.LastShiftEnd = s2.EndTime  -- Fetch the Date for the last EndTime
+        -- Join weekly hours ensuring it's for the same week and driver
+        (SELECT 
+            PersonID, 
+            TotalHours 
+         FROM 
+            DriverWeeklyHours 
+         WHERE 
+            WeekNumber = WEEK(specified_date, 1)) dwh ON d.DriverID = dwh.PersonID
     GROUP BY 
-        d.DriverID, dwh.TotalHours, s2.Date                                      -- Add non-aggregated columns to GROUP BY
+        d.DriverID, dwh.TotalHours
     HAVING 
-        IFNULL(dwh.TotalHours, 0) < 40;                                          -- Ensure drivers without hours are included
+        IFNULL(dwh.TotalHours, 0) < 40;  -- Ensure drivers without hours are included
 END$$
 
 DELIMITER $$
-CREATE PROCEDURE GetAvailableDrivingAssistant(IN specified_storeID INT)
+CREATE PROCEDURE GetAvailableDrivingAssistant(
+    IN specified_storeID INT,
+    IN specified_date DATE
+)
 BEGIN
     SELECT
         a.DrivingAssistantID, 
-        MAX(s.EndTime) AS LastShiftEnd,                                     -- Last shift end, can be NULL if no shipments
-        IFNULL(awh.TotalHours, 0) AS WorkHours,                             -- Work hours, default to 0 if NULL
-        s.Date AS DrivingAssistantAvailableDate                              -- Date of last shift, can be NULL
+        IFNULL(
+            CASE 
+                -- If assistant has worked an even number of shifts (consecutive), enforce a 1-hour break
+                WHEN ShiftCount % 2 = 0 AND ShiftCount != 0 THEN DATE_FORMAT(DATE_ADD(s.LastShiftEnd, INTERVAL 1 HOUR), '%H:%i:%s')
+                -- Otherwise, use the last shift end time
+                ELSE DATE_FORMAT(s.LastShiftEnd, '%H:%i:%s')
+            END, 
+            '09:00:00'   -- Default to 9:00 AM if no shifts
+        ) AS DrivingAssistantAvailableTime,
+        IFNULL(awh.TotalHours, 0) AS WorkHours  -- Work hours, default to 0 if NULL
     FROM 
-        -- Filter driver assistants by StoreID
+        -- Filter driving assistants by StoreID
         (SELECT 
             DrivingAssistantID, 
             StoreID
@@ -52,33 +78,56 @@ BEGIN
          WHERE 
             StoreID = specified_storeID) a
     LEFT JOIN
-        -- Get the last EndTime for each driver assistant from shipments
-        Shipments s ON a.DrivingAssistantID = s.DrivingAssistantID
+        -- Subquery to get the last EndTime and count the number of shifts for each assistant
+        (SELECT 
+            DrivingAssistantID, 
+            MAX(EndTime) AS LastShiftEnd,
+            COUNT(*) AS ShiftCount   -- Count the number of shifts worked on the specified date
+         FROM 
+            Shipments
+         WHERE 
+            Date = specified_date   -- Filter shipments for the specified date
+            AND StoreID = specified_storeID   -- Match StoreID as well
+         GROUP BY 
+            DrivingAssistantID
+        ) s ON a.DrivingAssistantID = s.DrivingAssistantID
     LEFT JOIN
-        AssistantWeeklyHours awh ON a.DrivingAssistantID = awh.PersonID
+        -- Join weekly hours, ensuring it's for the correct week and assistant
+        (SELECT 
+            PersonID, 
+            TotalHours 
+         FROM 
+            AssistantWeeklyHours 
+         WHERE 
+            WeekNumber = WEEK(specified_date, 1)) awh ON a.DrivingAssistantID = awh.PersonID
     GROUP BY 
-        a.DrivingAssistantID, awh.TotalHours, s.Date                         -- Group by all non-aggregated columns
-    HAVING 
-        IFNULL(awh.TotalHours, 0) < 60;                                     -- Treat NULL work hours as 0
+        a.DrivingAssistantID, awh.TotalHours;
 END$$
 
 DELIMITER $$
-CREATE PROCEDURE GetAvailableTrucks(IN specified_storeID INT)
+CREATE PROCEDURE GetAvailableTrucks(
+    IN specified_storeID INT,
+    IN specified_date DATE
+)
 BEGIN
     SELECT 
         t.TruckID,
-        s2.Date AS TruckAvailableDate,  -- Get the date corresponding to the last EndTime
-        s.LastShiftEnd,                 -- Get the latest EndTime
+        IFNULL(s.LastShiftEnd, '09:00:00') AS LastShiftEnd,  -- Get the last shift end time or default to 9:00 AM if no shift
         t.Capacity
     FROM 
+        -- Subquery to get the latest EndTime for each Truck on the specified date
         (SELECT 
             TruckID, 
-            MAX(EndTime) AS LastShiftEnd -- Get the latest EndTime for each Truck
+            MAX(EndTime) AS LastShiftEnd  -- Get the latest EndTime for each Truck on the given date
          FROM 
             Shipments
+         WHERE 
+			Date = specified_date   -- Filter shipments for the specified date
+            AND StoreID = specified_storeID   -- Ensure we match StoreID as well
          GROUP BY 
             TruckID) s
     RIGHT JOIN
+        -- Filter trucks by StoreID
         (SELECT 
             TruckID, 
             StoreID,
@@ -87,8 +136,6 @@ BEGIN
             Trucks
          WHERE 
             StoreID = specified_storeID) t ON s.TruckID = t.TruckID
-    LEFT JOIN
-        Shipments s2 ON s.TruckID = s2.TruckID AND s.LastShiftEnd = s2.EndTime -- Join to get the Date for the latest EndTime
     GROUP BY 
-        t.TruckID, s2.Date, s.LastShiftEnd, t.Capacity;
+        t.TruckID, s.LastShiftEnd, t.Capacity;
 END$$
