@@ -11,6 +11,8 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductsByCategory = () => {
   const [products, setProducts] = useState([]);
@@ -47,7 +49,10 @@ const ProductsByCategory = () => {
 
   const saveProductUpdate = (product) => {
     axios.put(`/products/${product.ProductID}`, product).then(() => {
-      alert("Product updated successfully");
+      toast.success("Product updated successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     });
   };
 
@@ -60,7 +65,10 @@ const ProductsByCategory = () => {
     axios
       .post(`/products/categories/${currentCategoryID}/products`, newProduct)
       .then(() => {
-        alert("Product added successfully");
+        toast.success("Product added successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         setShowAddModal(false);
         axios.get("/products").then((response) => {
           setProducts(response.data);
@@ -234,6 +242,9 @@ const ProductsByCategory = () => {
           </Modal.Body>
         </Modal>
       </Container>
+
+      {/* Toast container for notifications */}
+      <ToastContainer />
     </div>
   );
 };

@@ -23,7 +23,7 @@ const navigation = [
   },
   {
     title: "Driver",
-    href: "/driver",
+    href: "/addDriver",
     icon: "bi bi-truck",
     roles: ["manager"],
   },
@@ -58,7 +58,7 @@ const Sidebar = () => {
       <div className="pt-4">
         <Nav className="flex-column">
           {navigation
-            .filter((navi) => navi.roles.includes(userRole)) // Filter items based on role
+            .filter((navi) => navi.roles.includes(userRole))
             .map((navi, index) => (
               <Nav.Item key={index}>
                 <Nav.Link

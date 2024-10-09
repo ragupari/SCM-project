@@ -13,6 +13,7 @@ import PendingOrders from "./pages/PendingOrders";
 import TrainTrips from "./pages/TrainTrips";
 import SelectSchedule from "./pages/SelectSchedule";
 import ProductsByCategory from "./pages/AddProducts";
+import AddDriver from "./pages/AddDriver";
 
 export default function AppRoutes() {
   const [loginInfo, setLoginInfo] = useState(null);
@@ -66,6 +67,7 @@ export default function AppRoutes() {
                 <Route path="/orders">
                   <Route path="truck-schedules" element={<SelectSchedule />} />
                 </Route>
+                <Route path="/addDriver" element={<AddDriver />} />
               </>
             )}
           </Route>
