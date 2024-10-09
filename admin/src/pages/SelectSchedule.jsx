@@ -123,8 +123,8 @@ const SelectSchedule = () => {
                 {truckSchedules.map((schedule) => (
                     <Col md={4} key={schedule.DeliveryID} className="mb-4">
                         <Card>
+                            <Card.Header as="h5">Delivery Schedule: {schedule.DeliveryID}</Card.Header>
                             <Card.Body>
-                                <Card.Title>Delivery ID: {schedule.DeliveryID}</Card.Title>
                                 <Card.Text>Route Destination: {schedule.Destination}</Card.Text>
                                 <Card.Text>Main Towns : {schedule.MainTowns}</Card.Text>
                                 <Card.Text>Truck ID: {schedule.TruckID}</Card.Text>
@@ -155,6 +155,7 @@ const SelectSchedule = () => {
                 setNewSchedule={setNewSchedule}
                 handleCreateSchedule={handleCreateSchedule}
                 storeID={storeID}
+                routeID={routeID}
             />
         </Container>
     );
