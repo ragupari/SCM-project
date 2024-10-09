@@ -36,7 +36,14 @@ BEGIN
          GROUP BY 
             DriverID) s ON d.DriverID = s.DriverID
     LEFT JOIN
-        DriverWeeklyHours dwh ON d.DriverID = dwh.PersonID
+        -- Join weekly hours ensuring it's for the same week and driver
+        (SELECT 
+            PersonID, 
+            TotalHours 
+         FROM 
+            DriverWeeklyHours 
+         WHERE 
+            WeekNumber = WEEK(specified_date, 1)) dwh ON d.DriverID = dwh.PersonID
     GROUP BY 
         d.DriverID, dwh.TotalHours
     HAVING 
@@ -55,7 +62,7 @@ BEGIN
             CASE 
                 -- If assistant has worked an even number of shifts (consecutive), enforce a 1-hour break
                 WHEN ShiftCount % 2 = 0 AND ShiftCount != 0 THEN DATE_FORMAT(DATE_ADD(s.LastShiftEnd, INTERVAL 1 HOUR), '%H:%i:%s')
-                -- Otherwise, use the last shift end time + 1 hour
+                -- Otherwise, use the last shift end time
                 ELSE DATE_FORMAT(s.LastShiftEnd, '%H:%i:%s')
             END, 
             '09:00:00'   -- Default to 9:00 AM if no shifts
@@ -71,21 +78,28 @@ BEGIN
          WHERE 
             StoreID = specified_storeID) a
     LEFT JOIN
-        -- Subquery to get the last EndTime for each assistant and count shifts on the given date
+        -- Subquery to get the last EndTime and count the number of shifts for each assistant
         (SELECT 
             DrivingAssistantID, 
             MAX(EndTime) AS LastShiftEnd,
-            COUNT(*) AS ShiftCount   -- Count the number of shifts worked on the given date
+            COUNT(*) AS ShiftCount   -- Count the number of shifts worked on the specified date
          FROM 
             Shipments
          WHERE 
-			Date = specified_date   -- Filter shipments for the specified date
-            AND StoreID = specified_storeID   -- Ensure we match StoreID as well
+            Date = specified_date   -- Filter shipments for the specified date
+            AND StoreID = specified_storeID   -- Match StoreID as well
          GROUP BY 
             DrivingAssistantID
         ) s ON a.DrivingAssistantID = s.DrivingAssistantID
     LEFT JOIN
-        AssistantWeeklyHours awh ON a.DrivingAssistantID = awh.PersonID
+        -- Join weekly hours, ensuring it's for the correct week and assistant
+        (SELECT 
+            PersonID, 
+            TotalHours 
+         FROM 
+            AssistantWeeklyHours 
+         WHERE 
+            WeekNumber = WEEK(specified_date, 1)) awh ON a.DrivingAssistantID = awh.PersonID
     GROUP BY 
         a.DrivingAssistantID, awh.TotalHours;
 END$$

@@ -78,6 +78,7 @@ const SelectSchedule = () => {
         }
         const newDateStr = newDate.toISOString().split('T')[0];
         if (newDateStr < arrivalDate) return;
+        setNewSchedule({ ...newSchedule, Date: newDateStr });
         navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${arrivalDate}&date=${newDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 

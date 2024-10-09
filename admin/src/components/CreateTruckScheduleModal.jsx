@@ -26,7 +26,7 @@ const CreateTruckScheduleModal = ({ show, onHide, newSchedule, setNewSchedule, h
         axios.get(`/roadways/${routeID}`)
             .then(response => setTimeforCompletion(response.data.TimeforCompletion))
             .catch(error => console.error('Error fetching route details:', error));
-    }, [storeID, routeID, newSchedule]);
+    }, [storeID, routeID, newSchedule, newSchedule.Date]);
 
     // Utility function to calculate the maximum time
     const getMaxTime = (...times) => {
