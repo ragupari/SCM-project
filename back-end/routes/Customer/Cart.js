@@ -52,16 +52,16 @@ router.delete('/:itemId', (req, res) => {
 router.post('/checkout', (req, res) => {
     const { username } = req.body;
 
-    const sqlGetCustomerID = 'SELECT customer_ID FROM customers WHERE username = ?';
+    const sqlGetCustomerID = 'SELECT CustomerID FROM Customers WHERE Username = ?';
     db.query(sqlGetCustomerID, [username], (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Error fetching customer ID' });
         }
-
+        console.log("this  line works!");
         const customerID = result[0].customer_ID;
         const sqlInsertOrder = `
-            INSERT INTO orders (customer_ID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity)
-            VALUES (?, DATE(NOW()), DATE(DATE_ADD(NOW(), INTERVAL 7 DAY)), 'Pending', ?, ?);
+            INSERT INTO Orders (CustomerID, OrderDate, DeliveryDate, DeliveryAddress, Status, TotalPrice, TotalCapacity)
+            VALUES (?, DATE(NOW()), DATE(DATE_ADD(NOW(), INTERVAL 7 DAY)),'address', 'Pending', ?, ?);
         `;
 
         let totalPrice = 0;
@@ -79,7 +79,7 @@ router.post('/checkout', (req, res) => {
 
             const orderID = result.insertId;
             const sqlInsertOrderItems = `
-                INSERT INTO orderitems (OrderID, product_ID, Quantity, Cost)
+                INSERT INTO OrderItems (OrderID, ProductID, Quantity, Cost)
                 VALUES ?
             `;
             const orderItems = cart.map(item => [

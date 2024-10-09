@@ -22,6 +22,7 @@
   .card-font {
     font-size: 1.5rem; /* Adjust the font size for smaller screens */
   }
+}
 
   
   @media (max-width: 768px) {

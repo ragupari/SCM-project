@@ -1,144 +1,185 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import DisplayCard from '../components/PageTitleCard'; 
+import DisplayCard from '../components/PageTitleCard';
 import NavBar from '../components/NavBar';
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState([]);
-    const [username, setUsername] = useState('');
+  const [cartItems, setCartItems] = useState([]);
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const getUsernameFromToken = async () => {
-        try {
-          const res = await axios.get('/tokenauth', {
-            headers: {
-              'x-access-token': localStorage.getItem('token')
-            }
-          });
-          setUsername(res.data.username);
-          return res.data.username;
-        } catch (error) {
-          console.error(error);
-        }
+  // Fetch the username from the token
+  const getUsernameFromToken = async () => {
+    try {
+      const res = await axios.get('/tokenauth', {
+        headers: {
+          'x-access-token': localStorage.getItem('token'),
+        },
+      });
+      setUsername(res.data.username);
+      return res.data.username;
+    } catch (error) {
+      console.error(error);
+      setError('Failed to get username from token.');
+      setLoading(false);
+    }
+  };
+
+  // Fetch items in the cart using the retrieved username
+  const fetchCartItems = async (username) => {
+    try {
+      const response = await axios.post('/cart2/cartitems', { username });
+      setCartItems(response.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const loadCartItems = async () => {
+      const retrievedUsername = await getUsernameFromToken();
+      if (retrievedUsername) {
+        fetchCartItems(retrievedUsername);
+      }
     };
+    loadCartItems();
+  }, []);
 
-    // Fetch all items in the cart
-    const fetchCartItems = async () => {
-        try {
-            const res = await axios.get('/cart');
-            setCartItems(res.data);
-        } catch (error) {
-            console.error('Error fetching cart items:', error);
-        }
-    };
+  // Calculate total amount for the cart
+  const calculateTotalAmount = () => {
+    return cartItems.reduce((total, item) => total + item.UnitPrice * item.Number, 0);
+  };
 
-    useEffect(() => {
-        fetchCartItems();
-        getUsernameFromToken();
-    }, []);
+  // Proceed to checkout (clears the cart)
+  const checkout = async () => {
+    try {
+      await axios.post('/cart2/checkout', { username });
+      alert('Checkout successful!');
+      fetchCartItems(username);
+    } catch (error) {
+      console.error('Error during checkout:', error);
+    }
+  };
 
-    // Update item quantity in the cart
-    const updateCartItem = async (itemId, quantity) => {
-        try {
-            await axios.put(`/cart/${itemId}`, { quantity });
-            fetchCartItems();
-        } catch (error) {
-            console.error('Error updating cart item:', error);
-        }
-    };
+  // Update item quantity (increment or decrement)
+  const updateCartItem = async (itemId, action) => {
+    try {
+      // Choose the appropriate endpoint based on action
+      console.log(username);
+      console.log(itemId);
+      console.log(action);
+      const endpoint = action === 'increment' ? '/cart2/addquantity' : '/cart2/reducequantity';
+      await axios.post(endpoint, { username, productID: itemId });
+      // Fetch updated cart items to reflect changes in the UI
+      fetchCartItems(username);
+    } catch (error) {
+      console.error('Failed to update item quantity:', error);
+    }
+  };
 
-    // Remove an item from the cart
-    const removeCartItem = async (itemId) => {
-        try {
-            await axios.delete(`/cart/${itemId}`);
-            fetchCartItems();
-        } catch (error) {
-            console.error('Error removing cart item:', error);
-        }
-    };
+  // Remove item from cart
+  const removeCartItem = async (itemId) => {
+    try {
+      await axios.post('/cart2/removeitem', { username, productID: itemId });
+      setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.error('Failed to remove item from cart:', error);
+    }
+  };
+  
 
-    // Proceed to checkout (clears the cart)
-    const checkout = async () => {
-        try {
-            await axios.post('/cart/checkout',{ username });
-            alert('Checkout successful!');
-            fetchCartItems();
-        } catch (error) {
-            console.error('Error during checkout:', error);
-        }
-    };
-
-    const totalAmount = cartItems.reduce(
-        (total, item) => total + item.price * item.quantity
-    ,0);
-
-    return (
-        <div>
-            <NavBar currentPage={'Cart'} />
-            <DisplayCard title={'Cart'} />
-            <div className="container py-5">
-                {cartItems.length === 0 ? (
-                    <div className="alert alert-info text-center" role="alert">
-                        Your cart is empty.
-                    </div>
-                ) : (
-                    <>
-                        <div className="table-responsive border rounded-3 shadow-sm">
-                            <table className="table table-hover align-middle" style={{ tableLayout: 'fixed' }}>
-                                <thead className="table-light">
-                                    <tr>
-                                        <th>Product Name</th>
-                                        <th style={{ width: '120px' }}>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Total</th>
-                                        <th style={{ width: '100px' }}>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cartItems.map((item) => (
-                                        <tr key={item.id}>
-                                            <td>{item.productName}</td>
-                                            <td>
-                                                <input
-                                                    type="number"
-                                                    min="1"
-                                                    value={item.quantity}
-                                                    onChange={(e) =>
-                                                        updateCartItem(item.id, parseInt(e.target.value))
-                                                    }
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>${item.price}</td>
-                                            <td>${(item.price * item.quantity).toFixed(2)}</td>
-                                            <td>
-                                                <button
-                                                    className="btn btn-outline-danger btn-sm"
-                                                    onClick={() => removeCartItem(item.id)}
-                                                >
-                                                    Remove
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td colSpan="3" className="text-end">
-                                            <strong>Total Amount:</strong>
-                                        </td>
-                                        <td colSpan="2">${totalAmount.toFixed(2)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+  return (
+    <div>
+      <NavBar currentPage={'Cart'} />
+      <DisplayCard title={'Cart'} />
+      <div className="container py-5">
+        {loading ? (
+          <div className="alert alert-info text-center" role="alert">
+            Loading cart items...
+          </div>
+        ) : error ? (
+          <div className="alert alert-danger text-center" role="alert">
+            {error}
+          </div>
+        ) : cartItems.length === 0 ? (
+          <div className="alert alert-info text-center" role="alert">
+            Your cart is empty.
+          </div>
+        ) : (
+          <>
+            <div className="table-responsive border rounded-3 shadow-sm">
+              <table className="table table-hover align-middle" style={{ tableLayout: 'fixed' }}>
+                <thead className="table-light">
+                  <tr>
+                    <th>Product Name</th>
+                    <th className="d-none d-sm-table-cell" style={{ width: '120px' }}>
+                      Quantity
+                    </th>
+                    <th className="d-none d-md-table-cell">Price</th>
+                    <th className="d-none d-lg-table-cell">Total</th>
+                    <th style={{ width: '100px' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cartItems.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.ProductName}</td>
+                      <td className="d-none d-sm-table-cell">
+                        <div className="input-group">
+                          <button
+                            className="btn btn-outline-secondary"
+                            onClick={() => updateCartItem(item.ProductID, 'decrement')}
+                            disabled={item.Number <= 1} // Disable if quantity is 1
+                          >
+                            -
+                          </button>
+                          <span className="form-control text-center">{item.Number}</span>
+                          <button
+                            className="btn btn-outline-secondary"
+                            onClick={() => updateCartItem(item.ProductID, 'increment')}
+                          >
+                            +
+                          </button>
                         </div>
-                        <div className="d-flex justify-content-end mt-3">
-                            <button className="btn btn-success btn-lg" onClick={checkout}>
-                                Proceed to Checkout
-                            </button>
-                        </div>
-                    </>
-                )}
+                      </td>
+                      <td className="d-none d-md-table-cell">${item.UnitPrice}</td>
+                      <td className="d-none d-lg-table-cell">${(item.UnitPrice * item.Number).toFixed(2)}</td>
+                      <td>
+                        <button
+                          className="btn btn-lg"
+                          style={{ color: 'red' }}
+                          onClick={() => removeCartItem(item.ProductID)}
+                        >
+                          <i className="bi bi-dash-square"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td colSpan="3" className="text-end d-none d-lg-table-cell">
+                      <strong>Total Amount:</strong>
+                    </td>
+                    <td colSpan="3" className="text-end d-lg-none">
+                      <strong>Total:</strong>
+                    </td>
+                    <td colSpan="2">${calculateTotalAmount().toFixed(2)}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-        </div>
-    );
+            <div className="d-flex justify-content-end mt-3">
+              <button className="btn btn-success btn-lg" onClick={checkout}>
+                Proceed to Checkout
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Cart;
