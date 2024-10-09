@@ -2,20 +2,17 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../dbconfig');
 
-router.get('/:TrainID', (req, res) => {
-    const { TrainID } = req.params;
+router.get('/:routeID', (req, res) => {
+    const { routeID } = req.params;
 
-    const query =  `SELECT r.RouteID, s.StoreID, s.City, r.MainTowns, r.Destination, r.TimeToCompletion FROM traintrips t
-                    LEFT JOIN  store s ON t.Destination = s.StoreID
-                    LEFT JOIN routes r ON s.StoreID = r.StoreID
-                    WHERE TrainTripID = ?`;
+    const query =  `SELECT * FROM Routes WHERE RouteID = ?;`;
 
-    db.query(query, [TrainID], (err, results) => {
+    db.query(query, [routeID], (err, results) => {
         if (err) {
             console.error('Error fetching roadways:', err);
             return res.status(500).send('Error fetching roadways');
         }
-        res.json(results);
+        res.json(results[0]);
     });
 });
 

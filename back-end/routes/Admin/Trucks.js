@@ -16,12 +16,11 @@ router.get('/:truckID', (req, res) => {
     });
 });
 
-router.get('/available/:storeID', (req, res) => {
-    const { storeID } = req.params;
+router.get('/available/query', (req, res) => {
+    const { storeID, date } = req.query;
 
-    const query = `CALL GetAvailableTrucks(?);`;
-
-    db.query(query, [storeID], (err, results) => {
+    const query = `CALL GetAvailableTrucks(?,?);`
+    db.query(query, [storeID, date], (err, results) => {
         if (err) {
             console.error('Error fetching available trucks:', err);
             return res.status(500).send('Error fetching available trucks');
