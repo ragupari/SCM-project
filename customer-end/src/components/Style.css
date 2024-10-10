@@ -27,6 +27,26 @@
     font-size: 1.5rem;
     /* Adjust the font size for smaller screens */
   }
+<<<<<<< HEAD
+}
+
+  
+  @media (max-width: 768px) {
+    .card-font {
+      font-size: 1.5rem; /* Adjust the font size for smaller screens */
+    }
+  }
+  
+
+  .gradient-text-active  {
+    font-weight : 900 !important;
+    background: linear-gradient(45deg, rgb(1, 70, 38), rgb(17, 137, 23)) !important; /* Adjust gradient colors and direction */
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important; /* For non-WebKit browsers */
+    color: transparent !important; /* Fallback color */
+=======
+>>>>>>> d49cd6991de2c882890a2b8e419dd8478e755f1c
 }
 
 @media (max-width: 768px) {

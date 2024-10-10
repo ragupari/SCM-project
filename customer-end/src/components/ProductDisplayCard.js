@@ -1,31 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import "./Style.css"; // Custom styles, if needed
 import Alert from '../components/Alert';
 
-
 const ProductDisplayCard = ({ id, name, price, description, capacityperunit }) => {
-
+    const [username, setUsername] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [status, setStatus] = useState('');
-    const [success, setSuccess] = useState('');
+    const [success, setSuccess] = useState(false);
 
+    // Fetch the username from the token when the component mounts
+    useEffect(() => {
+        const getUsernameFromToken = async () => {
+            try {
+                const res = await axios.get('/tokenauth', {
+                    headers: {
+                        'x-access-token': localStorage.getItem('token')
+                    }
+                });
+                setUsername(res.data.username);
+            } catch (error) {
+                console.error('Error fetching username from token:', error);
+            }
+        };
+        getUsernameFromToken();
+    }, []);
+
+    // Add product to cart
     const addToCart = async () => {
         try {
-            await axios.post('/cart', {
-                id: id,
-                productName: name,
-                quantity: quantity,
-                price: price,
-                CapacityPerUnit: capacityperunit
-            }).then(res => {
-                setStatus(`${name} has been added to your cart.`);
-                setSuccess(true);
+            await axios.post('/cart2/add', {
+
+                username: username,
+                productID: id,
+                number: quantity
             });
+            setStatus(`${name} has been added to your cart.`);
+            setSuccess(true);
         } catch (error) {
             console.error('Error adding product to cart:', error);
+            setStatus('An error occurred while adding the product to your cart.');
+            setSuccess(false);
         }
     };
 
@@ -33,9 +50,7 @@ const ProductDisplayCard = ({ id, name, price, description, capacityperunit }) =
         <div className="container my-4">
             <div className="row gx-4 gx-lg-5 align-items-center">
                 <div className="col-md-6 mb-4 mb-md-0">
-          
                     <div className="image-wrapper">
-      
                         <img
                             className="card-img-top mb-5 mb-md-0"
                             src={`/assets/Products/${name}.jpg`}
@@ -55,8 +70,8 @@ const ProductDisplayCard = ({ id, name, price, description, capacityperunit }) =
                             id="inputQuantity"
                             type="number"
                             min="1"
-                            defaultValue="1"
-                            onChange={(e) => setQuantity(parseInt(e.target.value))}
+                            value={quantity}
+                            onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                             style={{ maxWidth: "5rem" }}
                         />
                         <button className="btn btn-outline-dark" type="button" onClick={addToCart}>
