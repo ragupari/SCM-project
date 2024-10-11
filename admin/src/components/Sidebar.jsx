@@ -2,21 +2,43 @@ import React from "react";
 import { Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 
-const navigation = [
-    {
-        title: "Dashboard",
-        href: "/dashboard",
-        icon: "bi bi-speedometer2",
-    },
-    {
-        title: "Orders",
-        href: "/orders",
-        icon: "bi bi-calendar-event",
-    },
-];
-
 const Sidebar = () => {
     let location = useLocation();
+    const role = localStorage.getItem("role");
+
+    const adminNavigation = [
+        {
+            title: "Dashboard",
+            href: "/dashboard",
+            icon: "bi bi-speedometer2",
+        },
+        {
+            title: "Orders",
+            href: "/orders",
+            icon: "bi bi-calendar-event",
+        }
+    ];
+
+    const managerNavigation = [
+        {
+            title: "Dashboard",
+            href: "/dashboard",
+            icon: "bi bi-speedometer2",
+        },
+        {
+            title: "Orders",
+            href: "/orders",
+            icon: "bi bi-calendar-event",
+        },
+        {
+            title: "Schedule History",
+            href: "/schedule-history",
+            icon: "bi bi-truck",
+        },
+    ];
+
+    // Determine which navigation to use
+    const navigation = role === "admin" ? adminNavigation : managerNavigation;
 
     const linkStyle = {
         transition: "background-color 0.3s ease, transform 0.3s ease",

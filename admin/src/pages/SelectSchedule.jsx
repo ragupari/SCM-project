@@ -3,6 +3,7 @@ import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CreateTruckScheduleModal from '../components/CreateTruckScheduleModal';
+import AlertBox from '../components/AlertBox';
 
 const SelectSchedule = () => {
     const location = useLocation();
@@ -26,6 +27,9 @@ const SelectSchedule = () => {
         EndTime: '',
         RemainingCapacity: 0,
     });
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -64,6 +68,7 @@ const SelectSchedule = () => {
             await axios.post('/truck-schedules', newSchedule);
             setShowCreateModal(false);
             fetchTruckSchedules(date);
+            setNewSchedule({ ...newSchedule, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });
         } catch (error) {
             console.error('Error creating truck schedule:', error);
         }
@@ -78,7 +83,7 @@ const SelectSchedule = () => {
         }
         const newDateStr = newDate.toISOString().split('T')[0];
         if (newDateStr < arrivalDate) return;
-        setNewSchedule({ ...newSchedule, Date: newDateStr });
+        setNewSchedule({ ...newSchedule, Date: newDateStr, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });
         navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${arrivalDate}&date=${newDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
@@ -95,10 +100,18 @@ const SelectSchedule = () => {
     };
 
     return (
-        <Container>
+        <Container fluid className="shadow-sm rounded p-4" style={{ backgroundColor: "#ffffff2f" }}>
+            <AlertBox
+                show={showAlert}
+                variant={alertType}
+                message={alertMessage}
+                onClose={() => setShowAlert(false)} // Reset the show state when alert closes
+            />
             <Row className="my-4">
                 <Col>
-                    <Button variant="primary" onClick={() => handleDateChange('prev')}>
+                    <Button onClick={() => handleDateChange('prev')}
+                        variant="outline-primary" className="rounded-pill px-3 py-2"
+                    >
                         Previous Date
                     </Button>
                 </Col>
@@ -106,7 +119,9 @@ const SelectSchedule = () => {
                     <h2>Truck Schedules for {date}</h2>
                 </Col>
                 <Col className="text-end">
-                    <Button variant="primary" onClick={() => handleDateChange('next')}>
+                    <Button onClick={() => handleDateChange('next')}
+                        variant="outline-primary" className="rounded-pill px-3 py-2"
+                    >
                         Next Date
                     </Button>
                 </Col>
@@ -157,6 +172,9 @@ const SelectSchedule = () => {
                 handleCreateSchedule={handleCreateSchedule}
                 storeID={storeID}
                 routeID={routeID}
+                setAlertMessage={setAlertMessage}
+                setAlertType={setAlertType}
+                setShowAlert={setShowAlert}
             />
         </Container>
     );
