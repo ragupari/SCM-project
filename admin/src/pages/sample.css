@@ -1,0 +1,35 @@
+.table-modern {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    width: 100%;
+    background-color: white;
+  }
+  
+  .table-modern thead {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .table-modern thead th {
+    padding: 10px;
+    font-weight: bold;
+    color: #343a40;
+  }
+  
+  .table-modern tbody tr {
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-modern tbody td {
+    padding: 15px;
+    vertical-align: middle;
+  }
+  
+  .table-modern tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  

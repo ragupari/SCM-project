@@ -14,71 +14,103 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const DriversByStore = () => {
-  const [drivers, setDrivers] = useState([]);
-  const [newDriver, setNewDriver] = useState({
+const AddDriverAssistant = () => {
+  const [assistants, setAssistants] = useState([]);
+  const [newAssistant, setNewAssistant] = useState({
     Name: "",
     EmploymentStatus: "PresentEmployer",
   });
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Get StoreID from localStorage
   const storeID = localStorage.getItem("storeID");
 
   useEffect(() => {
-    // Fetch drivers for the store
-    axios.get(`/drivers/addDriver/store/${storeID}`).then((response) => {
-      setDrivers(response.data);
-    });
+    axios
+      .get(`/assistants/addAssistants/store/${storeID}`)
+      .then((response) => {
+        setAssistants(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching assistants:", error);
+      });
   }, [storeID]);
 
-  const handleEmploymentStatusChange = (driverID, newStatus) => {
-    const updatedDrivers = drivers.map((driver) =>
-      driver.DriverID === driverID
-        ? { ...driver, EmploymentStatus: newStatus }
-        : driver
+  const handleEmploymentStatusChange = (assistantID, newStatus) => {
+    const updatedAssistants = assistants.map((assistant) =>
+      assistant.DrivingAssistantID === assistantID
+        ? { ...assistant, EmploymentStatus: newStatus }
+        : assistant
     );
-    setDrivers(updatedDrivers);
+    setAssistants(updatedAssistants);
   };
 
-  const saveDriverUpdate = (driver) => {
-    axios.put(`/drivers/addDriver/${driver.DriverID}`, driver).then(() => {
-      toast.success("Driver updated successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    });
-  };
-
-  const handleNewDriverChange = (e) => {
-    setNewDriver({ ...newDriver, [e.target.name]: e.target.value });
-  };
-
-  const handleNewDriverSubmit = (e) => {
-    e.preventDefault();
-    axios.post(`/drivers/addDriver/store/${storeID}`, newDriver).then(() => {
-      toast.success("Driver added successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      setShowAddModal(false);
-      axios.get(`/drivers/addDriver/store/${storeID}`).then((response) => {
-        setDrivers(response.data);
-      });
-    });
-  };
-
-  const removeDriver = (driverID) => {
-    if (window.confirm("Are you sure you want to remove this driver?")) {
-      axios.delete(`/drivers/addDriver/${driverID}`).then(() => {
-        toast.success("Driver removed successfully!", {
+  const saveAssistantUpdate = (assistant) => {
+    axios
+      .put(
+        `/assistants/addAssistants/${assistant.DrivingAssistantID}`,
+        assistant
+      )
+      .then(() => {
+        toast.success("Assistant updated successfully!", {
           position: "top-right",
           autoClose: 3000,
         });
-        // Update the drivers list after deletion
-        setDrivers(drivers.filter((driver) => driver.DriverID !== driverID));
+      })
+      .catch((error) => {
+        console.error("Error updating assistant:", error);
+        toast.error("Failed to update assistant.");
       });
-    }
+  };
+
+  const handleDeleteAssistant = (assistantID) => {
+    axios
+      .delete(`/assistants/addAssistants/${assistantID}`)
+      .then(() => {
+        toast.success("Assistant removed successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+
+        setAssistants(
+          assistants.filter((a) => a.DrivingAssistantID !== assistantID)
+        );
+      })
+      .catch((error) => {
+        console.error("Error removing assistant:", error);
+        toast.error("Error removing assistant. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      });
+  };
+
+  const handleNewAssistantChange = (e) => {
+    setNewAssistant({ ...newAssistant, [e.target.name]: e.target.value });
+  };
+
+  const handleNewAssistantSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`/assistants/addAssistants/store/${storeID}`, newAssistant)
+      .then(() => {
+        toast.success("Assistant added successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        setShowAddModal(false);
+        axios
+          .get(`/assistants/addAssistants/store/${storeID}`)
+          .then((response) => {
+            setAssistants(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching assistants:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error adding assistant:", error);
+        toast.error("Failed to add assistant.");
+      });
   };
 
   return (
@@ -86,7 +118,7 @@ const DriversByStore = () => {
       {/* Navbar */}
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">Driver Management</Navbar.Brand>
+          <Navbar.Brand href="#home">Assistant Management</Navbar.Brand>
         </Container>
       </Navbar>
 
@@ -95,39 +127,39 @@ const DriversByStore = () => {
           <Card.Body>
             <Row className="align-items-center mb-3">
               <Col>
-                <h3>Drivers</h3>
+                <h3>Driver Assistants</h3>
               </Col>
               <Col className="text-end">
                 <Button variant="primary" onClick={() => setShowAddModal(true)}>
-                  Add Driver
+                  Add Assistant
                 </Button>
               </Col>
             </Row>
 
-            {/* Styled Table */}
+            {/* Table with Bootstrap classes */}
             <Table striped bordered hover responsive="md" className="table-sm">
               <thead className="table-dark">
                 <tr>
-                  <th className="text-center align-middle">Driver ID</th>
+                  <th className="text-center align-middle">Assistant ID</th>
                   <th className="align-middle">Name</th>
                   <th className="align-middle">Employment Status</th>
                   <th className="text-center align-middle">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {drivers.map((driver) => (
-                  <tr key={driver.DriverID}>
+                {assistants.map((assistant) => (
+                  <tr key={assistant.DrivingAssistantID}>
                     <td className="text-center align-middle p-3">
-                      {driver.DriverID}
+                      {assistant.DrivingAssistantID}
                     </td>
-                    <td className="align-middle p-3">{driver.Name}</td>
+                    <td className="align-middle p-3">{assistant.Name}</td>
                     <td className="align-middle p-3">
                       <Form.Control
                         as="select"
-                        value={driver.EmploymentStatus}
+                        value={assistant.EmploymentStatus}
                         onChange={(e) =>
                           handleEmploymentStatusChange(
-                            driver.DriverID,
+                            assistant.DrivingAssistantID,
                             e.target.value
                           )
                         }
@@ -141,14 +173,16 @@ const DriversByStore = () => {
                       <Button
                         variant="success"
                         size="sm"
-                        onClick={() => saveDriverUpdate(driver)}
+                        onClick={() => saveAssistantUpdate(assistant)}
                       >
                         Save
                       </Button>{" "}
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => removeDriver(driver.DriverID)}
+                        onClick={() =>
+                          handleDeleteAssistant(assistant.DrivingAssistantID)
+                        }
                       >
                         Remove
                       </Button>
@@ -160,20 +194,20 @@ const DriversByStore = () => {
           </Card.Body>
         </Card>
 
-        {/* Modal to add a new driver */}
+        {/* Modal to add a new assistant */}
         <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Add New Driver</Modal.Title>
+            <Modal.Title>Add New Assistant</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form onSubmit={handleNewDriverSubmit}>
+            <Form onSubmit={handleNewAssistantSubmit}>
               <Form.Group>
-                <Form.Label>Driver Name</Form.Label>
+                <Form.Label>Assistant Name</Form.Label>
                 <Form.Control
                   type="text"
                   name="Name"
-                  value={newDriver.Name}
-                  onChange={handleNewDriverChange}
+                  value={newAssistant.Name}
+                  onChange={handleNewAssistantChange}
                   required
                   className="form-control-sm"
                 />
@@ -183,8 +217,8 @@ const DriversByStore = () => {
                 <Form.Control
                   as="select"
                   name="EmploymentStatus"
-                  value={newDriver.EmploymentStatus}
-                  onChange={handleNewDriverChange}
+                  value={newAssistant.EmploymentStatus}
+                  onChange={handleNewAssistantChange}
                   className="form-select-sm"
                 >
                   <option value="PresentEmployer">PresentEmployer</option>
@@ -192,7 +226,7 @@ const DriversByStore = () => {
                 </Form.Control>
               </Form.Group>
               <Button variant="primary" type="submit" className="mt-3">
-                Add Driver
+                Add Assistant
               </Button>
             </Form>
           </Modal.Body>
@@ -205,4 +239,4 @@ const DriversByStore = () => {
   );
 };
 
-export default DriversByStore;
+export default AddDriverAssistant;

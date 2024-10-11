@@ -29,7 +29,7 @@ const navigation = [
   },
   {
     title: "Assistant",
-    href: "/assistant",
+    href: "/addAssistant",
     icon: "bi bi-people",
     roles: ["manager"],
   },
