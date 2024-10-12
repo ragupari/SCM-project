@@ -3,7 +3,7 @@ CREATE TRIGGER update_product_stock_after_order
 AFTER INSERT ON OrderItems
 FOR EACH ROW
 BEGIN
-  UPDATE products
+  UPDATE Products
   SET AvailableStock = AvailableStock - NEW.Quantity
   WHERE ProductID = NEW.ProductID;
 END$$

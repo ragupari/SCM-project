@@ -56,7 +56,7 @@ router.put('/assignschedule/:orderID', (req, res) => {
     const orderID = req.params.orderID;
 
     const query = "UPDATE Orders SET DeliveryID = ?, Status = ? WHERE OrderID = ?";
-    db.query(query, [deliveryID, 'OntheWay', orderID], (err, results) => {
+    db.query(query, [deliveryID, 'OnTheWay', orderID], (err, results) => {
         if (err) {
             console.error('Error assigning schedule:', err);
             return res.status(500).send('Error assigning schedule');
@@ -67,9 +67,9 @@ router.put('/assignschedule/:orderID', (req, res) => {
 
 router.get('/:username', (req, res) => {
     const username = req.params.username;
-    const query = `SELECT OrderID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity FROM orders o
-                    LEFT JOIN customers c ON o.customer_ID = c.customer_ID
-                    WHERE username = ?`;
+    const query = `SELECT OrderID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity FROM Orders o
+                    LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
+                    WHERE Username = ?`;
 
     db.query(query, [username], (err, results) => {
         if (err) {
@@ -83,7 +83,7 @@ router.get('/:username', (req, res) => {
 router.put('/:orderID', (req, res) => {
     const orderID = req.params.orderID;
     const { status } = req.body;
-    const query = "UPDATE orders SET Status = ? WHERE OrderID = ?";
+    const query = "UPDATE Orders SET Status = ? WHERE OrderID = ?";
 
     db.query(query, [status, orderID], (err, results) => {
         if (err) {
@@ -112,7 +112,7 @@ router.get('/getbyid/:orderID', (req, res) => {
 router.post('/status/:orderID', (req, res) => {
     const orderID = req.params.orderID;
     const { status } = req.body;
-    const query = "UPDATE orders SET Status = ? WHERE OrderID = ?";
+    const query = "UPDATE Orders SET Status = ? WHERE OrderID = ?";
 
     db.query(query, [status, orderID], (err, results) => {
         if (err) {
@@ -120,6 +120,35 @@ router.post('/status/:orderID', (req, res) => {
             return res.status(500).send('Error updating order status');
         }
         res.send(`Order is now ${status}`);
+    });
+});
+
+router.get('/getbyDeliveryID/:deliveryID', (req, res) => {
+    const deliveryID = req.params.deliveryID;
+    const query = `SELECT * FROM Orders WHERE DeliveryID = ?`;
+
+    db.query(query, [deliveryID], (err, results) => {
+        if (err) {
+            console.error('Error fetching order:', err);
+            return res.status(500).send('Error fetching order');
+        }
+        res.json(results);
+    });
+});
+
+router.get('/getProducts/:OrderID', (req, res) => {
+    const OrderID = req.params.OrderID;
+    const query = `SELECT p.ProductName, o.Quantity, o.Cost 
+                    FROM OrderItems o
+                    LEFT JOIN Products p ON o.ProductID = p.ProductID
+                    WHERE o.OrderID = ?`;
+                    
+    db.query(query, [OrderID], (err, results) => {
+        if (err) {
+            console.error('Error fetching order details:', err);
+            return res.status(500).send('Error fetching order details');
+        }
+        res.json(results);
     });
 });
 

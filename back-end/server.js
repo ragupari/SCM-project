@@ -9,15 +9,16 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Customer-end routes
-app.use("/signin", require("./routes/Customer/Login"));
-app.use("/signup", require("./routes/Customer/Signup"));
-app.use("/tokenauth", require("./routes/TokenAuth"));
-app.use("/profile", require("./routes/Customer/Profile"));
-app.use("/getcategories", require("./routes/Customer/ProductCategories"));
-app.use("/getproducts", require("./routes/Customer/Products"));
-app.use("/getproductdetails", require("./routes/Customer/ProductDetails"));
-app.use("/cart", require("./routes/Customer/Cart"));
-app.use("/search", require("./routes/Customer/SearchProducts"));
+app.use('/signin', require('./routes/Customer/Login'));
+app.use('/signup', require('./routes/Customer/Signup'));
+app.use('/tokenauth', require('./routes/TokenAuth'));
+app.use('/profile', require('./routes/Customer/Profile'));
+app.use('/getcategories', require('./routes/Customer/ProductCategories'));
+app.use('/getproducts', require('./routes/Customer/Products'));
+app.use('/getproductdetails', require('./routes/Customer/ProductDetails'));
+app.use('/cart', require('./routes/Customer/Cart'));
+app.use('/cart2', require('./routes/Customer/Cart2'));
+app.use('/search', require('./routes/Customer/SearchProducts'));
 
 // admin-end routes
 app.use("/admintokenauth", require("./routes/Admin/AdminTokenAuth"));

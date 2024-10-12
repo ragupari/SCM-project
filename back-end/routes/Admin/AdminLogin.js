@@ -47,7 +47,8 @@ router.post('/', (req, res) => {
                             status: 'Login Successful!',
                             success: true,
                             token: token,
-                            storeID: user.StoreID
+                            storeID: user.StoreID,
+                            role: 'admin'
                         });
                     } else {
                         const token = jwt.sign({ username: user.Username, role: 'manager' }, secretkey, { expiresIn: '1h' });
@@ -55,7 +56,8 @@ router.post('/', (req, res) => {
                             status: 'Login Successful!',
                             success: true,
                             token: token,
-                            storeID: user.StoreID
+                            storeID: user.StoreID,
+                            role: 'manager'
                         });
                     }
                 } else {

@@ -6,15 +6,16 @@ import SignUp from "./pages/auth/SignUp";
 
 import FullLayout from "./layout/FullLayout";
 
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import ProcessingOrders from "./pages/ProcessingOrders";
-import PendingOrders from "./pages/PendingOrders";
-import TrainTrips from "./pages/TrainTrips";
-import SelectSchedule from "./pages/SelectSchedule";
-import ProductsByCategory from "./pages/AddProducts";
-import AddDriver from "./pages/AddDriver";
-import AddDriverAssistant from "./pages/AddDriverAssistant";
+import Dashboard from './pages/Dashboard';
+import NotFound from './pages/NotFound';
+import ProcessingOrders from './pages/ProcessingOrders';
+import PendingOrders from './pages/PendingOrders';
+import TrainTrips from './pages/TrainTrips';
+import SelectSchedule from './pages/SelectSchedule';
+import ScheduleHistory from './pages/ScheduleHistory';
+import ProductsByCategory from './pages/AddProducts';
+import AddDriver from './pages/AddDriver';
+import AddDriverAssistant from './pages/AddDriverAssistant';
 
 export default function AppRoutes() {
   const [loginInfo, setLoginInfo] = useState(null);
@@ -70,6 +71,7 @@ export default function AppRoutes() {
                 </Route>
                 <Route path="/addDriver" element={<AddDriver />} />
                 <Route path="/addAssistant" element={<AddDriverAssistant />} />
+                <Route path="/schedule-history" element={<ScheduleHistory />} />
               </>
             )}
           </Route>

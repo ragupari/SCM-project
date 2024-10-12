@@ -1,32 +1,38 @@
 CREATE VIEW DriverWeeklyHours AS
 SELECT 
     DriverID AS PersonID, 
-    SUM(TIMESTAMPDIFF(HOUR, StartTime, EndTime)) AS TotalHours,
-    WEEK(Date) AS WeekNumber
+    ROUND(SUM(TIMESTAMPDIFF(MINUTE, StartTime, EndTime) / 60), 1) AS TotalHours,
+    WEEK(Date, 1) AS WeekNumber
 FROM 
     Shipments
+WHERE 
+    StartTime IS NOT NULL AND EndTime IS NOT NULL
 GROUP BY 
-    DriverID, WEEK(Date);
+    DriverID, WEEK(Date, 1);
     
 CREATE VIEW AssistantWeeklyHours AS
 SELECT 
     DrivingAssistantID AS PersonID, 
-    SUM(TIMESTAMPDIFF(HOUR, StartTime, EndTime)) AS TotalHours,
-    WEEK(Date) AS WeekNumber
+    ROUND(SUM(TIMESTAMPDIFF(MINUTE, StartTime, EndTime) / 60), 1) AS TotalHours,
+    WEEK(Date, 1) AS WeekNumber
 FROM 
     Shipments
+WHERE 
+    StartTime IS NOT NULL AND EndTime IS NOT NULL
 GROUP BY 
-    DrivingAssistantID, WEEK(Date);
+    DrivingAssistantID, WEEK(Date, 1);
     
 CREATE VIEW TruckWeeklyHours AS
 SELECT
-	TruckID,
-	SUM(TIMESTAMPDIFF(HOUR, StartTime, EndTime)) AS TotalHours,
-    WEEK(Date) AS WeekNumber
+    TruckID,
+    ROUND(SUM(TIMESTAMPDIFF(MINUTE, StartTime, EndTime) / 60), 1) AS TotalHours,
+    WEEK(Date, 1) AS WeekNumber
 FROM
-	Shipments
+    Shipments
+WHERE 
+    StartTime IS NOT NULL AND EndTime IS NOT NULL
 GROUP BY
-	TruckID, WEEK(Date);
+    TruckID, WEEK(Date, 1);
     
 CREATE VIEW QuarterlySalesReport AS
 SELECT 
@@ -59,7 +65,3 @@ JOIN Routes R ON O.RouteID = R.RouteID
 JOIN Stores S ON R.StoreID = S.StoreID
 GROUP BY S.City, R.Destination
 ORDER BY S.City, R.Destination;
-
-
-
-
