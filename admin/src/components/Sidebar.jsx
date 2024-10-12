@@ -1,43 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-    let location = useLocation();
-    const role = localStorage.getItem("role");
+  let location = useLocation();
+  const role = localStorage.getItem("role");
 
-    const adminNavigation = [
-        {
-            title: "Dashboard",
-            href: "/dashboard",
-            icon: "bi bi-speedometer2",
-        },
-        {
-            title: "Orders",
-            href: "/orders",
-            icon: "bi bi-calendar-event",
-        }
-    ];
+  const adminNavigation = [
+      {
+          title: "Dashboard",
+          href: "/dashboard",
+          icon: "bi bi-speedometer2",
+      },
+      {
+          title: "Orders",
+          href: "/orders",
+          icon: "bi bi-calendar-event",
+      },
+      {
+          title: "Products",
+          href: "/products",
+          icon: "bi bi-cup-hot",
+      }
+  ];
 
-    const managerNavigation = [
-        {
-            title: "Dashboard",
-            href: "/dashboard",
-            icon: "bi bi-speedometer2",
-        },
-        {
-            title: "Orders",
-            href: "/orders",
-            icon: "bi bi-calendar-event",
-        },
-        {
-            title: "Schedule History",
-            href: "/schedule-history",
-            icon: "bi bi-truck",
-        },
-    ];
+  const managerNavigation = [
+      {
+          title: "Dashboard",
+          href: "/dashboard",
+          icon: "bi bi-speedometer2",
+      },
+      {
+          title: "Orders",
+          href: "/orders",
+          icon: "bi bi-calendar-event",
+      },
+      {
+          title: "Schedule History",
+          href: "/schedule-history",
+          icon: "bi bi-truck",
+      },
+      {
+          title: "Driver",
+          href: "/addDriver",
+          icon: "bi bi-truck",
+      },
+      {
+          title: "Assistant",
+          href: "/addAssistant",
+          icon: "bi bi-people",
+      }
+  ];
 
-    // Determine which navigation to use
+  // Determine which navigation to use
     const navigation = role === "admin" ? adminNavigation : managerNavigation;
 
     const linkStyle = {
