@@ -16,6 +16,7 @@ import ScheduleHistory from './pages/ScheduleHistory';
 import ProductsByCategory from './pages/AddProducts';
 import AddDriver from './pages/AddDriver';
 import AddDriverAssistant from './pages/AddDriverAssistant';
+import ProfilePage from "./pages/Profile";
 
 export default function AppRoutes() {
   const [loginInfo, setLoginInfo] = useState(null);
@@ -52,6 +53,7 @@ export default function AppRoutes() {
           <Route element={<FullLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<ProfilePage />} />
             {loginInfo.role === "admin" && (
               <>
                 <Route path="/orders" element={<PendingOrders />} />

@@ -24,6 +24,7 @@ app.use('/search', require('./routes/Customer/SearchProducts'));
 app.use("/admintokenauth", require("./routes/Admin/AdminTokenAuth"));
 app.use("/adminsignin", require("./routes/Admin/AdminLogin"));
 app.use("/adminsignup", require("./routes/Admin/AdminSignup"));
+app.use("/adminprofile", require('./routes/Admin/AdminProfile'));
 app.use("/orders", require("./routes/Admin/Orders"));
 app.use("/traintrips", require("./routes/Admin/TrainTrips"));
 app.use("/roadways", require("./routes/Admin/Roadways"));
