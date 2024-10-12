@@ -100,7 +100,7 @@ const SelectSchedule = () => {
     };
 
     return (
-        <Container fluid className="shadow-sm rounded p-4" style={{ backgroundColor: "#ffffff2f" }}>
+        <Container fluid className="shadow-sm rounded p-4 h-100" style={{ backgroundColor: "#ffffff2f" }}>
             <AlertBox
                 show={showAlert}
                 variant={alertType}

@@ -65,7 +65,7 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="bg-dark text-light vh-100 p-2 shadow-lg">
+        <div className="bg-dark text-light h-100 p-2 shadow-lg">
             <div className="pt-4">
                 <Nav className="flex-column">
                     {navigation.map((navi, index) => (
