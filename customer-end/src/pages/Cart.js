@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DisplayCard from '../components/PageTitleCard';
 import NavBar from '../components/NavBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [routeID, setRouteID] = useState('');
+  const [showModal, setShowModal] = useState(false);
+
+  const [destinations, setDestinations] = useState([]);
+  const [selectedDestination, setSelectedDestination] = useState('');
+  const [routes, setRoutes] = useState([]);
 
   // Fetch the username from the token
   const getUsernameFromToken = async () => {
@@ -37,6 +44,31 @@ const Cart = () => {
       setLoading(false);
     }
   };
+  const calculateTotalAmount = () => {
+    return cartItems.reduce((total, item) => total + item.UnitPrice * item.Number, 0);
+};
+
+  // Fetch destinations
+  const fetchDestinations = async () => {
+    try {
+      const response = await axios.get('cart2/routes/destinations');
+      setDestinations(response.data);
+    } catch (error) {
+      console.error('Failed to fetch destinations:', error);
+    }
+  };
+
+  // Fetch routes based on selected destination
+  const fetchRoutesByDestination = async (destination) => {
+    try {
+      const response = await axios.get('cart2/routes/by-destination', {
+        params: { destination },
+      });
+      setRoutes(response.data);
+    } catch (error) {
+      console.error('Failed to fetch routes:', error);
+    }
+  };
 
   useEffect(() => {
     const loadCartItems = async () => {
@@ -46,19 +78,28 @@ const Cart = () => {
       }
     };
     loadCartItems();
+    fetchDestinations(); // Load destinations when component mounts
   }, []);
 
-  // Calculate total amount for the cart
-  const calculateTotalAmount = () => {
-    return cartItems.reduce((total, item) => total + item.UnitPrice * item.Number, 0);
+  // Handle destination change
+  const handleDestinationChange = (event) => {
+    const destination = event.target.value;
+    setSelectedDestination(destination);
+    fetchRoutesByDestination(destination); // Fetch routes based on selected destination
+  };
+
+  // Show modal when checkout is clicked
+  const handleCheckout = () => {
+    setShowModal(true); // Show the modal
   };
 
   // Proceed to checkout (clears the cart)
   const checkout = async () => {
     try {
-      await axios.post('/cart2/checkout', { username });
+      await axios.post('/cart2/checkout', { username, routeID });
       alert('Checkout successful!');
       fetchCartItems(username);
+      setShowModal(false); // Close the modal after successful checkout
     } catch (error) {
       console.error('Error during checkout:', error);
     }
@@ -67,14 +108,9 @@ const Cart = () => {
   // Update item quantity (increment or decrement)
   const updateCartItem = async (itemId, action) => {
     try {
-      // Choose the appropriate endpoint based on action
-      console.log(username);
-      console.log(itemId);
-      console.log(action);
       const endpoint = action === 'increment' ? '/cart2/addquantity' : '/cart2/reducequantity';
       await axios.post(endpoint, { username, productID: itemId });
-      // Fetch updated cart items to reflect changes in the UI
-      fetchCartItems(username);
+      fetchCartItems(username); // Fetch updated cart items
     } catch (error) {
       console.error('Failed to update item quantity:', error);
     }
@@ -89,7 +125,6 @@ const Cart = () => {
       console.error('Failed to remove item from cart:', error);
     }
   };
-  
 
   return (
     <div>
@@ -171,12 +206,69 @@ const Cart = () => {
               </table>
             </div>
             <div className="d-flex justify-content-end mt-3">
-              <button className="btn btn-success btn-lg" onClick={checkout}>
+              <button className="btn btn-success btn-lg" onClick={handleCheckout}>
                 Proceed to Checkout
               </button>
             </div>
           </>
         )}
+      </div>
+
+      {/* Modal */}
+      <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Select Destination and Route</h5>
+              <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+            </div>
+            <div className="modal-body">
+              {/* Destination Dropdown */}
+              <label htmlFor="destinationSelect">Destination</label>
+              <select
+                id="destinationSelect"
+                className="form-select"
+                value={selectedDestination}
+                onChange={handleDestinationChange}
+              >
+                <option value="">Select Destination</option>
+                {destinations.map((destination) => (
+                  <option key={destination.Destination} value={destination.Destination}>
+                    {destination.Destination}
+                  </option>
+                ))}
+              </select>
+
+              {/* Route Dropdown */}
+              {selectedDestination && (
+                <>
+                  <label htmlFor="routeSelect" className="mt-3">Route (Main Towns)</label>
+                  <select
+                    id="routeSelect"
+                    className="form-select"
+                    value={routeID}
+                    onChange={(e) => setRouteID(e.target.value)}
+                  >
+                    <option value="">Select Route</option>
+                    {routes.map((route) => (
+                      <option key={route.RoutelD} value={route.RoutelD}>
+                        {route.MainTowns}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                Cancel
+              </button>
+              <button type="button" className="btn btn-primary" onClick={checkout} disabled={!routeID}>
+                Confirm Checkout
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

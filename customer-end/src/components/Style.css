@@ -29,14 +29,6 @@
   }
 }
 
-@media (max-width: 768px) {
-  .card-font {
-    font-size: 1.5rem;
-    /* Adjust the font size for smaller screens */
-  }
-}
-
-
 .gradient-text-active {
   font-weight: 900 !important;
   background: linear-gradient(45deg, rgb(1, 70, 38), rgb(17, 137, 23)) !important;
