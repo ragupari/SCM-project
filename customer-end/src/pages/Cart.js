@@ -11,6 +11,7 @@ const Cart = () => {
   const [error, setError] = useState(null);
   const [routeID, setRouteID] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState(''); // New state for delivery address
 
   const [destinations, setDestinations] = useState([]);
   const [selectedDestination, setSelectedDestination] = useState('');
@@ -44,9 +45,10 @@ const Cart = () => {
       setLoading(false);
     }
   };
+
   const calculateTotalAmount = () => {
     return cartItems.reduce((total, item) => total + item.UnitPrice * item.Number, 0);
-};
+  };
 
   // Fetch destinations
   const fetchDestinations = async () => {
@@ -95,8 +97,9 @@ const Cart = () => {
 
   // Proceed to checkout (clears the cart)
   const checkout = async () => {
+    console.log('checkout', routeID, deliveryAddress);
     try {
-      await axios.post('/cart2/checkout', { username, routeID });
+      await axios.post('/cart2/checkout', { username, routeID, deliveryAddress }); // Include delivery address
       alert('Checkout successful!');
       fetchCartItems(username);
       setShowModal(false); // Close the modal after successful checkout
@@ -219,19 +222,19 @@ const Cart = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Select Destination and Route</h5>
+              <h5 className="modal-title">Select Your Delivery Route</h5>
               <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
               {/* Destination Dropdown */}
-              <label htmlFor="destinationSelect">Destination</label>
+              <label htmlFor="destinationSelect">Store</label>
               <select
                 id="destinationSelect"
                 className="form-select"
                 value={selectedDestination}
                 onChange={handleDestinationChange}
               >
-                <option value="">Select Destination</option>
+                <option value="">Select Near-by Store</option>
                 {destinations.map((destination) => (
                   <option key={destination.Destination} value={destination.Destination}>
                     {destination.Destination}
@@ -251,19 +254,35 @@ const Cart = () => {
                   >
                     <option value="">Select Route</option>
                     {routes.map((route) => (
-                      <option key={route.RoutelD} value={route.RoutelD}>
+                      <option key={route.RouteID} value={route.RouteID}>
                         {route.MainTowns}
                       </option>
                     ))}
                   </select>
                 </>
               )}
+
+              {/* Delivery Address Input */}
+              <label htmlFor="deliveryAddress" className="mt-3">Delivery Address</label>
+              <input
+                type="text"
+                id="deliveryAddress"
+                className="form-control"
+                placeholder="Enter delivery address"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+              />
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                 Cancel
               </button>
-              <button type="button" className="btn btn-primary" onClick={checkout} disabled={!routeID}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => checkout(routeID)}
+                disabled={!routeID || !deliveryAddress} // Disable if routeID or address is empty
+              >
                 Confirm Checkout
               </button>
             </div>
