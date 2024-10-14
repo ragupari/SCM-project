@@ -1,7 +1,7 @@
 // index.js
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const app = express();
 
 // Enable CORS for all routes
@@ -21,22 +21,23 @@ app.use('/cart2', require('./routes/Customer/Cart2'));
 app.use('/search', require('./routes/Customer/SearchProducts'));
 
 // admin-end routes
-app.use('/admintokenauth', require('./routes/Admin/AdminTokenAuth'));
-app.use('/adminsignin', require('./routes/Admin/AdminLogin'));
-app.use('/adminsignup', require('./routes/Admin/AdminSignup'));
-app.use('/orders', require('./routes/Admin/Orders'));
-app.use('/traintrips', require('./routes/Admin/TrainTrips'));
-app.use('/roadways', require('./routes/Admin/Roadways'));
-app.use('/trucks', require('./routes/Admin/Trucks'));
-app.use('/drivers', require('./routes/Admin/Drivers'));
-app.use('/assistants', require('./routes/Admin/Assistants'));
-app.use('/truck-schedules', require('./routes/Admin/TruckSchedule'));
+app.use("/admintokenauth", require("./routes/Admin/AdminTokenAuth"));
+app.use("/adminsignin", require("./routes/Admin/AdminLogin"));
+app.use("/adminsignup", require("./routes/Admin/AdminSignup"));
+app.use("/adminprofile", require('./routes/Admin/AdminProfile'));
+app.use("/orders", require("./routes/Admin/Orders"));
+app.use("/traintrips", require("./routes/Admin/TrainTrips"));
+app.use("/roadways", require("./routes/Admin/Roadways"));
+app.use("/trucks", require("./routes/Admin/Trucks"));
+app.use("/drivers", require("./routes/Admin/Drivers"));
+app.use("/assistants", require("./routes/Admin/Assistants"));
+app.use("/truck-schedules", require("./routes/Admin/TruckSchedule"));
+app.use("/products", require("./routes/Admin/Products"));
 
 // Example route
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
 });
-
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {

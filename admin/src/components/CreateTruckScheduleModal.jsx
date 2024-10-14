@@ -3,7 +3,7 @@ import { Modal, Button, ListGroup, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import './Style.css';
 
-const CreateTruckScheduleModal = ({ show, onHide, newSchedule, setNewSchedule, handleCreateSchedule, storeID, routeID }) => {
+const CreateTruckScheduleModal = ({ show, onHide, newSchedule, setNewSchedule, handleCreateSchedule, storeID, routeID, setAlertMessage, setAlertType, setShowAlert }) => {
     const [trucks, setTrucks] = useState([]);
     const [drivers, setDrivers] = useState([]);
     const [assistants, setAssistants] = useState([]);
@@ -61,9 +61,21 @@ const CreateTruckScheduleModal = ({ show, onHide, newSchedule, setNewSchedule, h
             );
 
             const calculatedEndTime = addTime(maxAvailableTime, timeforCompletion);
-
-            // Update the schedule with calculated start and end times
-            setNewSchedule({ ...newSchedule, StartTime: maxAvailableTime, EndTime: calculatedEndTime });
+            const [endHours, endMinutes, endSeconds] = calculatedEndTime.split(':').map(Number);
+            
+            if(endHours < 17){
+                // Update the schedule with calculated start and end times
+                setNewSchedule({ ...newSchedule, StartTime: maxAvailableTime, EndTime: calculatedEndTime });
+                setAlertMessage('Schedule created successfully');
+                setAlertType('success');
+                setShowAlert(true);
+            } else {
+                // Reset the schedule if the calculated end time is after 5 PM
+                setNewSchedule({ ...newSchedule, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });
+                setAlertMessage('End time is after 5 PM');
+                setAlertType('danger');
+                setShowAlert(true);
+            }
         }
     }, [newSchedule.TruckID, newSchedule.DriverID, newSchedule.DrivingAssistantID, trucks, drivers, assistants, timeforCompletion]);
 
