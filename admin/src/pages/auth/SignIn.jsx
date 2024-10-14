@@ -26,6 +26,7 @@ function SignIn() {
             if (res.data.success) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('storeID', res.data.storeID);
+                localStorage.setItem('role', res.data.role);
                 window.location.href = '/dashboard';
             }
         })
