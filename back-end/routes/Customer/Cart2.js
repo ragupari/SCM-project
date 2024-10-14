@@ -288,38 +288,76 @@ router.post('/checkout', (req, res) => {
 
         const orderID = result.insertId;
 
-          // Step 7: Update stock for each product
-          const sqlUpdateStock = `
-            UPDATE Products 
-            SET AvailableStock = AvailableStock - ? 
-            WHERE ProductID = ?`;
+        // Step 6: Insert each item into the OrderItems table
+        const sqlInsertOrderItem = `
+          INSERT INTO OrderItems (OrderID, ProductID, Quantity, Cost) 
+          VALUES (?, ?, ?, ?)`;
 
-          const stockUpdatePromises = itemsToOrder.map(item => 
-            db.promise().query(sqlUpdateStock, [item.CartQuantity, item.ProductID])
-          );
-
-          Promise.all(stockUpdatePromises)
-            .then(() => {
-              // Step 8: Clear the cart for the customer
-              const sqlClearCart = 'DELETE FROM Cart WHERE CustomerID = ?';
-              db.query(sqlClearCart, [customerID], (err, result) => {
-                if (err) {
-                  return res.status(500).json({ error: 'Error clearing the cart after checkout.' });
-                }
-
-                // Step 9: Return success response
-                res.status(200).json({ message: 'Order placed successfully', orderID });
-              });
-            })
-            .catch(error => {
-              console.error('Error updating stock:', error);
-              res.status(500).json({ error: 'Error updating product stock.' });
-            });
+        const orderItemPromises = itemsToOrder.map(item => {
+          const itemCost = item.UnitPrice * item.CartQuantity;
+          return db.promise().query(sqlInsertOrderItem, [orderID, item.ProductID, item.CartQuantity, itemCost]);
         });
+
+        // Step 7: Update stock for each product
+        const sqlUpdateStock = `
+          UPDATE Products 
+          SET AvailableStock = AvailableStock - ? 
+          WHERE ProductID = ?`;
+
+        const stockUpdatePromises = itemsToOrder.map(item => 
+          db.promise().query(sqlUpdateStock, [item.CartQuantity, item.ProductID])
+        );
+
+        Promise.all([...orderItemPromises, ...stockUpdatePromises])
+          .then(() => {
+            // Step 8: Clear the cart for the customer
+            const sqlClearCart = 'DELETE FROM Cart WHERE CustomerID = ?';
+            db.query(sqlClearCart, [customerID], (err, result) => {
+              if (err) {
+                return res.status(500).json({ error: 'Error clearing the cart after checkout.' });
+              }
+
+              // Step 9: Return success response
+              res.status(200).json({ message: 'Order placed successfully', orderID });
+            });
+          })
+          .catch(error => {
+            console.error('Error during checkout process:', error);
+            res.status(500).json({ error: 'Error completing the checkout process.' });
+          });
       });
     });
   });
+});
 
+router.get('/routes/destinations', (req, res) => {
+  const sqlGetDestinations = 'SELECT DISTINCT Destination FROM Routes';
+
+  db.query(sqlGetDestinations, (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Error fetching destinations' });
+      }
+      res.json(results);
+  });
+});
+
+// Get routes based on a selected destination
+router.get('/routes/by-destination', (req, res) => {
+  const { destination } = req.query; // Extract the destination from the query string
+
+  const sqlGetRoutesByDestination = `
+      SELECT RouteID, MainTowns, TimeforCompletion 
+      FROM Routes 
+      WHERE Destination = ?
+  `;
+
+  db.query(sqlGetRoutesByDestination, [destination], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: err });
+      }
+      res.json(results);
+  });
+});
 
 
 module.exports = router;
