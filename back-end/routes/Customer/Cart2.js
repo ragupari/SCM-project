@@ -212,8 +212,7 @@ router.post('/removeitem', async (req, res) => {
 });
 
 router.post('/checkout', (req, res) => {
-  const { username } = req.body;
-
+  const { username, routeID, deliveryAddress } = req.body;
   // Step 1: Fetch the CustomerID for the given username
   const sqlGetCustomerID = 'SELECT CustomerID FROM Customers WHERE Username = ?';
   db.query(sqlGetCustomerID, [username], (err, result) => {
@@ -279,9 +278,9 @@ router.post('/checkout', (req, res) => {
       // Step 5: Insert the order into the Orders table
       const sqlInsertOrder = `
         INSERT INTO Orders (CustomerID, OrderDate, DeliveryDate, DeliveryAddress, Status, TotalPrice, TotalCapacity, RouteID)
-        VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'Default Address', 'Pending', ?, ?, 15)`;
+        VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), ?, 'Pending', ?, ?, ?)`;
 
-      db.query(sqlInsertOrder, [customerID, totalPrice, totalCapacity], (err, result) => {
+      db.query(sqlInsertOrder, [ customerID, deliveryAddress, totalPrice, totalCapacity, routeID], (err, result) => {
         if (err) {
           return res.status(500).json({ error: 'Error inserting order.' });
         }
