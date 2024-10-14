@@ -17,6 +17,7 @@ app.use('/getcategories', require('./routes/Customer/ProductCategories'));
 app.use('/getproducts', require('./routes/Customer/Products'));
 app.use('/getproductdetails', require('./routes/Customer/ProductDetails'));
 app.use('/cart', require('./routes/Customer/Cart'));
+app.use('/cart2', require('./routes/Customer/Cart2'));
 app.use('/search', require('./routes/Customer/SearchProducts'));
 
 // admin-end routes

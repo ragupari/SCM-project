@@ -68,8 +68,8 @@ router.put('/assignschedule/:orderID', (req, res) => {
 router.get('/:username', (req, res) => {
     const username = req.params.username;
     const query = `SELECT OrderID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity FROM orders o
-                    LEFT JOIN customers c ON o.customer_ID = c.customer_ID
-                    WHERE username = ?`;
+                    LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
+                    WHERE Username = ?`;
 
     db.query(query, [username], (err, results) => {
         if (err) {
