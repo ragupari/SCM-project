@@ -27,7 +27,6 @@
     font-size: 1.5rem;
     /* Adjust the font size for smaller screens */
   }
-<<<<<<< HEAD
 }
 
   
@@ -45,8 +44,6 @@
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important; /* For non-WebKit browsers */
     color: transparent !important; /* Fallback color */
-=======
->>>>>>> d49cd6991de2c882890a2b8e419dd8478e755f1c
 }
 
 @media (max-width: 768px) {
