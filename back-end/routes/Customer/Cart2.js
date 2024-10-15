@@ -329,10 +329,23 @@ router.post('/checkout', (req, res) => {
   });
 });
 
-router.get('/routes/destinations', (req, res) => {
-  const sqlGetDestinations = 'SELECT DISTINCT Destination FROM Routes';
+router.get('/stores', (req, res) => {
+  const sqlGetStores = 'SELECT * FROM Stores';
+  db.query(sqlGetStores, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching stores' });
+    }
+    res.json(results);
+  });
+});
 
-  db.query(sqlGetDestinations, (err, results) => {
+router.get('/routes', (req, res) => {
+  const sqlGetRoutes = `SELECT r.RouteID, s.StoreID, s.City, r.MainTowns, r.Destination
+                        FROM Routes r
+                        LEFT JOIN Stores s
+                        ON r.StoreID = s.StoreID;`;
+
+  db.query(sqlGetRoutes, (err, results) => {
       if (err) {
           return res.status(500).json({ error: 'Error fetching destinations' });
       }
@@ -340,23 +353,17 @@ router.get('/routes/destinations', (req, res) => {
   });
 });
 
-// Get routes based on a selected destination
-router.get('/routes/by-destination', (req, res) => {
-  const { destination } = req.query; // Extract the destination from the query string
-
-  const sqlGetRoutesByDestination = `
-      SELECT RouteID, MainTowns, TimeforCompletion 
-      FROM Routes 
-      WHERE Destination = ?
-  `;
-
-  db.query(sqlGetRoutesByDestination, [destination], (err, results) => {
-      if (err) {
-          return res.status(500).json({ error: err });
-      }
-      res.json(results);
+router.get('/address/:Username', (req, res) => {
+  const { Username } = req.params;
+  const sqlGetAddress = ` SELECT CONCAT(Address, ', ', City) AS FullAddress
+                          FROM Customers
+                          WHERE Username = ?;`;
+  db.query(sqlGetAddress, [Username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching address' });
+    }
+    res.json(results[0]);
   });
 });
-
 
 module.exports = router;
