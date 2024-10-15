@@ -36,6 +36,17 @@ BEGIN
 END $$
 
 DELIMITER $$
+CREATE TRIGGER check_capacity_before_update
+BEFORE UPDATE ON TrainTrips
+FOR EACH ROW
+BEGIN
+    IF NEW.AvailableCapacity < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'AvailableCapacity cannot be negative';
+    END IF;
+END $$
+
+DELIMITER $$
 CREATE TRIGGER set_initial_remaining_capacity
 BEFORE INSERT ON Shipments
 FOR EACH ROW
