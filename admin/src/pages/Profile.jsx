@@ -58,13 +58,13 @@ const ProfilePage = () => {
 
   return (
     <Container className="d-flex justify-content-center mt-5">
-      <Card className="shadow-lg rounded" style={{ width: '50%', backgroundColor: 'rgba(255, 255, 255, 0.6)' }}>
+      <Card className="shadow-lg rounded" style={{ width: '80%', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
         <Card.Body>
           {/* Profile Image and Grid layout */}
-          <Row className="align-items-center">
+          <Row className="my-5 mx-5 align-items-center">
             <Col md={4} className="text-center">
               {/* Profile Image */}
-              <div className="profile-image" style={{
+              <div className="profile-image shadow-sm" style={{
                 width: '120px',
                 height: '120px',
                 backgroundColor: '#62c9fc',
@@ -89,7 +89,7 @@ const ProfilePage = () => {
             </Col>
 
             {/* Name as a separate row */}
-            <Col md={8}>
+            <Col md={8} className="p-5 shadow-sm rounded bg-white">
               <Row className="mb-3 text-left text-md-left">
                 <Col md={7}>
                   <h3 className="mb-0">{name}</h3>
