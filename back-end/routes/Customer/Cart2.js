@@ -227,7 +227,7 @@ router.post('/checkout', (req, res) => {
 
     // Step 2: Fetch the items in the cart for this customer
     const sqlGetCartItems = `
-      SELECT c.ProductID, c.Number AS CartQuantity, p.ProductName, p.UnitPrice, p.AvailableStock
+      SELECT c.ProductID, c.Number AS CartQuantity, p.ProductName, p.UnitPrice, p.AvailableStock, p.CapacityPerUnit
       FROM Cart c 
       JOIN Products p ON c.ProductID = p.ProductID 
       WHERE c.CustomerID = ?`;
@@ -252,7 +252,7 @@ router.post('/checkout', (req, res) => {
           // Item has enough stock, prepare for order insertion
           itemsToOrder.push(item);
           totalPrice += item.UnitPrice * item.CartQuantity;
-          totalCapacity += item.CartQuantity; // Assume capacity is number of units for simplicity
+          totalCapacity += item.CapacityPerUnit * item.CartQuantity;
         } else {
           // Item does not have enough stock, mark it for removal
           itemsToRemove.push(item.ProductID);
@@ -297,7 +297,7 @@ router.post('/checkout', (req, res) => {
           return db.promise().query(sqlInsertOrderItem, [orderID, item.ProductID, item.CartQuantity, itemCost]);
         });
 
-        Promise.all([...orderItemPromises, ...stockUpdatePromises])
+        Promise.all(orderItemPromises)
           .then(() => {
             // Step 7: Clear the cart for the customer
             const sqlClearCart = 'DELETE FROM Cart WHERE CustomerID = ?';

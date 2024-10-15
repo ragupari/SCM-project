@@ -100,7 +100,7 @@ const Cart = () => {
 
   // Proceed to checkout (clears the cart)
   const checkout = async () => {
-    console.log('checkout', routeID, deliveryAddress);
+    //console.log('checkout', routeID, deliveryAddress);
     try {
       await axios.post('/cart2/checkout', { username, routeID, deliveryAddress }); // Include delivery address
       alert('Checkout successful!');
