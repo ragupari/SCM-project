@@ -20,7 +20,8 @@ const Orders = () => {
     // Function to format date
     const formatDate = (dateString) => {
         const tempDate = new Date(dateString);
-        return tempDate.toISOString().split('T')[0];
+        const localDate = tempDate.toLocaleDateString('en-CA'); // 'en-CA' format gives 'YYYY-MM-DD'
+        return localDate;
     };
 
     const handleAssign = (orderID, totalCapacity, orderDate) => {

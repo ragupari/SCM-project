@@ -41,29 +41,33 @@ const TrainTripsPage = () => {
         if (orderDate) {
             const newDate = new Date(orderDate);
             newDate.setDate(newDate.getDate() + 1); 
-            const nextDateStr = newDate.toISOString().split('T')[0];
-            setDate(nextDateStr);
-            fetchTrainTrips(nextDateStr); // Fetch train trips for the next day
+            const localDate = newDate.toLocaleDateString('en-CA');
+            setDate(localDate);
+            fetchTrainTrips(localDate); // Fetch train trips for the next day
         }
     }, [orderDate]);
 
     const handleNextDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
-        const nextDateStr = newDate.toISOString().split('T')[0];
-        setDate(nextDateStr);
-        fetchTrainTrips(nextDateStr);
+        const localDate = newDate.toLocaleDateString('en-CA');
+        setDate(localDate);
+        fetchTrainTrips(localDate);
     };
 
     const handlePrevDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() - 1);
-        const prevDateStr = newDate.toISOString().split('T')[0];
-        // Prevent fetching train trips for past dates
-        if (prevDateStr < orderDate.toString().split('T')[0]) return;
+        const localDate = newDate.toLocaleDateString('en-CA');
 
-        setDate(prevDateStr);
-        fetchTrainTrips(prevDateStr);
+        // Prevent fetching train trips for past dates
+        const orderDay = new Date(orderDate);
+        const orderLocalDate = orderDay.toLocaleDateString('en-CA');
+        
+        if (localDate < orderLocalDate) return;
+
+        setDate(localDate);
+        fetchTrainTrips(localDate);
     };
 
     const handleSelectTrain = async(trainId) => {

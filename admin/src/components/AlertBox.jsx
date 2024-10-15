@@ -20,9 +20,9 @@ const AlertBox = ({ show, variant, message, onClose }) => {
   // Define icon based on variant
   const renderIcon = () => {
     if (variant === "danger") {
-      return <i class="bi bi-exclamation-circle" style={{ color: "red", marginRight: "10px" }} />;
+      return <i className="bi bi-exclamation-circle" style={{ color: "red", marginRight: "10px" }} />;
     } else if (variant === "success") {
-      return <i class="bi bi-check-circle" style={{ color: "green", marginRight: "10px" }} />;
+      return <i className="bi bi-check-circle" style={{ color: "green", marginRight: "10px" }} />;
     }
     return null; // No icon for other variants
   };
