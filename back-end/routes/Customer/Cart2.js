@@ -297,19 +297,9 @@ router.post('/checkout', (req, res) => {
           return db.promise().query(sqlInsertOrderItem, [orderID, item.ProductID, item.CartQuantity, itemCost]);
         });
 
-        // Step 7: Update stock for each product
-        const sqlUpdateStock = `
-          UPDATE Products 
-          SET AvailableStock = AvailableStock - ? 
-          WHERE ProductID = ?`;
-
-        const stockUpdatePromises = itemsToOrder.map(item => 
-          db.promise().query(sqlUpdateStock, [item.CartQuantity, item.ProductID])
-        );
-
         Promise.all([...orderItemPromises, ...stockUpdatePromises])
           .then(() => {
-            // Step 8: Clear the cart for the customer
+            // Step 7: Clear the cart for the customer
             const sqlClearCart = 'DELETE FROM Cart WHERE CustomerID = ?';
             db.query(sqlClearCart, [customerID], (err, result) => {
               if (err) {
