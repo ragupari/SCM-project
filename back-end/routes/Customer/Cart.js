@@ -50,7 +50,7 @@ router.delete('/:itemId', (req, res) => {
 
 // Clear the cart
 router.post('/checkout', (req, res) => {
-    const { username } = req.body;
+    const { username,routeID } = req.body;
 
     const sqlGetCustomerID = 'SELECT CustomerID FROM Customers WHERE Username = ?';
     db.query(sqlGetCustomerID, [username], (err, result) => {
@@ -100,5 +100,8 @@ router.post('/checkout', (req, res) => {
         });
     });
 });
+
+
+
 
 module.exports = router;
