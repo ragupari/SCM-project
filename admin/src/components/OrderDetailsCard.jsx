@@ -20,7 +20,8 @@ const OrderDetailsCard = ({ orderID }) => {
     const formatDate = (dateString) => {
         if (!dateString) return 'null';
         const tempDate = new Date(dateString);
-        return tempDate.toISOString().split('T')[0];
+        const localDate = tempDate.toLocaleDateString('en-CA'); // 'en-CA' format gives 'YYYY-MM-DD'
+        return localDate;
     };
 
     return (
@@ -47,6 +48,9 @@ const OrderDetailsCard = ({ orderID }) => {
                     {/* Right Column */}
                     <div className="col-md-6">
                         <Card.Text style={{ fontSize: '16px', lineHeight: '1.6' }}>
+                            <i className='bi bi-shop' style={{ fontSize: '20px', marginRight: '10px', color: '#ff6b6b' }}></i>
+                            <strong className={getTextColor(selectedOrder.City)} style={{ fontWeight: '500', color: '#ff9f43' }}>Near-by Store:</strong> {selectedOrder.City}
+                            <br />
                             <i className="bi bi-boxes" style={{ fontSize: '20px', marginRight: '10px', color: '#feca57' }}></i>
                             <strong className={getTextColor(selectedOrder.TotalCapacity)} style={{ fontWeight: '500', color: '#feca57' }}>Order Capacity:</strong> {selectedOrder.TotalCapacity}
                             <br />

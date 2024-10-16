@@ -3,6 +3,8 @@ import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderDetailsCard from '../components/OrderDetailsCard';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TrainTripsPage = () => {
     const [trainTrips, setTrainTrips] = useState([]);
@@ -75,8 +77,16 @@ const TrainTripsPage = () => {
             await Promise.all([
                 axios.put(`/orders/assigntraintrip/${orderID}`, { trainTripID: trainId }),
                 axios.put(`/traintrips/decreasecapacity/${trainId}`, { reqCapacity })
-            ]);
-            navigate('/orders');
+            ]).then(() => {
+                toast.success('Train Trip selected successfully!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            });
+
+            // Add a 2-second delay before navigating
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            navigate(`/orders`);
         } catch (error) {
             console.error('Error assigning train trip:', error);
         }
@@ -136,6 +146,7 @@ const TrainTripsPage = () => {
                     ></iframe>
                 </Col>
             </Row>
+            <ToastContainer/>
         </Container>
     );
 };

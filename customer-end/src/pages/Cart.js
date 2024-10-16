@@ -3,6 +3,7 @@ import axios from 'axios';
 import DisplayCard from '../components/PageTitleCard';
 import NavBar from '../components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AlertBox from '../components/AlertBox';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -17,6 +18,10 @@ const Cart = () => {
   const [stores, setStores] = useState([]);
   const [selectedStoreID, setStoreID] = useState('');
   const [deliveryAddressMethod, setDeliveryAddressMethod] = useState('default');
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('success');
 
   // Fetch the username from the token
   const getUsernameFromToken = async () => {
@@ -103,7 +108,9 @@ const Cart = () => {
     //console.log('checkout', routeID, deliveryAddress);
     try {
       await axios.post('/cart2/checkout', { username, routeID, deliveryAddress }); // Include delivery address
-      alert('Checkout successful!');
+      setAlertMessage('Checkout successful!'); // Set success message
+      setAlertType('success'); // Set alert type to success
+      setShowAlert(true); // Show the alert
       fetchCartItems(username);
       setShowModal(false); // Close the modal after successful checkout
     } catch (error) {
@@ -136,6 +143,12 @@ const Cart = () => {
     <div>
       <NavBar currentPage={'Cart'} />
       <DisplayCard title={'Cart'} />
+      <AlertBox
+        show={showAlert}
+        variant={alertType}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)} // Reset the show state when alert closes
+      />
       <div className="container py-5">
         {loading ? (
           <div className="alert alert-info text-center" role="alert">

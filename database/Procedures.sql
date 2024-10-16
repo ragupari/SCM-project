@@ -1,3 +1,6 @@
+-- Contains stored procedures for the database.
+
+-- Get available drivers for a specified store and date
 DELIMITER $$
 CREATE PROCEDURE GetAvailableDriver(
     IN specified_storeID INT,
@@ -22,7 +25,7 @@ BEGIN
          FROM 
             Drivers
          WHERE 
-            StoreID = specified_storeID) d
+            StoreID = specified_storeID AND EmploymentStatus = 'PresentEmployer') d
     LEFT JOIN
         -- Subquery to get DriverID and the latest EndTime for the given date and store
         (SELECT 
@@ -47,9 +50,12 @@ BEGIN
     GROUP BY 
         d.DriverID, dwh.TotalHours
     HAVING 
-        IFNULL(dwh.TotalHours, 0) < 40;  -- Ensure drivers without hours are included
+        IFNULL(dwh.TotalHours, 0) < 40  -- Ensure drivers without hours are included
+    ORDER BY 
+        DriverAvailableTime;  -- Order by DriverAvailableTime
 END$$
 
+-- Get available driving assistants for a specified store and date
 DELIMITER $$
 CREATE PROCEDURE GetAvailableDrivingAssistant(
     IN specified_storeID INT,
@@ -76,7 +82,7 @@ BEGIN
          FROM 
             DrivingAssistants
          WHERE 
-            StoreID = specified_storeID) a
+            StoreID = specified_storeID AND EmploymentStatus = 'PresentEmployer') a
     LEFT JOIN
         -- Subquery to get the last EndTime and count the number of shifts for each assistant
         (SELECT 
@@ -101,9 +107,12 @@ BEGIN
          WHERE 
             WeekNumber = WEEK(specified_date, 1)) awh ON a.DrivingAssistantID = awh.PersonID
     GROUP BY 
-        a.DrivingAssistantID, awh.TotalHours;
+        a.DrivingAssistantID, awh.TotalHours
+    ORDER BY
+        DrivingAssistantAvailableTime;  -- Order by DrivingAssistantAvailableTime
 END$$
 
+-- Get available trucks for a specified store and date
 DELIMITER $$
 CREATE PROCEDURE GetAvailableTrucks(
     IN specified_storeID INT,
@@ -137,5 +146,46 @@ BEGIN
          WHERE 
             StoreID = specified_storeID) t ON s.TruckID = t.TruckID
     GROUP BY 
-        t.TruckID, s.LastShiftEnd, t.Capacity;
+        t.TruckID, s.LastShiftEnd, t.Capacity
+    ORDER BY 
+        LastShiftEnd;  -- Order by LastShiftEnd
 END$$
+
+-- Generate Train Schedule
+DELIMITER $$
+CREATE PROCEDURE GenerateTrainSchedule(IN StartDate DATE, IN EndDate DATE)
+BEGIN
+    DECLARE DayTotalCapacity INT;
+    DECLARE DayCapacity INT;
+
+    WHILE StartDate <= EndDate DO
+        -- Train 1 to Destination 1
+        INSERT INTO TrainTrips (DepartureTime, Destination, AvailableCapacity)
+        VALUES (CONCAT(StartDate, ' 06:00:00'), 1, 1500 + FLOOR(RAND() * 1000));
+
+        -- Train 2 to Destination 2
+        INSERT INTO TrainTrips (DepartureTime, Destination, AvailableCapacity)
+        VALUES (CONCAT(StartDate, ' 06:20:00'), 2, 1500 + FLOOR(RAND() * 1000));
+
+        -- Train 3 to Destination 3
+        INSERT INTO TrainTrips (DepartureTime, Destination, AvailableCapacity)
+        VALUES (CONCAT(StartDate, ' 07:15:00'), 3, 1500 + FLOOR(RAND() * 1000));
+
+        -- Train 4 to Destination 4
+        INSERT INTO TrainTrips (DepartureTime, Destination, AvailableCapacity)
+        VALUES (CONCAT(StartDate, ' 07:40:00'), 4, 1500 + FLOOR(RAND() * 1000));
+
+        -- Train 5 to Destination 5
+        INSERT INTO TrainTrips (DepartureTime, Destination, AvailableCapacity)
+        VALUES (CONCAT(StartDate, ' 08:10:00'), 5, 1500 + FLOOR(RAND() * 1000));
+
+        -- Train 6 to Destination 6
+        INSERT INTO TrainTrips (DepartureTime, Destination, AvailableCapacity)
+        VALUES (CONCAT(StartDate, ' 08:20:00'), 6, 1500 + FLOOR(RAND() * 1000));
+
+        -- Move to the next day
+        SET StartDate = DATE_ADD(StartDate, INTERVAL 1 DAY);
+    END WHILE;
+END $$
+
+DELIMITER ;
