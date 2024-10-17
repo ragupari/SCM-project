@@ -19,7 +19,6 @@ BEGIN
   END IF;
 END;
 
-
 -- Didn't work
 DELIMITER $$
 CREATE TRIGGER update_traintrip_available_capacity
@@ -55,6 +54,7 @@ BEGIN
     SET NEW.RemainingCapacity = (SELECT Capacity FROM Trucks WHERE TruckID = NEW.TruckID);
 END $$
 
+-- Didn't work
 DELIMITER $$
 CREATE TRIGGER update_remaining_capacity_on_order
 AFTER INSERT ON Orders

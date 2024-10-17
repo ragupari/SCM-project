@@ -1,3 +1,6 @@
+-- Create views for the database
+
+-- View to get the total hours worked by drivers in a week
 CREATE VIEW DriverWeeklyHours AS
 SELECT 
     DriverID AS PersonID, 
@@ -9,7 +12,8 @@ WHERE
     StartTime IS NOT NULL AND EndTime IS NOT NULL
 GROUP BY 
     DriverID, WEEK(Date, 1);
-    
+
+-- View to get the total hours worked by driving assistants in a week   
 CREATE VIEW AssistantWeeklyHours AS
 SELECT 
     DrivingAssistantID AS PersonID, 
@@ -21,7 +25,8 @@ WHERE
     StartTime IS NOT NULL AND EndTime IS NOT NULL
 GROUP BY 
     DrivingAssistantID, WEEK(Date, 1);
-    
+
+-- View to get the total hours worked by trucks in a week  
 CREATE VIEW TruckWeeklyHours AS
 SELECT
     TruckID,
@@ -33,7 +38,8 @@ WHERE
     StartTime IS NOT NULL AND EndTime IS NOT NULL
 GROUP BY
     TruckID, WEEK(Date, 1);
-    
+
+-- View to get the total sales and capacity for each quarter 
 CREATE VIEW QuarterlySalesReport AS
 SELECT 
     QUARTER(O.OrderDate) AS Quarter,
@@ -44,7 +50,7 @@ FROM Orders O
 GROUP BY YEAR(O.OrderDate), QUARTER(O.OrderDate)
 ORDER BY Year, Quarter;
 
-    
+-- View to get the total quantity ordered for each product  
 CREATE VIEW MostOrderedItems AS
 SELECT 
     P.ProductName,
@@ -54,6 +60,7 @@ JOIN Products P ON OI.ProductID = P.ProductID
 GROUP BY P.ProductName
 ORDER BY TotalQuantityOrdered DESC;
 
+-- View to get the total sales and capacity for each store
 CREATE VIEW SalesReportByCityAndRoute AS
 SELECT 
     S.City AS StoreCity,
