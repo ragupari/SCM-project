@@ -33,6 +33,7 @@ app.use("/drivers", require("./routes/Admin/Drivers"));
 app.use("/assistants", require("./routes/Admin/Assistants"));
 app.use("/truck-schedules", require("./routes/Admin/TruckSchedule"));
 app.use("/products", require("./routes/Admin/Products"));
+app.use("/report", require("./routes/Admin/Report"));
 
 // Example route
 app.get("/", (req, res) => {

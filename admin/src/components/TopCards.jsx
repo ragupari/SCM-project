@@ -10,7 +10,7 @@ const TopCards = (props) => {
             <i className={props.icon}></i>
           </div>
           <div className="ms-3">
-            <h3 className="mb-0 font-weight-bold">{props.earning}</h3>
+            <h5 className="mb-0 font-weight-bold">{props.earning}</h5>
             <small className="text-muted">{props.subtitle}</small>
           </div>
         </div>
