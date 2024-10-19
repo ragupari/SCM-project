@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CreateTruckScheduleModal from '../components/CreateTruckScheduleModal';
 import AlertBox from '../components/AlertBox';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SelectSchedule = () => {
     const location = useLocation();
@@ -43,7 +45,8 @@ const SelectSchedule = () => {
 
     const formatDate = (dateString) => {
         const tempDate = new Date(dateString);
-        return tempDate.toISOString().split('T')[0];
+        const localDate = tempDate.toLocaleDateString('en-CA'); // 'en-CA' format gives 'YYYY-MM-DD'
+        return localDate;
     };
 
     const fetchTruckSchedules = async (selectedDate) => {
@@ -57,7 +60,9 @@ const SelectSchedule = () => {
 
     const handleCreateSchedule = async () => {
         if (!validateSchedule()) {
-            alert('Please fill in all fields');
+            setAlertMessage('Please select Driver, Assistant and Truck');
+            setAlertType('danger');
+            setShowAlert(true);
             return;
         }
 
@@ -68,6 +73,9 @@ const SelectSchedule = () => {
             await axios.post('/truck-schedules', newSchedule);
             setShowCreateModal(false);
             fetchTruckSchedules(date);
+            setAlertMessage('Schedule created successfully');
+            setAlertType('success');
+            setShowAlert(true);
             setNewSchedule({ ...newSchedule, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });
         } catch (error) {
             console.error('Error creating truck schedule:', error);
@@ -81,10 +89,10 @@ const SelectSchedule = () => {
         } else if (direction === 'next') {
             newDate.setDate(newDate.getDate() + 1);
         }
-        const newDateStr = newDate.toISOString().split('T')[0];
-        if (newDateStr < arrivalDate) return;
-        setNewSchedule({ ...newSchedule, Date: newDateStr, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });
-        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${arrivalDate}&date=${newDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
+        const localDate = newDate.toLocaleDateString('en-CA');
+        if (localDate < arrivalDate) return;
+        setNewSchedule({ ...newSchedule, Date: localDate, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });
+        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${arrivalDate}&date=${localDate}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
     const handleSelectTruck = async (deliveryID) => {
@@ -93,6 +101,14 @@ const SelectSchedule = () => {
                 axios.put(`/orders/assignschedule/${orderID}`, { deliveryID }),
             ]);
             await axios.put(`/truck-schedules/decreasecapacity/${deliveryID}`, { reqCapacity })
+                .then(() => {
+                    toast.success("Truck schedule selected successfully!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                });
+            });
+            // Add a 2-second delay before navigating
+            await new Promise((resolve) => setTimeout(resolve, 2000));
             navigate(`/orders`);
         } catch (error) {
             console.error('Error selecting truck schedule:', error);
@@ -176,6 +192,7 @@ const SelectSchedule = () => {
                 setAlertType={setAlertType}
                 setShowAlert={setShowAlert}
             />
+            <ToastContainer />
         </Container>
     );
 };

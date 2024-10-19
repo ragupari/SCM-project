@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
                         LEFT JOIN  TrainTrips t ON o.TrainTripID = t.TrainTripID
                         LEFT JOIN  Routes r ON o.RouteID = r.RouteID
                         WHERE o.Status = ? AND r.StoreID = ?
-                        ORDER BY o.OrderDate DESC
+                        ORDER BY o.OrderDate
                     `;
 
         db.query(query, ['Processing', storeID], (err, results) => {
@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
             res.json(results);
         });
     } else if (status === 'pending' && storeID === '7') {
-        const query = "SELECT * FROM Orders WHERE Status = ?";
+        const query = "SELECT * FROM Orders WHERE Status = ? ORDER BY OrderDate";
 
         db.query(query, ['Pending'], (err, results) => {
             if (err) {
@@ -97,7 +97,10 @@ router.put('/:orderID', (req, res) => {
 router.get('/getbyid/:orderID', (req, res) => {
     const orderID = req.params.orderID;
 
-    const query = `SELECT * FROM Orders WHERE OrderID = ?`;
+    const query = `SELECT * FROM Orders o
+                    LEFT JOIN Routes r ON o.RouteID = r.RouteID
+                    LEFT JOIN Stores s ON s.StoreID = r.StoreID 
+                    WHERE OrderID = ?`;
 
     db.query(query, [orderID], (err, results) => {
         if (err) {

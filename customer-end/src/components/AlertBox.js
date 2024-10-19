@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Alert } from "react-bootstrap";
 
 const AlertBox = ({ show, variant, message, onClose }) => {
   const [visible, setVisible] = useState(show);
@@ -47,7 +46,7 @@ const AlertBox = ({ show, variant, message, onClose }) => {
       }}
     >
       {visible && (
-        <Alert
+        <div className="alert fade show" role="alert"
           variant={variant}
           onClose={() => setVisible(false)}
           style={{
@@ -61,7 +60,7 @@ const AlertBox = ({ show, variant, message, onClose }) => {
         >
           {renderIcon()}
           <span>{message}</span>
-        </Alert>
+        </div>
       )}
     </div>
   );

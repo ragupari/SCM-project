@@ -3,6 +3,8 @@ import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderDetailsCard from '../components/OrderDetailsCard';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TrainTripsPage = () => {
     const [trainTrips, setTrainTrips] = useState([]);
@@ -41,29 +43,33 @@ const TrainTripsPage = () => {
         if (orderDate) {
             const newDate = new Date(orderDate);
             newDate.setDate(newDate.getDate() + 1); 
-            const nextDateStr = newDate.toISOString().split('T')[0];
-            setDate(nextDateStr);
-            fetchTrainTrips(nextDateStr); // Fetch train trips for the next day
+            const localDate = newDate.toLocaleDateString('en-CA');
+            setDate(localDate);
+            fetchTrainTrips(localDate); // Fetch train trips for the next day
         }
     }, [orderDate]);
 
     const handleNextDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
-        const nextDateStr = newDate.toISOString().split('T')[0];
-        setDate(nextDateStr);
-        fetchTrainTrips(nextDateStr);
+        const localDate = newDate.toLocaleDateString('en-CA');
+        setDate(localDate);
+        fetchTrainTrips(localDate);
     };
 
     const handlePrevDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() - 1);
-        const prevDateStr = newDate.toISOString().split('T')[0];
-        // Prevent fetching train trips for past dates
-        if (prevDateStr < orderDate.toString().split('T')[0]) return;
+        const localDate = newDate.toLocaleDateString('en-CA');
 
-        setDate(prevDateStr);
-        fetchTrainTrips(prevDateStr);
+        // Prevent fetching train trips for past dates
+        const orderDay = new Date(orderDate);
+        const orderLocalDate = orderDay.toLocaleDateString('en-CA');
+        
+        if (localDate < orderLocalDate) return;
+
+        setDate(localDate);
+        fetchTrainTrips(localDate);
     };
 
     const handleSelectTrain = async(trainId) => {
@@ -71,8 +77,16 @@ const TrainTripsPage = () => {
             await Promise.all([
                 axios.put(`/orders/assigntraintrip/${orderID}`, { trainTripID: trainId }),
                 axios.put(`/traintrips/decreasecapacity/${trainId}`, { reqCapacity })
-            ]);
-            navigate('/orders');
+            ]).then(() => {
+                toast.success('Train Trip selected successfully!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            });
+
+            // Add a 2-second delay before navigating
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            navigate(`/orders`);
         } catch (error) {
             console.error('Error assigning train trip:', error);
         }
@@ -132,6 +146,7 @@ const TrainTripsPage = () => {
                     ></iframe>
                 </Col>
             </Row>
+            <ToastContainer/>
         </Container>
     );
 };

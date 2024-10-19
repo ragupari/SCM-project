@@ -20,14 +20,15 @@ const Orders = () => {
     // Function to format date
     const formatDate = (dateString) => {
         const tempDate = new Date(dateString);
-        return tempDate.toISOString().split('T')[0];
+        const localDate = tempDate.toLocaleDateString('en-CA');
+        return localDate;
     };
 
     const handleAssign = (orderID, departureTime, routeID, reqCapacity) => {
-        const newDate = new Date(departureTime);
-        newDate.setDate(newDate.getDate() + 1);
-        const nextDateStr = newDate.toISOString().split('T')[0];
-        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${nextDateStr}&date=${nextDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
+        const tempDate = new Date(departureTime);
+        tempDate.setDate(tempDate.getDate() + 1);
+        const localDate = tempDate.toLocaleDateString('en-CA');
+        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${localDate}&date=${localDate}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
     // Logic for displaying current page orders
