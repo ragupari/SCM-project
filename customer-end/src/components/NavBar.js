@@ -25,16 +25,15 @@ function NavBar({ currentPage }) {
           </div>
           <ul className="navbar-nav mb-2 mb-lg-0">
             <li className="nav-item dropdown dropstart">
-              <a
+              <button
                 className="nav-link dropdown-toggle gradient-text-"
                 id="navbarDropdown"
                 role="button"
-                href="#"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 Account
-              </a>
+              </button>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
                   <a className="dropdown-item gradient-text-" href="/profile">
