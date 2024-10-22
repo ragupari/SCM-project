@@ -29,6 +29,7 @@ function NavBar({ currentPage }) {
                 className="nav-link dropdown-toggle gradient-text-"
                 id="navbarDropdown"
                 role="button"
+                href="#"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
