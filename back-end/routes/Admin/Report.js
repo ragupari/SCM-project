@@ -52,11 +52,34 @@ router.get('/quarterly/:year', (req, res) => {
     });
 });
 
-router.get('/citySales/:year', (req, res) => {
-    const { year } = req.params;
-    const query = `SELECT * FROM SalesReportByCityRouteAndYear WHERE YEAR = ?;`;
+router.get('/citySales/:year/:quarter', (req, res) => {
+    const { year, quarter } = req.params;
 
-    db.query(query, [year], (err, results) => {
+    const query = `
+        SELECT * 
+        FROM SalesReportByCityRouteAndQuarter 
+        WHERE Year = ? AND Quarter = ?;
+    `;
+
+    db.query(query, [year, quarter], (err, results) => {
+        if (err) {
+            console.error('Error fetching city sales:', err);
+            return res.status(500).send('Error fetching city sales');
+        }
+        res.json(results);
+    });
+});
+
+router.get('/report/StoreReport/CategoryRevenue/:year/:quarter/:selectedStore', (req, res) => {
+    const { year, quarter , selectedStore } = req.params;
+
+    const query = `
+        SELECT * 
+        FROM SalesReportByCityRouteAndQuarter 
+        WHERE Year = ? AND Quarter = ?;
+    `;
+
+    db.query(query, [year, quarter], (err, results) => {
         if (err) {
             console.error('Error fetching city sales:', err);
             return res.status(500).send('Error fetching city sales');
