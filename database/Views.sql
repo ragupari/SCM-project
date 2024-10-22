@@ -61,14 +61,39 @@ GROUP BY P.ProductName
 ORDER BY TotalQuantityOrdered DESC;
 
 -- View to get the total sales and capacity for each store
-CREATE VIEW SalesReportByCityAndRoute AS
+CREATE VIEW SalesReportByCityRouteAndYear AS
 SELECT 
     S.City AS StoreCity,
     R.Destination AS RouteDestination,
+    YEAR(O.OrderDate) AS Year,
     SUM(O.TotalPrice) AS TotalSales,
     SUM(O.TotalCapacity) AS TotalCapacity
 FROM Orders O
 JOIN Routes R ON O.RouteID = R.RouteID
 JOIN Stores S ON R.StoreID = S.StoreID
-GROUP BY S.City, R.Destination
-ORDER BY S.City, R.Destination;
+GROUP BY S.City, R.Destination, YEAR(O.OrderDate)
+ORDER BY S.City, R.Destination, YEAR(O.OrderDate);
+
+-- View to get the total quantity ordered for each category
+CREATE VIEW OrderedQuantityByCategory AS
+SELECT 
+    pc.CategoryName,
+    SUM(oi.Quantity) AS TotalOrderedQuantity
+FROM 
+    OrderItems oi
+    JOIN Products p ON oi.ProductID = p.ProductID
+    JOIN ProductCategories pc ON p.CategoryID = pc.CategoryID
+GROUP BY 
+    pc.CategoryID, pc.CategoryName;
+
+-- View to get the total revenue for each category
+CREATE VIEW RevenueByCategory AS
+SELECT 
+    pc.CategoryName,
+    SUM(oi.Cost) AS TotalRevenue
+FROM 
+    OrderItems oi
+    JOIN Products p ON oi.ProductID = p.ProductID
+    JOIN ProductCategories pc ON p.CategoryID = pc.CategoryID
+GROUP BY 
+    pc.CategoryID, pc.CategoryName;
