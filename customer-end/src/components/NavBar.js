@@ -28,7 +28,6 @@ function NavBar({ currentPage }) {
               <button
                 className="nav-link dropdown-toggle gradient-text-"
                 id="navbarDropdown"
-                role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
