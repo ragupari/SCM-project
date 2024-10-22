@@ -1,6 +1,5 @@
 import React from 'react'
-import NavBar from '../components/NavBar';
-import DisplayCard from '../components/PageTitleCard'; 
+import NavBar from '../components/NavBar'; 
 
 const AboutUs = () => {
     return (
