@@ -54,4 +54,17 @@ router.get('/logs/:truckID', (req, res) => {
     });
 });
 
+router.get('/store/:storeID', (req, res) => {
+    const { storeID } = req.params;
+
+    const query = `SELECT * FROM Trucks WHERE StoreID = ?;`
+    db.query(query, [storeID], (err, results) => {
+        if (err) {
+            console.error('Error fetching available trucks:', err);
+            return res.status(500).send('Error fetching available trucks');
+        }
+        res.json(results);
+    });
+});
+
 module.exports = router;

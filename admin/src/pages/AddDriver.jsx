@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import {
   Navbar,
@@ -21,6 +22,7 @@ const DriversByStore = () => {
     EmploymentStatus: "PresentEmployer",
   });
   const [showAddModal, setShowAddModal] = useState(false);
+  const navigate = useNavigate();
 
   // Get StoreID from localStorage
   const storeID = localStorage.getItem("storeID");
@@ -68,17 +70,8 @@ const DriversByStore = () => {
     });
   };
 
-  const removeDriver = (driverID) => {
-    if (window.confirm("Are you sure you want to remove this driver?")) {
-      axios.delete(`/drivers/addDriver/${driverID}`).then(() => {
-        toast.success("Driver removed successfully!", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        // Update the drivers list after deletion
-        setDrivers(drivers.filter((driver) => driver.DriverID !== driverID));
-      });
-    }
+  const viewWorkingHours = (driver) => {
+    navigate(`/viewWorkingHours?personID=${driver.driverID}&type=driver&name=${driver.Name}`);
   };
 
   return (
@@ -129,12 +122,12 @@ const DriversByStore = () => {
                   onClick={() => saveDriverUpdate(driver)}
                 >
                   Save
-                </Button>{" "}
+                </Button>{"  "}
                 <Button
-                  variant="outline-danger" className="rounded-pill px-3 py-2"
-                  onClick={() => removeDriver(driver.DriverID)}
+                  variant="outline-primary" className="rounded-pill px-3 py-2"
+                  onClick={() => viewWorkingHours(driver)}
                 >
-                  Remove
+                  Working Hours
                 </Button>
               </td>
             </tr>

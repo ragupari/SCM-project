@@ -72,7 +72,7 @@ function SignIn() {
           </div>
         </form>
         <div className="text-center mt-3">
-          <a href="/signup">Forgot your password?</a>
+          <a href="/signup">Don't have a account? Register Now!</a>
         </div>
       </div>
     </div>
