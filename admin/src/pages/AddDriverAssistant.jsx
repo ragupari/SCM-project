@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import {
   Container,
@@ -19,6 +20,7 @@ const AddDriverAssistant = () => {
     EmploymentStatus: "PresentEmployer",
   });
   const [showAddModal, setShowAddModal] = useState(false);
+  const navigate = useNavigate();
 
   const storeID = localStorage.getItem("storeID");
 
@@ -111,6 +113,10 @@ const AddDriverAssistant = () => {
       });
   };
 
+  const viewWorkingHours = (assistant) => {
+    navigate(`/viewWorkingHours?personID=${assistant.assistantID}&type=assistant&name=${assistant.Name}`);
+  };
+
   return (
     <Container fluid className="shadow-sm rounded p-4 h-100" style={{ backgroundColor: "#ffffff2f" }}>
       <Row className="mb-4">
@@ -159,14 +165,14 @@ const AddDriverAssistant = () => {
                   onClick={() => saveAssistantUpdate(assistant)}
                 >
                   Save
-                </Button>{" "}
+                </Button>{"  "}
                 <Button
-                  variant="outline-danger" className="rounded-pill px-3 py-2"
+                  variant="outline-primary" className="rounded-pill px-3 py-2"
                   onClick={() =>
-                    handleDeleteAssistant(assistant.DrivingAssistantID)
+                    viewWorkingHours(assistant)
                   }
                 >
-                  Remove
+                  Working Hours
                 </Button>
               </td>
             </tr>

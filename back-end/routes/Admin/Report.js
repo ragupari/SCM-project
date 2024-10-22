@@ -52,14 +52,92 @@ router.get('/quarterly/:year', (req, res) => {
     });
 });
 
-router.get('/citySales/:year', (req, res) => {
-    const { year } = req.params;
-    const query = `SELECT * FROM SalesReportByCityRouteAndYear WHERE YEAR = ?;`;
+router.get('/citySales/:year/:quarter', (req, res) => {
+    const { year, quarter } = req.params;
 
-    db.query(query, [year], (err, results) => {
+    const query = `
+        SELECT * 
+        FROM SalesReportByCityRouteAndQuarter 
+        WHERE Year = ? AND Quarter = ?;
+    `;
+
+    db.query(query, [year, quarter], (err, results) => {
         if (err) {
             console.error('Error fetching city sales:', err);
             return res.status(500).send('Error fetching city sales');
+        }
+        res.json(results);
+    });
+});
+
+router.get('/StoreReport/CategoryRevenue/:year/:quarter/:selectedStore', (req, res) => {
+    const { year, quarter , selectedStore } = req.params;
+
+    const query = `
+        SELECT CategoryName AS name, Revenue as value
+        FROM CategoryByStore
+        WHERE year =? and StoreID = ? and Quarter = ?;
+    `;
+
+    db.query(query, [year, selectedStore, quarter], (err, results) => {
+        if (err) {
+            console.error('Error fetching category revenue data:', err);
+            return res.status(500).send('Error fetching category revenue data');
+        }
+        res.json(results);
+    });
+});
+
+router.get('/StoreReport/ProductRevenue/:year/:quarter/:selectedStore', (req, res) => {
+    const { year, quarter , selectedStore } = req.params;
+
+    const query = `
+        SELECT ProductName AS name, Revenue as value
+        FROM ProductByStore
+        WHERE year =? and StoreID = ? and Quarter = ?;
+    `;
+
+    db.query(query, [year, selectedStore, quarter], (err, results) => {
+        if (err) {
+            console.error('Error fetching category revenue data:', err);
+            return res.status(500).send('Error fetching category revenue data');
+        }
+        res.json(results);
+    });
+});
+
+router.get('/RouteReport/ProductSales/:year/:quarter/:selectedRoute', (req, res) => {
+    const { year, quarter , selectedRoute } = req.params;
+
+    const query = `
+        SELECT ProductName AS name, Revenue as value
+        FROM RouteSalesView
+        WHERE year =? and Destination = ? and Quarter = ?;
+    `;
+
+    db.query(query, [year, selectedRoute, quarter], (err, results) => {
+        if (err) {
+            console.error('Error fetching product sales data:', err);
+            return res.status(500).send('Error fetching product sales data');
+        }
+        res.json(results);
+    });
+});
+
+router.get('/RouteReport/CategorySales/:year/:quarter/:selectedRoute', (req, res) => {
+    const { year, quarter , selectedRoute } = req.params;
+
+    const query = `
+        SELECT CategoryName AS name, sum(Revenue) as value
+        FROM RouteSalesView
+        WHERE year = ? and Destination = ? and Quarter = ?
+        GROUP BY CategoryName;
+    `;
+
+    db.query(query, [year, selectedRoute, quarter], (err, results) => {
+        if (err) {
+            console.error('Error fetching category sales data:', err);
+            return res.status(500).send('Error fetching category sales data');
         }
         res.json(results);
     });

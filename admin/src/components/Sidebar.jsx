@@ -38,17 +38,22 @@ const Sidebar = () => {
       {
           title: "Schedule History",
           href: "/schedule-history",
-          icon: "bi bi-truck",
+          icon: "bi bi-clipboard2-check",
       },
       {
           title: "Driver",
           href: "/addDriver",
-          icon: "bi bi-truck",
+          icon: "bi bi-person",
       },
       {
           title: "Assistant",
           href: "/addAssistant",
           icon: "bi bi-people",
+      },
+      {
+            title: "Trucks",
+            href: "/trucksWorkingHours",
+            icon: "bi bi-truck",
       }
   ];
 
