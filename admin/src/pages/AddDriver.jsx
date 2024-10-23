@@ -71,7 +71,7 @@ const DriversByStore = () => {
   };
 
   const viewWorkingHours = (driver) => {
-    navigate(`/viewWorkingHours?personID=${driver.driverID}&type=driver&name=${driver.Name}`);
+    navigate(`/viewWorkingHours?personID=${driver.DriverID}&type=driver&name=${driver.Name}`);
   };
 
   return (
