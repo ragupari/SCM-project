@@ -67,17 +67,28 @@ router.put('/assignschedule/:orderID', (req, res) => {
 
 router.get('/:username', (req, res) => {
     const username = req.params.username;
-    const query = `SELECT OrderID, OrderDate, DeliveryDate, Status, TotalPrice, TotalCapacity FROM Orders o
-                    LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
-                    WHERE Username = ?`;
+    const query = `CALL GetCustomerOrdersByUsername(?)`;
 
-    db.query(query, [username], (err, results) => {
-        if (err) {
-            console.error('Error fetching orders:', err);
-            return res.status(500).send('Error fetching orders');
+  db.query(query, [username], (error, results) => {
+    if (error) {
+      res.status(500).json({ error: 'Error fetching orders' });
+    } else {
+      const orders = results[0].map((order) => ({
+        ...order,
+        Products: order.ProductNames.split(',').map((name, index) => ({
+          ProductName: name,
+          Quantity: order.Quantities.split(',')[index]
+        })),
+        StatusDates: {
+          pending: order.OrderDate,
+          processing: order.TrainTripDate || '_',  // Train trip date indicates processing stage
+          ontheway: order.ShipmentDate || '_',     // Shipment date indicates on the way stage
+          received: order.Status === 'Received' ? order.ShipmentDate : '_'  // Delivery date for received status
         }
-        res.json(results);
-    });
+      }));
+      res.json(orders);
+    }
+  });
 });
 
 router.put('/:orderID', (req, res) => {
