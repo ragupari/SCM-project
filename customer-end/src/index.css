@@ -27,6 +27,14 @@ body {
   transform: translateY(-2px);
 }
 
+.order-card {
+  transition: transform 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+}
+
 .product-card {
   transition: transform 0.3s ease;
 }
@@ -38,4 +46,73 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.step-line {
+  display: flex;
+  justify-content: center; /* Centers the step line horizontally */
+  align-items: center; /* Vertically aligns the content */
+  padding: 0;
+  gap: 7px; /* Space between the circles */
+}
+
+.step {
+  position: relative;
+  text-align: center;
+  flex: 1; /* Ensures even spacing between steps */
+}
+
+.step.with-arrow::after {
+  content: '';
+  position: absolute;
+  right: -15px; /* Adjust to place the arrow correctly */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 2px;
+  background-color: #ccc; /* Default arrow color */
+  transition: background-color 0.3s;
+}
+
+.step.completed.with-arrow::after {
+  background-color: #4caf50; /* Green arrow for completed steps */
+}
+
+.step.active.with-arrow::after {
+  background-color: #2196f3; /* Blue arrow for the active step */
+}
+
+.step-circle {
+  background: #ddd;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 10px;
+  transition: background 0.3s;
+  text-align: center;
+  padding: 0 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.step.completed .step-circle {
+  background: #4caf50; /* Green for completed */
+  color: white;
+}
+
+.step.active .step-circle {
+  background: #2196f3; /* Blue for active */
+  color: white;
+}
+
+.step small {
+  display: block;
+  margin-top: 8px;
+  font-size: 10px;
+  color: #888;
 }
