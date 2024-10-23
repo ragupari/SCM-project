@@ -6,9 +6,10 @@ import NavBar from '../components/NavBar';
 const Orders = () => {
     const [username, setUsername] = useState('');
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fecthData = async () => {
+        const fetchData = async () => {
             try {
                 const username = await getUsernameFromToken();
                 if (!username) {
@@ -18,9 +19,11 @@ const Orders = () => {
                 setOrders(res.data);
             } catch (error) {
                 console.error('Error fetching orders:', error);
+            } finally {
+                setLoading(false);
             }
         };
-        fecthData();
+        fetchData();
     }, []);
 
     const getUsernameFromToken = async () => {
@@ -103,85 +106,92 @@ const Orders = () => {
             <NavBar currentPage={'My Orders'} />
             <DisplayCard title={'My Orders'} />
             <div className="container-fluid p-4">
-                <div className="row">
-                    {orders.map((order, index) => (
-                        <div key={order.OrderID} className="col-12 col-md-6 col-lg-4 mb-4">
-                            <div className="card order-card">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-8">
-                                            <h5 className="card-title mb-2">Order ID: {order.OrderID}</h5>
-                                            <div className="d-flex align-items-center mb-2">
-                                                <span className="me-2">Total Price:</span>
-                                                <strong>${order.TotalPrice.toFixed(2)}</strong>
+                {loading ? (
+                    <div>Loading orders...</div>
+                ) : orders.length === 0 ? (
+                    <div className="alert alert-info text-center" role="alert">
+                        No orders found.
+                    </div>
+                ) : (
+                    <div className="row">
+                        {orders.map((order, index) => (
+                            <div key={order.OrderID} className="col-12 col-md-6 col-lg-4 mb-4">
+                                <div className="card order-card">
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-8">
+                                                <h5 className="card-title mb-2">Order ID: {order.OrderID}</h5>
+                                                <div className="d-flex align-items-center mb-2">
+                                                    <span className="me-2">Total Price:</span>
+                                                    <strong>${order.TotalPrice.toFixed(2)}</strong>
+                                                </div>
+                                                <div className="d-flex align-items-center mb-2">
+                                                    <span className="me-2">Total Capacity:</span>
+                                                    <strong>{order.TotalCapacity}</strong>
+                                                </div>
+                                                <div className="d-flex align-items-center">
+                                                    <span className="me-2">Status:</span>
+                                                    <strong className="text-primary">{order.Status}</strong>
+                                                </div>
                                             </div>
-                                            <div className="d-flex align-items-center mb-2">
-                                                <span className="me-2">Total Capacity:</span>
-                                                <strong>{order.TotalCapacity}</strong>
-                                            </div>
-                                            <div className="d-flex align-items-center">
-                                                <span className="me-2">Status:</span>
-                                                <strong className="text-primary">{order.Status}</strong>
-                                            </div>
-                                        </div>
-                                        <div className="col-4 text-end">
-                                            <button
-                                                onClick={() => toggleExpand(index)}
-                                                className="btn btn-outline-primary"
-                                            >
-                                                {order.expanded ? 'Collapse' : 'Expand'}
-                                            </button>
-                                            {order.Status === 'OnTheWay' && (
+                                            <div className="col-4 text-end">
                                                 <button
-                                                    onClick={() => handleReceive(order.OrderID)}
-                                                    className="btn btn-outline-success mt-2"
+                                                    onClick={() => toggleExpand(index)}
+                                                    className="btn btn-outline-primary"
                                                 >
-                                                    Mark as Received
+                                                    {order.expanded ? 'Collapse' : 'Expand'}
                                                 </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                    {order.expanded && (
-                                        <div className="mt-3">
-                                            <div className="row">
-
-                                                <div className="col-6">
-                                                    <h6>Delivery Address:</h6>
-                                                    <p className="mb-2">{order.DeliveryAddress}</p>
-                                                </div>
-                                                <div className="col-6">
-                                                    <h6>Route Main Towns:</h6>
-                                                    <p className="mb-2">{order.MainTowns}</p>
-                                                </div>
-                                                <div className="col-12">
-                                                    <h6>Products:</h6>
-                                                    <ul className="list-unstyled">
-                                                        {order.Products.map((product, idx) => (
-                                                            <li key={idx} className="mb-1">
-                                                                <div className="row">
-                                                                    <div className="col-6">
-                                                                        {product.ProductName}
-                                                                    </div>
-                                                                    <div className="col-6">
-                                                                        {product.Quantity}
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
+                                                {order.Status === 'OnTheWay' && (
+                                                    <button
+                                                        onClick={() => handleReceive(order.OrderID)}
+                                                        className="btn btn-outline-success mt-2"
+                                                    >
+                                                        Mark as Received
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
-                                    )}
+                                        {order.expanded && (
+                                            <div className="mt-3">
+                                                <div className="row">
+                                                    <div className="col-6">
+                                                        <h6>Delivery Address:</h6>
+                                                        <p className="mb-2">{order.DeliveryAddress}</p>
+                                                    </div>
+                                                    <div className="col-6">
+                                                        <h6>Route Main Towns:</h6>
+                                                        <p className="mb-2">{order.MainTowns}</p>
+                                                    </div>
+                                                    <div className="col-12">
+                                                        <h6>Products:</h6>
+                                                        <ul className="list-unstyled">
+                                                            {order.Products.map((product, idx) => (
+                                                                <li key={idx} className="mb-1">
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            {product.ProductName}
+                                                                        </div>
+                                                                        <div className="col-6">
+                                                                            {product.Quantity}
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {renderStepLine(order.Status, order.StatusDates)}
                                 </div>
-                                {renderStepLine(order.Status, order.StatusDates)}
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
 }
 
-export default Orders
+export default Orders;
