@@ -114,7 +114,7 @@ const AddDriverAssistant = () => {
   };
 
   const viewWorkingHours = (assistant) => {
-    navigate(`/viewWorkingHours?personID=${assistant.assistantID}&type=assistant&name=${assistant.Name}`);
+    navigate(`/viewWorkingHours?personID=${assistant.DrivingAssistantID}&type=assistant&name=${assistant.Name}`);
   };
 
   return (
