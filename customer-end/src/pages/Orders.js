@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DisplayCard from '../components/PageTitleCard';
 import NavBar from '../components/NavBar';
+import OrderTracking from "../components/OrderTracking";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Orders = () => {
     const [username, setUsername] = useState('');
@@ -40,16 +42,6 @@ const Orders = () => {
         }
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const options = {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-        };
-        return date.toLocaleDateString(undefined, options);
-    };
-
     const fetchOrders = async () => {
         try {
             const res = await axios.get(`/orders/${username}`);
@@ -75,29 +67,15 @@ const Orders = () => {
     };
 
     const renderStepLine = (status, statusDates) => {
-        const steps = ['Pending', 'Processing', 'OnTheWay', 'Received'];
+        let currentStatus = 'Ordered';
+
+        if (status === 'Pending') { currentStatus = 'Ordered'; }
+        else if (status === 'Processing') { currentStatus = 'Packed'; }
+        else if (status === 'OnTheWay') { currentStatus = 'In Transit'; }
+        else if (status === 'Received') { currentStatus = 'Delivered'; }
 
         return (
-            <div>
-                <ul className="step-line list-inline">
-                    {steps.map((step, index) => {
-                        // Determine if the step is completed or active
-                        const isCompleted = steps.indexOf(status) > index;
-                        const isActive = status === step;
-
-                        return (
-                            <li key={index} className="list-inline-item">
-                                <div className={`step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''} ${index < steps.length - 1 ? 'with-arrow' : ''}`}>
-                                    <div className="step-circle">{step}</div>
-                                    {statusDates[step.toLowerCase()] && (
-                                        <small>{formatDate(statusDates[step.toLowerCase()])}</small>
-                                    )}
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
+            <OrderTracking status={currentStatus} dates={statusDates} />
         );
     };
 
@@ -115,12 +93,33 @@ const Orders = () => {
                 ) : (
                     <div className="row">
                         {orders.map((order, index) => (
-                            <div key={order.OrderID} className="col-12 col-md-6 col-lg-4 mb-4">
+                            <div key={order.OrderID} className="col-8 mb-4 mx-auto">
                                 <div className="card order-card">
+                                    {/* Card Header */}
+                                    <div className="card-header d-flex justify-content-between align-items-center">
+                                        <h5 className="mb-0">Order ID: {order.OrderID}</h5>
+                                        <div className="d-flex gap-2">
+                                            <button
+                                                onClick={() => toggleExpand(index)}
+                                                className="btn btn-outline-primary"
+                                            >
+                                                {order.expanded ? 'Collapse' : 'Expand'}
+                                            </button>
+                                            {order.Status === 'OnTheWay' && (
+                                                <button
+                                                    onClick={() => handleReceive(order.OrderID)}
+                                                    className="btn btn-outline-success"
+                                                >
+                                                    Mark as Received
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {/* Card Body */}
                                     <div className="card-body">
                                         <div className="row">
-                                            <div className="col-8">
-                                                <h5 className="card-title mb-2">Order ID: {order.OrderID}</h5>
+                                            {/* Order Summary */}
+                                            <div className="col-6">
                                                 <div className="d-flex align-items-center mb-2">
                                                     <span className="me-2">Total Price:</span>
                                                     <strong>${order.TotalPrice.toFixed(2)}</strong>
@@ -134,23 +133,12 @@ const Orders = () => {
                                                     <strong className="text-primary">{order.Status}</strong>
                                                 </div>
                                             </div>
-                                            <div className="col-4 text-end">
-                                                <button
-                                                    onClick={() => toggleExpand(index)}
-                                                    className="btn btn-outline-primary"
-                                                >
-                                                    {order.expanded ? 'Collapse' : 'Expand'}
-                                                </button>
-                                                {order.Status === 'OnTheWay' && (
-                                                    <button
-                                                        onClick={() => handleReceive(order.OrderID)}
-                                                        className="btn btn-outline-success mt-2"
-                                                    >
-                                                        Mark as Received
-                                                    </button>
-                                                )}
+                                            <div className="col-6">
+                                                {/* Horizontal Step Line */}
+                                                {renderStepLine(order.Status, order.StatusDates)}
                                             </div>
                                         </div>
+                                        {/* Expanded Details */}
                                         {order.expanded && (
                                             <div className="mt-3">
                                                 <div className="row">
@@ -183,7 +171,6 @@ const Orders = () => {
                                             </div>
                                         )}
                                     </div>
-                                    {renderStepLine(order.Status, order.StatusDates)}
                                 </div>
                             </div>
                         ))}
