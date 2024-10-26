@@ -13,7 +13,6 @@ const Home = ({user}) => {
         <DisplayCard title = "Welcome" />
         <SearchBar />
         <AllCategoryCards />
-        <div className='gradient-text'>Welcome {user}</div> {/* Assuming loginInfo contains a 'username' property */}
       </div>
 
     );
