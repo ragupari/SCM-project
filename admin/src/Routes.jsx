@@ -7,6 +7,8 @@ import SignUp from "./pages/auth/SignUp";
 import FullLayout from "./layout/FullLayout";
 
 import Dashboard from './pages/Dashboard';
+
+import Reports from './pages/Reports';
 import NotFound from './pages/NotFound';
 import ProcessingOrders from './pages/ProcessingOrders';
 import PendingOrders from './pages/PendingOrders';
@@ -57,6 +59,7 @@ export default function AppRoutes() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/reports" element={<Reports />} />
             {loginInfo.role === "admin" && (
               <>
                 <Route path="/orders" element={<PendingOrders />} />
