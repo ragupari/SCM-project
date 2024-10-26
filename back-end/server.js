@@ -35,6 +35,7 @@ app.use("/truck-schedules", require("./routes/Admin/TruckSchedule"));
 app.use("/products", require("./routes/Admin/Products"));
 app.use("/report", require("./routes/Admin/Report"));
 app.use("/stores", require("./routes/Admin/Stores"));
+app.use("/workinghours", require("./routes/Admin/WorkingHours"));
 
 // Example route
 app.get("/", (req, res) => {

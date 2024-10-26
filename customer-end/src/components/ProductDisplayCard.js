@@ -47,7 +47,7 @@ const ProductDisplayCard = ({ id, name, price, description, capacityperunit }) =
     };
 
     return (
-        <div className="container my-4">
+        <div className="container-fluid shadow-sm rounded p-5" style={{ backgroundColor: "#ffffff3f" }}>
             <div className="row gx-4 gx-lg-5 align-items-center">
                 <div className="col-md-6 mb-4 mb-md-0">
                     <div className="image-wrapper">
@@ -58,10 +58,13 @@ const ProductDisplayCard = ({ id, name, price, description, capacityperunit }) =
                         />
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 shadow-sm rounded p-5" style={{ backgroundColor: "#ffffff5f" }}>
                     <h1 className="display-5 fw-bolder mb-3">{name}</h1>
-                    <div className="fs-5 mb-4">
+                    <div className="fs-5">
                         <span>Unit Price: ${price}</span>
+                    </div>
+                    <div className="fs-6 mb-4">
+                        <span>50 Tea Bags per Pack | 50 Servings | 1.5 Grams per Tea Bag</span>
                     </div>
                     <p className="lead mb-4">{description}</p>
                     <div className="d-flex flex-column flex-sm-row">
