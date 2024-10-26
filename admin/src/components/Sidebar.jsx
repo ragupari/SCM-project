@@ -21,7 +21,12 @@ const Sidebar = () => {
           title: "Products",
           href: "/products",
           icon: "bi bi-cup-hot",
-      }
+      },
+      {
+        title: "Reports",
+        href: "/reports",
+        icon: "bi bi-book",
+    }
   ];
 
   const managerNavigation = [
@@ -49,7 +54,12 @@ const Sidebar = () => {
           title: "Assistant",
           href: "/addAssistant",
           icon: "bi bi-people",
-      }
+      },
+      {
+        title: "Reports",
+        href: "/reports",
+        icon: "bi bi-book",
+    }
   ];
 
   // Determine which navigation to use
