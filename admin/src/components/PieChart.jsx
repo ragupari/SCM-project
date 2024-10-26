@@ -2,7 +2,7 @@ import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Card } from "react-bootstrap";
 
-const PieChartComponent = ({ title, data = [] }) => {
+const PieChartComponent = ({ title, data = [], outerRadius, innerRadius}) => {
   const COLORS = [
     "#6A1B9A", // Dark Purple
     "#8E24AA", // Medium Purple
@@ -24,11 +24,11 @@ const PieChartComponent = ({ title, data = [] }) => {
   }));
 
   // Group extra items into "Others" category if there are more than 9 items
-  const processedData = formattedData.length > 9 ? [
-    ...formattedData.slice(0, 9),
+  const processedData = formattedData.length > 6 ? [
+    ...formattedData.slice(0, 6),
     {
       name: "Others",
-      value: formattedData.slice(9).reduce((acc, item) => acc + item.value, 0)
+      value: formattedData.slice(6).reduce((acc, item) => acc + item.value, 0)
     }
   ] : formattedData;
 
@@ -44,7 +44,8 @@ const PieChartComponent = ({ title, data = [] }) => {
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius={120}
+              outerRadius={outerRadius || "80%"}
+              innerRadius={innerRadius || "0%"}
               fill="#8884d8"
             >
               {processedData.map((entry, index) => (
