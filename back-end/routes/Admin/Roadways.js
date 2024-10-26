@@ -16,4 +16,18 @@ router.get('/:routeID', (req, res) => {
     });
 });
 
+
+router.get('/getRoutes/:storeID', (req, res) => {
+    const { storeID } = req.params;
+    const query =`SELECT * FROM Routes WHERE StoreID = ?;`;
+
+    db.query(query,[storeID], (err, results) => {
+        if (err) {
+            console.error('Error fetching routes:', err);
+            return res.status(500).send('Error fetching routes');
+        }
+        res.json(results);
+    });
+});
+
 module.exports = router;
