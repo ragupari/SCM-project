@@ -212,8 +212,7 @@ router.post('/removeitem', async (req, res) => {
 });
 
 router.post('/checkout', (req, res) => {
-  const { username } = req.body;
-
+  const { username, routeID, deliveryAddress } = req.body;
   // Step 1: Fetch the CustomerID for the given username
   const sqlGetCustomerID = 'SELECT CustomerID FROM Customers WHERE Username = ?';
   db.query(sqlGetCustomerID, [username], (err, result) => {
@@ -228,7 +227,7 @@ router.post('/checkout', (req, res) => {
 
     // Step 2: Fetch the items in the cart for this customer
     const sqlGetCartItems = `
-      SELECT c.ProductID, c.Number AS CartQuantity, p.ProductName, p.UnitPrice, p.AvailableStock
+      SELECT c.ProductID, c.Number AS CartQuantity, p.ProductName, p.UnitPrice, p.AvailableStock, p.CapacityPerUnit
       FROM Cart c 
       JOIN Products p ON c.ProductID = p.ProductID 
       WHERE c.CustomerID = ?`;
@@ -253,7 +252,7 @@ router.post('/checkout', (req, res) => {
           // Item has enough stock, prepare for order insertion
           itemsToOrder.push(item);
           totalPrice += item.UnitPrice * item.CartQuantity;
-          totalCapacity += item.CartQuantity; // Assume capacity is number of units for simplicity
+          totalCapacity += item.CapacityPerUnit * item.CartQuantity;
         } else {
           // Item does not have enough stock, mark it for removal
           itemsToRemove.push(item.ProductID);
@@ -279,9 +278,9 @@ router.post('/checkout', (req, res) => {
       // Step 5: Insert the order into the Orders table
       const sqlInsertOrder = `
         INSERT INTO Orders (CustomerID, OrderDate, DeliveryDate, DeliveryAddress, Status, TotalPrice, TotalCapacity, RouteID)
-        VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'Default Address', 'Pending', ?, ?, 15)`;
+        VALUES (?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), ?, 'Pending', ?, ?, ?)`;
 
-      db.query(sqlInsertOrder, [customerID, totalPrice, totalCapacity], (err, result) => {
+      db.query(sqlInsertOrder, [ customerID, deliveryAddress, totalPrice, totalCapacity, routeID], (err, result) => {
         if (err) {
           return res.status(500).json({ error: 'Error inserting order.' });
         }
@@ -298,19 +297,9 @@ router.post('/checkout', (req, res) => {
           return db.promise().query(sqlInsertOrderItem, [orderID, item.ProductID, item.CartQuantity, itemCost]);
         });
 
-        // Step 7: Update stock for each product
-        const sqlUpdateStock = `
-          UPDATE Products 
-          SET AvailableStock = AvailableStock - ? 
-          WHERE ProductID = ?`;
-
-        const stockUpdatePromises = itemsToOrder.map(item => 
-          db.promise().query(sqlUpdateStock, [item.CartQuantity, item.ProductID])
-        );
-
-        Promise.all([...orderItemPromises, ...stockUpdatePromises])
+        Promise.all(orderItemPromises)
           .then(() => {
-            // Step 8: Clear the cart for the customer
+            // Step 7: Clear the cart for the customer
             const sqlClearCart = 'DELETE FROM Cart WHERE CustomerID = ?';
             db.query(sqlClearCart, [customerID], (err, result) => {
               if (err) {
@@ -330,10 +319,23 @@ router.post('/checkout', (req, res) => {
   });
 });
 
-router.get('/routes/destinations', (req, res) => {
-  const sqlGetDestinations = 'SELECT DISTINCT Destination FROM Routes';
+router.get('/stores', (req, res) => {
+  const sqlGetStores = 'SELECT * FROM Stores';
+  db.query(sqlGetStores, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching stores' });
+    }
+    res.json(results);
+  });
+});
 
-  db.query(sqlGetDestinations, (err, results) => {
+router.get('/routes', (req, res) => {
+  const sqlGetRoutes = `SELECT r.RouteID, s.StoreID, s.City, r.MainTowns, r.Destination
+                        FROM Routes r
+                        LEFT JOIN Stores s
+                        ON r.StoreID = s.StoreID;`;
+
+  db.query(sqlGetRoutes, (err, results) => {
       if (err) {
           return res.status(500).json({ error: 'Error fetching destinations' });
       }
@@ -341,23 +343,17 @@ router.get('/routes/destinations', (req, res) => {
   });
 });
 
-// Get routes based on a selected destination
-router.get('/routes/by-destination', (req, res) => {
-  const { destination } = req.query; // Extract the destination from the query string
-
-  const sqlGetRoutesByDestination = `
-      SELECT RouteID, MainTowns, TimeforCompletion 
-      FROM Routes 
-      WHERE Destination = ?
-  `;
-
-  db.query(sqlGetRoutesByDestination, [destination], (err, results) => {
-      if (err) {
-          return res.status(500).json({ error: err });
-      }
-      res.json(results);
+router.get('/address/:Username', (req, res) => {
+  const { Username } = req.params;
+  const sqlGetAddress = ` SELECT CONCAT(Address, ', ', City) AS FullAddress
+                          FROM Customers
+                          WHERE Username = ?;`;
+  db.query(sqlGetAddress, [Username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching address' });
+    }
+    res.json(results[0]);
   });
 });
-
 
 module.exports = router;

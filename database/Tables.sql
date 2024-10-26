@@ -139,6 +139,14 @@ CREATE TABLE Shipments (
   FOREIGN KEY (DrivingAssistantID) REFERENCES DrivingAssistants(DrivingAssistantID)
 );
 
+CREATE TABLE Cart (
+  CartItemID int NOT NULL UNIQUE AUTO_INCREMENT,
+  CustomerID int NOT NULL,
+  ProductID int NOT NULL,
+  Number int(10) unsigned zerofill NOT NULL,
+  PRIMARY KEY (CartItemID)
+);
+
 
 -- useful when you need to re-create the tables and load data
 SET Foreign_key_checks = 0;

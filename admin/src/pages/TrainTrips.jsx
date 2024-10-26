@@ -3,6 +3,8 @@ import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderDetailsCard from '../components/OrderDetailsCard';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TrainTripsPage = () => {
     const [trainTrips, setTrainTrips] = useState([]);
@@ -41,29 +43,33 @@ const TrainTripsPage = () => {
         if (orderDate) {
             const newDate = new Date(orderDate);
             newDate.setDate(newDate.getDate() + 1); 
-            const nextDateStr = newDate.toISOString().split('T')[0];
-            setDate(nextDateStr);
-            fetchTrainTrips(nextDateStr); // Fetch train trips for the next day
+            const localDate = newDate.toLocaleDateString('en-CA');
+            setDate(localDate);
+            fetchTrainTrips(localDate); // Fetch train trips for the next day
         }
     }, [orderDate]);
 
     const handleNextDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
-        const nextDateStr = newDate.toISOString().split('T')[0];
-        setDate(nextDateStr);
-        fetchTrainTrips(nextDateStr);
+        const localDate = newDate.toLocaleDateString('en-CA');
+        setDate(localDate);
+        fetchTrainTrips(localDate);
     };
 
     const handlePrevDate = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() - 1);
-        const prevDateStr = newDate.toISOString().split('T')[0];
-        // Prevent fetching train trips for past dates
-        if (prevDateStr < orderDate.toString().split('T')[0]) return;
+        const localDate = newDate.toLocaleDateString('en-CA');
 
-        setDate(prevDateStr);
-        fetchTrainTrips(prevDateStr);
+        // Prevent fetching train trips for past dates
+        const orderDay = new Date(orderDate);
+        const orderLocalDate = orderDay.toLocaleDateString('en-CA');
+        
+        if (localDate < orderLocalDate) return;
+
+        setDate(localDate);
+        fetchTrainTrips(localDate);
     };
 
     const handleSelectTrain = async(trainId) => {
@@ -71,17 +77,25 @@ const TrainTripsPage = () => {
             await Promise.all([
                 axios.put(`/orders/assigntraintrip/${orderID}`, { trainTripID: trainId }),
                 axios.put(`/traintrips/decreasecapacity/${trainId}`, { reqCapacity })
-            ]);
-            navigate('/orders');
+            ]).then(() => {
+                toast.success('Train Trip selected successfully!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            });
+
+            // Add a 2-second delay before navigating
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            navigate(`/orders`);
         } catch (error) {
             console.error('Error assigning train trip:', error);
         }
     };
 
     return (
-        <Container fluid className="py-4">
-            <OrderDetailsCard orderID={orderID} />
+        <Container fluid className="shadow-sm rounded p-4 h-100" style={{ backgroundColor: "#ffffff2f" }}>
             <h2 className="text-center mb-4">Train Trips for {date}</h2>
+            <OrderDetailsCard orderID={orderID} />
             {trainTrips.length > 0 ? (
                 <Row>
                     {trainTrips.map((train) => (
@@ -95,8 +109,7 @@ const TrainTripsPage = () => {
                                         Capacity: {train.AvailableCapacity}
                                     </Card.Text>
                                     <Button
-                                        variant="info"
-                                        className="w-100 rounded"
+                                        variant="outline-info" className="w-100 rounded-pill px-3 py-2"
                                         onClick={() => handleSelectTrain(train.TrainTripID)}
                                         // Disable button if train capacity is less than required capacity
                                         disabled={train.AvailableCapacity < reqCapacity} 
@@ -112,10 +125,10 @@ const TrainTripsPage = () => {
                 <p className="text-center">No train trips available for this date.</p>
             )}
             <div className="d-flex justify-content-center mt-4 mb-4">
-                <Button variant="primary" className="rounded me-4" onClick={handlePrevDate}>
+                <Button variant="outline-primary" className="rounded-pill px-3 py-2 me-5" onClick={handlePrevDate}>
                     Prev Date
                 </Button>
-                <Button variant="primary" className="rounded" onClick={handleNextDate}>
+                <Button variant="outline-primary" className="rounded-pill px-3 py-2" onClick={handleNextDate}>
                     Next Date
                 </Button>
             </div>
@@ -133,6 +146,7 @@ const TrainTripsPage = () => {
                     ></iframe>
                 </Col>
             </Row>
+            <ToastContainer/>
         </Container>
     );
 };

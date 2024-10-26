@@ -3,6 +3,7 @@ import axios from 'axios';
 import DisplayCard from '../components/PageTitleCard';
 import NavBar from '../components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AlertBox from '../components/AlertBox';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -11,10 +12,16 @@ const Cart = () => {
   const [error, setError] = useState(null);
   const [routeID, setRouteID] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState(''); // New state for delivery address
 
-  const [destinations, setDestinations] = useState([]);
-  const [selectedDestination, setSelectedDestination] = useState('');
   const [routes, setRoutes] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [selectedStoreID, setStoreID] = useState('');
+  const [deliveryAddressMethod, setDeliveryAddressMethod] = useState('default');
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('success');
 
   // Fetch the username from the token
   const getUsernameFromToken = async () => {
@@ -44,29 +51,37 @@ const Cart = () => {
       setLoading(false);
     }
   };
+
   const calculateTotalAmount = () => {
     return cartItems.reduce((total, item) => total + item.UnitPrice * item.Number, 0);
-};
+  };
 
   // Fetch destinations
-  const fetchDestinations = async () => {
+  const fetchRoutes = async () => {
     try {
-      const response = await axios.get('cart2/routes/destinations');
-      setDestinations(response.data);
+      const response = await axios.get('cart2/routes');
+      setRoutes(response.data);
     } catch (error) {
       console.error('Failed to fetch destinations:', error);
     }
   };
 
-  // Fetch routes based on selected destination
-  const fetchRoutesByDestination = async (destination) => {
+  // Get distinct StoreID and City pairs
+  const fetchStores = async () => {
     try {
-      const response = await axios.get('cart2/routes/by-destination', {
-        params: { destination },
-      });
-      setRoutes(response.data);
+      const response = await axios.get('cart2/stores');
+      setStores(response.data);
     } catch (error) {
-      console.error('Failed to fetch routes:', error);
+      console.error('Failed to fetch stores:', error);
+    }
+  };
+
+  const fetchUserAddress = async (username) => {
+    try {
+      const response = await axios.get(`/cart2/address/${username}`);
+      setDeliveryAddress(response.data.FullAddress);
+    } catch (error) {
+      console.error('Failed to fetch user address:', error);
     }
   };
 
@@ -75,18 +90,13 @@ const Cart = () => {
       const retrievedUsername = await getUsernameFromToken();
       if (retrievedUsername) {
         fetchCartItems(retrievedUsername);
+        fetchUserAddress(retrievedUsername);
       }
     };
     loadCartItems();
-    fetchDestinations(); // Load destinations when component mounts
+    fetchStores(); // Load stores when component mounts
+    fetchRoutes(); // Load destinations when component mounts
   }, []);
-
-  // Handle destination change
-  const handleDestinationChange = (event) => {
-    const destination = event.target.value;
-    setSelectedDestination(destination);
-    fetchRoutesByDestination(destination); // Fetch routes based on selected destination
-  };
 
   // Show modal when checkout is clicked
   const handleCheckout = () => {
@@ -95,9 +105,12 @@ const Cart = () => {
 
   // Proceed to checkout (clears the cart)
   const checkout = async () => {
+    //console.log('checkout', routeID, deliveryAddress);
     try {
-      await axios.post('/cart2/checkout', { username, routeID });
-      alert('Checkout successful!');
+      await axios.post('/cart2/checkout', { username, routeID, deliveryAddress }); // Include delivery address
+      setAlertMessage('Checkout successful!'); // Set success message
+      setAlertType('success'); // Set alert type to success
+      setShowAlert(true); // Show the alert
       fetchCartItems(username);
       setShowModal(false); // Close the modal after successful checkout
     } catch (error) {
@@ -130,6 +143,12 @@ const Cart = () => {
     <div>
       <NavBar currentPage={'Cart'} />
       <DisplayCard title={'Cart'} />
+      <AlertBox
+        show={showAlert}
+        variant={alertType}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)} // Reset the show state when alert closes
+      />
       <div className="container py-5">
         {loading ? (
           <div className="alert alert-info text-center" role="alert">
@@ -160,7 +179,7 @@ const Cart = () => {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={item.ProductID}>
                       <td>{item.ProductName}</td>
                       <td className="d-none d-sm-table-cell">
                         <div className="input-group">
@@ -219,28 +238,28 @@ const Cart = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Select Destination and Route</h5>
+              <h5 className="modal-title">Select Your Delivery Route</h5>
               <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
               {/* Destination Dropdown */}
-              <label htmlFor="destinationSelect">Destination</label>
+              <label htmlFor="selectStore">Store</label>
               <select
-                id="destinationSelect"
+                id="selectStore"
                 className="form-select"
-                value={selectedDestination}
-                onChange={handleDestinationChange}
+                value={selectedStoreID}
+                onChange={(e) => setStoreID(e.target.value)}
               >
-                <option value="">Select Destination</option>
-                {destinations.map((destination) => (
-                  <option key={destination.Destination} value={destination.Destination}>
-                    {destination.Destination}
+                <option value="">Select Near-by Store</option>
+                {stores.map((store) => (
+                  <option key={store.StoreID} value={store.StoreID}>
+                    {store.City}
                   </option>
                 ))}
               </select>
 
               {/* Route Dropdown */}
-              {selectedDestination && (
+              {selectedStoreID && (
                 <>
                   <label htmlFor="routeSelect" className="mt-3">Route (Main Towns)</label>
                   <select
@@ -250,12 +269,40 @@ const Cart = () => {
                     onChange={(e) => setRouteID(e.target.value)}
                   >
                     <option value="">Select Route</option>
-                    {routes.map((route) => (
-                      <option key={route.RoutelD} value={route.RoutelD}>
-                        {route.MainTowns}
-                      </option>
-                    ))}
+                    {routes
+                      .filter((route) => route.StoreID === parseInt(selectedStoreID)) // Filter routes by StoreID
+                      .map((route) => (
+                        <option key={route.RouteID} value={route.RouteID}>
+                          {route.City} - {route.MainTowns} - {route.Destination}
+                        </option>
+                      ))}
                   </select>
+                </>
+              )}
+
+              {/* Delivery Address Method Dropdown */}
+              <label htmlFor="deliveryAddressMethod" className="mt-3">Delivery Address</label>
+              <select
+                id="deliveryAddressMethod"
+                className="form-select"
+                value={deliveryAddressMethod}
+                onChange={(e) => setDeliveryAddressMethod(e.target.value)}>
+                <option value="default">Use default address</option>
+                <option value="custom">Enter custom address</option>
+              </select>
+
+              {/*Custom Delivery Address Input */}
+              {deliveryAddressMethod === 'custom' && (
+                <>
+                  <label htmlFor="deliveryAddress" className="mt-3">Enter Delivery Address</label>
+                  <input
+                    type="text"
+                    id="deliveryAddress"
+                    className="form-control"
+                    placeholder="Enter delivery address"
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                  />
                 </>
               )}
             </div>
@@ -263,7 +310,12 @@ const Cart = () => {
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                 Cancel
               </button>
-              <button type="button" className="btn btn-primary" onClick={checkout} disabled={!routeID}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => checkout(routeID)}
+                disabled={!routeID || !deliveryAddress} // Disable if routeID or address is empty
+              >
                 Confirm Checkout
               </button>
             </div>

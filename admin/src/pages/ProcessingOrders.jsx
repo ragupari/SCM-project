@@ -20,14 +20,15 @@ const Orders = () => {
     // Function to format date
     const formatDate = (dateString) => {
         const tempDate = new Date(dateString);
-        return tempDate.toISOString().split('T')[0];
+        const localDate = tempDate.toLocaleDateString('en-CA');
+        return localDate;
     };
 
     const handleAssign = (orderID, departureTime, routeID, reqCapacity) => {
-        const newDate = new Date(departureTime);
-        newDate.setDate(newDate.getDate() + 1);
-        const nextDateStr = newDate.toISOString().split('T')[0];
-        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${nextDateStr}&date=${nextDateStr}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
+        const tempDate = new Date(departureTime);
+        tempDate.setDate(tempDate.getDate() + 1);
+        const localDate = tempDate.toLocaleDateString('en-CA');
+        navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${localDate}&date=${localDate}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
     };
 
     // Logic for displaying current page orders
@@ -45,7 +46,7 @@ const Orders = () => {
     }
 
     return (
-        <Container fluid className="shadow-sm rounded p-4" style={{ backgroundColor: "#ffffff2f" }}>
+        <Container fluid className="shadow-sm rounded p-4 h-100" style={{ backgroundColor: "#ffffff2f" }}>
             <Row className="mb-4">
                 <Col>
                     <h2 className="text-center" style={{ fontWeight: "600", color: "#333" }}>Processing Orders</h2>
@@ -55,13 +56,13 @@ const Orders = () => {
                 <thead className="bg-light" style={{ borderBottom: "2px solid #dee2e6" }}>
                     <tr style={{ textAlign: "center", fontWeight: "500", color: "#666", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                         <th style={{ padding: "15px" }}>Order ID</th>
-                        <th>Customer ID</th>
-                        <th>Order Date</th>
-                        <th>Arrival Date</th>
-                        <th>Delivery Date</th>
-                        <th>Total Price</th>
-                        <th>Total Capacity</th>
-                        <th>Action</th>
+                        <th className="text-center align-middle">Customer ID</th>
+                        <th className="text-center align-middle">Order Date</th>
+                        <th className="text-center align-middle">Arrival Date</th>
+                        <th className="text-center align-middle">Delivery Date</th>
+                        <th className="text-center align-middle">Total Price</th>
+                        <th className="text-center align-middle">Total Capacity</th>
+                        <th className="text-center align-middle">Action</th>
                     </tr>
                 </thead>
                 <tbody>

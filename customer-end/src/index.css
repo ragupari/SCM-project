@@ -27,6 +27,14 @@ body {
   transform: translateY(-2px);
 }
 
+.order-card {
+  transition: transform 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+}
+
 .product-card {
   transition: transform 0.3s ease;
 }

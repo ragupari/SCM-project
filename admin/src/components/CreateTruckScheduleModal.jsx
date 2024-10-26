@@ -66,9 +66,6 @@ const CreateTruckScheduleModal = ({ show, onHide, newSchedule, setNewSchedule, h
             if(endHours < 17){
                 // Update the schedule with calculated start and end times
                 setNewSchedule({ ...newSchedule, StartTime: maxAvailableTime, EndTime: calculatedEndTime });
-                setAlertMessage('Schedule created successfully');
-                setAlertType('success');
-                setShowAlert(true);
             } else {
                 // Reset the schedule if the calculated end time is after 5 PM
                 setNewSchedule({ ...newSchedule, TruckID: '', DriverID: '', DrivingAssistantID: '', StartTime: '', EndTime: '' });

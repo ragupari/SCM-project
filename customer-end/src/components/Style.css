@@ -114,12 +114,12 @@
 
 .image-wrapper {
   position: relative;
-  width: 100%;
+  width: 80%;
   height: auto;
-  /* Make the wrapper responsive */
-  padding-top: 56.25%;
-  /* Aspect ratio (16:9) */
+  padding-top: 56.25%; /* Aspect ratio (16:9) */
   overflow: hidden;
+  border-radius: 15px; /* Rounded corners for the wrapper */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Small shadow for the wrapper */
 }
 
 .image-wrapper img {
@@ -128,6 +128,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  /* Ensure the image covercs the container */
+  object-fit: cover; /* Ensure the image covers the entire box */
+  border-radius: 15px; /* Rounded corners for the image */
+  transition: transform 0.3s ease-in-out;
 }
+
+.image-wrapper img:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+

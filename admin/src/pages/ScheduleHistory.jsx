@@ -58,11 +58,12 @@ const ScheduleHistory = () => {
 
     const formatDate = (dateString) => {
         const tempDate = new Date(dateString);
-        return tempDate.toISOString().split('T')[0];
+        const localDate = tempDate.toLocaleDateString('en-CA'); // 'en-CA' format gives 'YYYY-MM-DD'
+        return localDate;
     }
 
     return (
-        <Container fluid className="shadow-sm rounded p-4" style={{ backgroundColor: "#ffffff2f" }}>
+        <Container fluid className="shadow-sm rounded p-4 h-100" style={{ backgroundColor: "#ffffff2f" }}>
             <Row className="mb-4">
                 <Col className="d-flex flex-column align-items-center">
                     <h2 className="text-center mb-3" style={{ fontWeight: "600", color: "#333" }}>Delivery History</h2>
