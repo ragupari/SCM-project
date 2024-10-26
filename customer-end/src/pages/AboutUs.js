@@ -25,7 +25,7 @@ const AboutUs = () => {
             <section className="container my-5">
                 <div className="row align-items-center">
                     <div className="col-md-6 mb-4 mb-md-0">
-                        <img src="your-image-url-here" alt="Tea plantation" className="img-fluid rounded" />
+                        <img src="https://t3.ftcdn.net/jpg/00/07/49/18/360_F_7491822_ZRJxpUmYKKgfmS2SRv76Sy2sUOQWP1Rp.jpg" alt="Tea plantation" className="img-fluid rounded" />
                     </div>
                     <div className="col-md-6">
                         <h2 className="mb-4">Who We Are</h2>
@@ -70,7 +70,7 @@ const AboutUs = () => {
                         </ul>
                     </div>
                     <div className="col-md-6">
-                        <img src="another-image-url-here" alt="Tea process" className="img-fluid rounded" />
+                        <img src="https://t3.ftcdn.net/jpg/08/35/78/38/360_F_835783811_B0S0yFWnzdxf0T00rHQua3jUhWeCJ46t.jpg" alt="Tea process" className="img-fluid rounded" />
                     </div>
                 </div>
             </section>
