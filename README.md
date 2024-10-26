@@ -8,7 +8,7 @@
 </div>
 
 ## Description
-This project is part of Group 40's Database System Project. It consists of a React frontend (`customer-end`) and a Node.js backend (`back-end`). The project is set up to manage both frontend and backend servers effectively.
+This project is a Supply Chain Management (SCM) system designed for a production company in Kandy. The system manages the distribution of products across multiple cities using a combination of railway and truck transportation. Key features include scheduling based on railway capacity, managing truck routes, and ensuring driver roster constraints. The system also provides comprehensive reporting, including sales reports, popular items, and driver/vehicle work hours. This project includes database design, procedures, and triggers to maintain data consistency and support detailed analytics.
 
 ## Project Structure
 - **admin**: The admin panel for managing supply chain operations.
