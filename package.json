@@ -15,6 +15,7 @@
     "backend": "cd back-end && npm start",
     "customerend": "cd customer-end && npm start",
     "adminend": "cd admin && npm start",
-    "start": "concurrently \"npm run backend\" \"npm run customerend\" \"npm run adminend\""
+    "driverend": "cd driver-and-assistance && npm start",
+    "start": "concurrently \"npm run backend\" \"npm run customerend\" \"npm run adminend\" \"npm run driverend\""
   }
 }
