@@ -22,7 +22,8 @@ const WorkingHours = () => {
   const name = queryParams.get("name");
 
   const currentYear = new Date().getFullYear();
-  const [month, setMonth] = useState(1);
+  const currentMonth = new Date().getMonth() + 1;
+  const [month, setMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
   const [workingHours, setWorkingHours] = useState([]);
 

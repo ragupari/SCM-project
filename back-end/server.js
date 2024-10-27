@@ -37,6 +37,11 @@ app.use("/report", require("./routes/Admin/Report"));
 app.use("/stores", require("./routes/Admin/Stores"));
 app.use("/workinghours", require("./routes/Admin/WorkingHours"));
 
+//driver-and-assistants
+app.use("/api/auth", require("./routes/driver-and-assistance/auth"));
+app.use("/api/schedule", require("./routes/driver-and-assistance/schedule"));
+app.use("/api/profile", require("./routes/driver-and-assistance/profile"));
+
 // Example route
 app.get("/", (req, res) => {
   res.send("Backend is running!");
