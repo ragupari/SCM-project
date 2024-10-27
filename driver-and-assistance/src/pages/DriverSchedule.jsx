@@ -25,7 +25,6 @@ import {
   LocalShipping as TruckIcon,
   Person as PersonIcon,
   Map as MapIcon,
-  Error as ErrorIcon,
   Refresh as RefreshIcon,
   ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';

@@ -52,7 +52,7 @@ const ProfilePage = ({ user, onLogout }) => {
     };
 
     fetchProfile();
-  }, [user.id]);
+  }, [user.id, user.role]);
 
   if (loading) return <LoadingSpinner />;
   if (!profile) return null;

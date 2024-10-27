@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import { Home as HomeIcon, Person as PersonIcon } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
