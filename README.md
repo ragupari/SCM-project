@@ -71,7 +71,7 @@ npm run customerend
 ```
 
 ### Driver,Assistant
-To start the admin frontend on `localhost:3002`, use the following command from the root directory:
+To start the Driver,Assistant frontend on `localhost:3002`, use the following command from the root directory:
 ```bash
 npm run driverend
 ```
