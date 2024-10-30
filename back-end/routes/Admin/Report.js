@@ -244,6 +244,65 @@ router.get('/driversbystore', (req, res) => {
         res.json(driversData);
     });
 });
+
+
+router.get('/customerordersbystore', (req, res) => {
+    const { year, storeID } = req.query;
+    // SQL query to fetch sales by store and year
+    const query = `
+        SELECT CustomerID, TotalAmount FROM CustomerOrdersByStore
+        WHERE OrderYear = ? AND StoreID = ? ORDER BY TotalAmount DESC`;
+
+    db.query(query, [year, storeID], (err, results) => {
+        if (err) {
+            console.error('Error executing query: ', err);
+            return res.status(500).json({ error: 'Database query failed.' });
+        }
+        // Transform results to [[], [], []] format
+        const transformedResults = results.map(row => [row.CustomerID, row.TotalAmount]);
+        
+        // Return the transformed result as JSON
+        res.json(transformedResults);
+    });
+});
+
+router.get('/salesbyroute', (req, res) => {
+    const { year, storeID } = req.query;
+
+    // SQL query to fetch sales by store and year
+    const query = `
+                SELECT 
+                    rv.Destination,
+                    SUM(rv.Revenue) AS TotalRevenue
+                FROM 
+                    RouteSalesView rv
+                JOIN 
+                    Routes r ON rv.RouteID = r.RouteID
+                WHERE 
+                    rv.Year = ? AND r.StoreID = ?
+                GROUP BY 
+                    rv.Destination,  
+                    rv.Year
+                ORDER BY TotalRevenue DESC;`
+
+    db.query(query, [year, storeID], (err, results) => {
+        if (err) {
+            console.error('Error executing query: ', err);
+            return res.status(500).json({ error: 'Database query failed.' });
+        }
+        
+        // Transform results to [[], [], []] format
+        const transformedResults = results.map(row => [row.Destination, row.TotalRevenue]);
+        
+        // Return the transformed result as JSON
+        res.json(transformedResults);
+    });
+});
+
+
+
+
+
 router.get('/assistdriversbystore', (req, res) => {
     const { year, storeID } = req.query;
 
