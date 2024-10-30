@@ -18,29 +18,9 @@ const calculateExpectedTimes = (startTime, endTime, orderCount) => {
     };
   };
   
-  const getShipmentStatus = () => {
-    // Get current time in local timezone
-    const now = new Date();
-    
-    return function(startTime, endTime) {
-        // Convert to today's date in local timezone
-        const today = now.toLocaleDateString('en-CA');
-        const start = new Date(`${today} ${startTime}`);
-        const end = new Date(`${today} ${endTime}`);
-  
-        
 
-        if (now >= start && now <= end) {
-            return 'Active';
-        } else if (now < start) {
-            return 'Upcoming';
-        } else {
-            return 'Completed';
-        }
-    };
-  };
   
   module.exports = {
-    calculateExpectedTimes,
-    getShipmentStatus
+    calculateExpectedTimes
+    
   };

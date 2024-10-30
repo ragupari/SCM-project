@@ -54,7 +54,7 @@ Before running the project, ensure all required dependencies are installed in th
     npm install
     cd ..
     ```
-5.**Install Driver Dependencies**:
+5. **Install Driver Dependencies**:
     Navigate to the `driver-and-assistance` directory and install dependencies:
     ```bash
     cd driver-and-assistance
