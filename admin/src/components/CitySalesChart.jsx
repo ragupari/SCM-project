@@ -20,7 +20,7 @@ const CitySalesChart = ({ year, quarter }) => {
     };
 
     const formatData = (data) => {
-        const cities = ["Colombo", "Negombo", "Galle", "Matara", "Jaffna", "Trinco", "Kandy"];
+        const cities = ["Colombo", "Negombo", "Galle", "Matara", "Jaffna", "Trinco"];
         return cities.map(city => {
             const cityData = data.filter(item => item.StoreCity === city);
             const totalSales = cityData.reduce((sum, item) => sum + parseInt(item.TotalSales), 0);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row, Container, Form } from "react-bootstrap";
+import { Tabs, Tab, Col, Row, Container, Form } from "react-bootstrap";
 import TopCards from "../components/TopCards";
 import PieChartComponent from "../components/PieChart"; // Ensure this path is correct and the component is properly exported
 import axios from "axios";
@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [ordersbyProduct, setOrdersbyProduct] = useState([]);
   const [revenuebyCategory, setRevenuebyCategory] = useState([]);
   const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
-  const [quarter, setQuarter] = useState(1);
+  const [quarter, setQuarter] = useState('4'); // Default to current quarter
   const [stores, setStores] = useState([]);
   const [selectedStore, setSelectedStore] = useState("1");
   const [revenuePerProduct, setRevenuePerProduct] = useState([]);
@@ -255,9 +255,10 @@ const Dashboard = () => {
         </Col>
       </Row>
 
+
       {/* Store Selector */}
       <Row className="mb-4">
-        <Col sm="12">
+        <Col sm="6">
           <Form.Group>
             <Form.Label>Select Store</Form.Label>
             <Form.Control
@@ -274,29 +275,8 @@ const Dashboard = () => {
             </Form.Control>
           </Form.Group>
         </Col>
-      </Row>
-
-      {/* Pie Charts */}
-      <Row className="mb-4">
-        <Col md={2} />
-        <Col md={4}>
-          <PieChartComponent
-            title="Revenue per Product"
-            data={revenuePerProduct}
-          />
-        </Col>
-        <Col md={4}>
-          <PieChartComponent
-            title="Revenue per Category"
-            data={revenuePerCategory}
-          />
-        </Col>
-        <Col md={2} />
-      </Row>
-
-      {/* Routes Selector */}
-      <Row className="mb-4">
-        <Col sm="12">
+        {/* Routes Selector */}
+        <Col sm="6">
           <Form.Group>
             <Form.Label>Select Route</Form.Label>
             <Form.Control
@@ -315,22 +295,52 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      {/* Pie Charts for Route sales */}
-      <Row className="mb-4">
-        <Col md={2} />
-        <Col md={4}>
-          <PieChartComponent
-            title="Revenue per Product by Route"
-            data={productSalesPerRoute}
-          />
+      <Row className="d-flex shadow-sm rounded p-3" style={{ backgroundColor: "#ffffff2f"}}>
+        <Col
+          md={6}
+          className="d-flex flex-column"
+          style={{ flex: 1 }}
+        >
+          <Row>
+            <Col md={6}>
+              <PieChartComponent
+                title="Revenue per Product by Store"
+                data={revenuePerProduct}
+                innerRadius={"40%"}
+              />
+            </Col>
+            <Col md={6}>
+              <PieChartComponent
+                title="Revenue per Category by Store"
+                data={revenuePerCategory}
+                innerRadius={"40%"}
+              />
+            </Col>
+          </Row>
         </Col>
-        <Col md={4}>
-          <PieChartComponent
-            title="Revenue per Category by Route"
-            data={categorySalesPerRoute}
-          />
+
+        <Col
+          md={6}
+          className="d-flex flex-column"
+          style={{ flex: 1 }}
+        >
+          <Row>
+            <Col md={6}>
+              <PieChartComponent
+                title="Revenue per Product by Route"
+                data={productSalesPerRoute}
+                innerRadius={"40%"}
+              />
+            </Col>
+            <Col md={6}>
+              <PieChartComponent
+                title="Revenue per Category by Route"
+                data={categorySalesPerRoute}
+                innerRadius={"40%"}
+              />
+            </Col>
+          </Row>
         </Col>
-        <Col md={2} />
       </Row>
     </Container>
   );

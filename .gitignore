@@ -3,3 +3,5 @@
 node_modules/
 customer-end/node_modules/
 back-end/node_modules/
+driver-and-assistance/node_modules/
+back-end/.env
