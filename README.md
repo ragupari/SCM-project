@@ -1,9 +1,11 @@
 <div align="center">
 <h1 align="center">Supply Chain Management System</h1>
   <p align="center">
-    <a href="https://serenehills.netlify.app/">View Client</a>
+    <a href="https://serenehills.netlify.app/">View Client UI</a>
     ·
-    <a href="https://sereneadmin.netlify.app/">View Admin</a>
+    <a href="https://sereneadmin.netlify.app/">View Admin UI</a>
+    .
+    <a href="https://serenestore.netlify.app/">View Employee UI</a>
   </p>
 </div>
 
@@ -52,6 +54,13 @@ Before running the project, ensure all required dependencies are installed in th
     npm install
     cd ..
     ```
+5.**Install Driver Dependencies**:
+    Navigate to the `driver-and-assistance` directory and install dependencies:
+    ```bash
+    cd driver-and-assistance
+    npm install
+    cd ..
+    ```
 
 ## Running the Application
 
@@ -61,16 +70,22 @@ To start the React frontend server on `localhost:3000`, use the following comman
 npm run customerend
 ```
 
+### Driver,Assistant
+To start the Driver,Assistant frontend on `localhost:3002`, use the following command from the root directory:
+```bash
+npm run driverend
+```
+
+### Admin
+To start the admin frontend on `localhost:3003`, use the following command from the root directory:
+```bash
+npm run adminend
+```
+
 ### Backend
 To start the backend server on `localhost:9000`, use the following command from the root directory:
 ```bash
 npm run backend
-```
-
-### Admin
-To start the admin frontend on `localhost:5174`, use the following command from the root directory:
-```bash
-npm run adminend
 ```
 
 ### All
