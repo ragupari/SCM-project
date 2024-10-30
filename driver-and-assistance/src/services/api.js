@@ -17,14 +17,14 @@ export const login = async (role, id) => {
   return response.json();
 };
 
-export const getSchedule = async (role, id) => {
-  const response = await fetch(`${API_BASE_URL}/schedule/${role}/${id}/schedule`);
-  
+export const getSchedule = async (role, id, date) => {
+  const response = await fetch(`${API_BASE_URL}/schedule/${role}/${id}/schedule?date=${date}`);
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || 'Failed to fetch schedule');
   }
-  
+
   return response.json();
 };
 
