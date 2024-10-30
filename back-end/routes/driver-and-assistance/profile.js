@@ -39,7 +39,7 @@ router.get('/driver/:id/profile', async (req, res) => {
     // Calculate estimated total distance from routes
     const [distance] = await pool.promise().query(
       `SELECT 
-        COUNT(DISTINCT r.RouteID) * 10 as estimatedDistance
+        COUNT(DISTINCT r.RouteID) * 15 as estimatedDistance
        FROM Shipments s
        JOIN Routes r ON s.RouteID = r.RouteID
        WHERE s.DriverID = ?
@@ -99,7 +99,7 @@ router.get('/assistant/:id/profile', async (req, res) => {
     // Calculate estimated total distance from routes
     const [distance] = await pool.promise().query(
       `SELECT 
-        COUNT(DISTINCT r.RouteID) * 10 as estimatedDistance
+        COUNT(DISTINCT r.RouteID) * 15 as estimatedDistance
        FROM Shipments s
        JOIN Routes r ON s.RouteID = r.RouteID
        WHERE s.DrivingAssistantID = ?

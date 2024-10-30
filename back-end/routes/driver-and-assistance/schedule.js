@@ -1,17 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../../dbconfig');
-const { calculateExpectedTimes, getShipmentStatus } = require('./utils/timeUtils');
+const { calculateExpectedTimes } = require('./utils/timeUtils');
 
 router.get('/:role/:id/schedule', async (req, res) => {
   const { role, id } = req.params;
+  const { date } = req.query;
   
-  const mDay = new Date();
-  const today = mDay.getFullYear() + '-' + 
-    String(mDay.getMonth() + 1).padStart(2, '0') + '-' + 
-    String(mDay.getDate()).padStart(2, '0');
   
-  const getStatus = getShipmentStatus();
 
   
   try {
@@ -28,7 +24,7 @@ router.get('/:role/:id/schedule', async (req, res) => {
        JOIN Drivers d ON s.DriverID = d.DriverID
        JOIN DrivingAssistants da ON s.DrivingAssistantID = da.DrivingAssistantID
        WHERE s.${idField} = ? AND s.Date = ?`,
-      [id, today]
+      [id, date]
     );
 
     const formattedShipments = shipments.map(shipment => ({
@@ -39,7 +35,6 @@ router.get('/:role/:id/schedule', async (req, res) => {
       mainTowns: shipment.MainTowns,
       truck: `TRK-${shipment.TruckID}`,
       remainingCapacity: shipment.RemainingCapacity,
-      status: getStatus(shipment.StartTime, shipment.EndTime),
       [role === 'driver' ? 'assistant' : 'driver']: 
         role === 'driver' ? shipment.AssistantName : shipment.DriverName
     }));

@@ -30,6 +30,7 @@ import {
 } from '@mui/icons-material';
 import { getSchedule } from '../services/api';
 import { formatTime } from '../utils/dateUtils';
+import { timeStringToDate, getScheduleStatus } from '../utils/scheduleUtils';
 
 const LoadingSpinner = () => (
   <Box
@@ -75,12 +76,40 @@ const DriverSchedule = ({ user, onLogout }) => {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Add timer to update status every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Update schedule fetching logic
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const scheduleData = await getSchedule(user.role, user.id);
-        setSchedules(scheduleData);
+        const today = new Date().toLocaleDateString('en-CA');
+        const scheduleData = await getSchedule(user.role, user.id, today);
+        
+        // Add status to each schedule
+        const formattedSchedules = scheduleData.map(schedule => ({
+          ...schedule,
+          status: getScheduleStatus(schedule.startTime, schedule.endTime)
+        }));
+
+        // Sort schedules by status and time
+        const sortedSchedules = formattedSchedules.sort((a, b) => {
+          const statusPriority = { active: 0, upcoming: 1, completed: 2 };
+          if (statusPriority[a.status] !== statusPriority[b.status]) {
+            return statusPriority[a.status] - statusPriority[b.status];
+          }
+          return timeStringToDate(a.startTime) - timeStringToDate(b.startTime);
+        });
+
+        setSchedules(sortedSchedules);
       } catch (error) {
         setError(error.message || 'Failed to load schedule');
       } finally {
@@ -89,7 +118,8 @@ const DriverSchedule = ({ user, onLogout }) => {
     };
 
     fetchSchedule();
-  }, [user.id, user.role]);
+  }, [user.id, user.role, currentTime]); // Re-fetch when current time updates
+
 
   const getStatusColor = (status) => {
     const statusColors = {
