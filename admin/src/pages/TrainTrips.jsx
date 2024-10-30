@@ -42,7 +42,6 @@ const TrainTripsPage = () => {
     const fetchTrainTrips = async (selectedDate, selectedRoute) => {
         setLoading(true);
         try {
-            console.log("Selected route", selectedRoute);
             const response = await axios.get(`/traintrips/gettrains?selectedDate=${selectedDate}&routeId=${selectedRoute}`); // Corrected 'routeID' to 'routeId'
             setTrainTrips(response.data);
         } catch (error) {
@@ -74,9 +73,6 @@ const TrainTripsPage = () => {
     };
 
     const handleSelectTrain = async (trainId, capacity) => {
-        // Log the selected values for debugging purposes
-        console.log("Selected values:", { trainId, capacity, date, orderID });
-    
         // Input validation
         if (!trainId || !capacity || !date || !orderID) {
             toast.error('All fields are required.', {
@@ -98,7 +94,6 @@ const TrainTripsPage = () => {
     
         try {
             // Make the API call to assign the train trip using GET request with query parameters
-
             const response = await axios.post('/traintrips/assigntraintrip', { trainID:trainId, date, availableCapacity,  orderID });
     
             // Check the response status
@@ -137,7 +132,7 @@ const TrainTripsPage = () => {
             ) : trainTrips.length > 0 ? (
                 <Row>
                     {trainTrips.map((train) => (
-                        <Col key={train.TrainTripID} md={4} className="mb-4">
+                        <Col key={train.TrainID} md={4} className="mb-4">
                             <Card className="shadow-sm rounded">
                                 <Card.Body>
                                     <Card.Title><i className="bi bi-train-front" style={{ fontSize: '20px', marginRight: '10px', color: 'red' }}></i> {train.City}</Card.Title>

@@ -56,15 +56,15 @@ const Sidebar = () => {
           icon: "bi bi-people",
       },
       {
+        title: "Trucks",
+        href: "/trucksWorkingHours",
+        icon: "bi bi-truck",
+      },
+      {
 
         title: "Reports",
         href: "/reports",
         icon: "bi bi-book",
-      },
-      {
-        title: "Trucks",
-        href: "/trucksWorkingHours",
-        icon: "bi bi-truck",
       }
   ];
 

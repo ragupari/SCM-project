@@ -24,8 +24,8 @@ const Orders = () => {
         return localDate;
     };
 
-    const handleAssign = (orderID, departureTime, routeID, reqCapacity) => {
-        const tempDate = new Date(departureTime);
+    const handleAssign = (orderID, ArrivalDate, routeID, reqCapacity) => {
+        const tempDate = new Date(ArrivalDate);
         tempDate.setDate(tempDate.getDate() + 1);
         const localDate = tempDate.toLocaleDateString('en-CA');
         navigate(`/orders/truck-schedules?OrderID=${orderID}&arrivalDate=${localDate}&date=${localDate}&routeID=${routeID}&reqCapacity=${reqCapacity}`);
@@ -71,12 +71,12 @@ const Orders = () => {
                             <td style={{ padding: "15px" }}>{order.OrderID}</td>
                             <td>{order.CustomerID}</td>
                             <td>{formatDate(order.OrderDate)}</td>
-                            <td>{formatDate(order.DepartureTime)}</td>
+                            <td>{formatDate(order.Date)}</td>
                             <td>{formatDate(order.DeliveryDate)}</td>
                             <td>{order.TotalPrice}</td>
                             <td>{order.TotalCapacity}</td>
                             <td>
-                                <Button onClick={() => handleAssign(order.OrderID, order.DepartureTime, order.RouteID, order.TotalCapacity)}
+                                <Button onClick={() => handleAssign(order.OrderID, order.Date, order.RouteID, order.TotalCapacity)}
                                     variant="outline-primary" className="rounded-pill px-3 py-2">
                                     Schedule 
                                 </Button>

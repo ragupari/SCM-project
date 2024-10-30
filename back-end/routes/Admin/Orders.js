@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 
     if (status === 'processing') {
         const query = ` SELECT * FROM Orders o
-                        LEFT JOIN  TrainTrips t ON o.TrainTripID = t.TrainTripID
+                        LEFT JOIN  TrainTrips2 t ON o.TrainTripID = t.TrainTripID
                         LEFT JOIN  Routes r ON o.RouteID = r.RouteID
                         WHERE o.Status = ? AND r.StoreID = ?
                         ORDER BY o.OrderDate
@@ -50,10 +50,6 @@ router.put('/assigntraintrip/:orderID', (req, res) => {
         res.send('Train trip assigned');
     });
 });
-
-
-
-
 
 router.put('/assignschedule/:orderID', (req, res) => {
     const { deliveryID } = req.body;

@@ -20,7 +20,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/gettrains', async (req, res) => {
-    console.log(req.query);
 
     // Input validation
     if (!req.query.selectedDate || isNaN(Date.parse(req.query.selectedDate))) {
@@ -36,7 +35,6 @@ router.get('/gettrains', async (req, res) => {
     try {
         // Use async/await directly
         const results = await new Promise((resolve, reject) => {
-            console.log("final",req.query.selectedDate)
             db.query(query, [req.query.routeId, req.query.selectedDate], (err, results) => {
                 if (err) {
                     return reject(err);
@@ -97,12 +95,6 @@ router.post('/assigntraintrip', async (req, res) => {
         return res.status(500).json({ message: 'Internal server error.' }); 
     }
 });
-  
-
-
-
-
-
 
 router.put('/reducecapacity/:trainTripID', (req, res) => {
     const { trainTripID } = req.params;
