@@ -84,7 +84,21 @@ const Dashboard = () => {
 
                 }
                 break;
-
+            case 'customer_order_report':
+                try {
+                    const storeID = await getStoreIDByName(selectedStore);
+                    const response = await axios.get(`/report/customerordersbystore?year=${selectedYear}&storeID=${storeID}`);
+                    const data = response.data; // Store the fetched data
+    
+                    // Make sure data is formatted correctly for the PDF
+                    generatePDF('Customer Order Summary For The Year: ' + selectedYear, selectedStore,
+                                ['Customer ID', 'Total Amount (in LKR)'], 
+                                data);
+                } catch (error) {
+                    console.error('Error fetching customer orders data:', error);
+                    
+                }
+                break;
             case 'most_ordered_items':
                 try {
                     const storeID = await getStoreIDByName(selectedStore);
@@ -100,10 +114,21 @@ const Dashboard = () => {
 
                 }
                 break;
-
-            case 'city_route_sales':
-                generatePDF('City Route Sales', ['City', 'Route', 'Revenue'], revenuePerCategory);
-                break;
+    
+            case 'route_sales':
+                try {
+                    const storeID = await getStoreIDByName(selectedStore);
+                    const response = await axios.get(`/report/salesbyroute?year=${selectedYear}&storeID=${storeID}`);
+                    const data = response.data; // Store the fetched data
+    
+                    // Make sure data is formatted correctly for the PDF
+                    generatePDF('Sales Per Route Summary For The Year: ' + selectedYear, selectedStore,
+                                ['Route Destination', 'Total Amount (in LKR)'], 
+                                data);
+                } catch (error) {
+                    console.error('Error fetching route salses details data:', error);
+                    
+                }
 
             case 'driver_hours':
                 try {
@@ -187,6 +212,16 @@ const Dashboard = () => {
         // Save the PDF with a dynamic name
         doc.save(`${storeName}_Report.pdf`);
     };
+
+    
+
+
+
+
+
+
+
+
     const generateDriverPDF = (title, storeName, driversData) => {
         // Create a new jsPDF instance
         const doc = new jsPDF();
@@ -271,7 +306,7 @@ const Dashboard = () => {
                             <option value="">Select a report</option>
                             <option value="quarterly_sales">Quarterly sales report</option>
                             <option value="most_ordered_items">Most ordered items</option>
-                            <option value="city_route_sales">Sales report by city and route</option>
+                            <option value="route_sales">Sales report by city and route</option>
                             <option value="driver_hours">Driver working hours</option>
                             <option value="assist_driver_hours">Assistant driver working hours</option>
                             <option value="customer_order_report">Customer order report</option>
@@ -345,3 +380,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+ 
