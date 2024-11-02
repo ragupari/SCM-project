@@ -63,8 +63,8 @@ Before running the project, ensure all required dependencies are installed in th
     ```
 
 6. **Set up `.env` environment**:
-    Navigate to the `admin/` directory and create an `.env` file like `.env.example` and insert your API key.
-    Navigate to the `back-end/` directory and create an `.env` file like `.env.example` and insert your database credentials.
+    <br>Navigate to the `admin/` directory and create an `.env` file like `.env.example` and insert your API key.
+    <br>Navigate to the `back-end/` directory and create an `.env` file like `.env.example` and insert your database credentials.
 
 ## Running the Application
 
