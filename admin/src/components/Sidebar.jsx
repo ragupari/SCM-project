@@ -26,6 +26,12 @@ const Sidebar = () => {
         title: "Reports",
         href: "/reports",
         icon: "bi bi-book",
+    },
+    {
+
+        title: "AI Assistant",
+        href: "/aiassistant",
+        icon: "bi bi-stars",
     }
   ];
 
@@ -65,6 +71,12 @@ const Sidebar = () => {
         title: "Reports",
         href: "/reports",
         icon: "bi bi-book",
+      },
+      {
+
+        title: "AI Assistant",
+        href: "/aiassistant",
+        icon: "bi bi-stars",
       }
   ];
 
