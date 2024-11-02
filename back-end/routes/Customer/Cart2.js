@@ -5,7 +5,7 @@ const db = require('../../dbconfig');
 // Route to check if the cart service is running
 router.get('/', async (req, res) => {
   res.send('Cart is running!');
-});
+}); 
 
 // Route to add a product to the cart
 router.post('/add', async (req, res) => {
@@ -17,15 +17,14 @@ router.post('/add', async (req, res) => {
   }
 
   try {
-    // Step 1: Fetch customerID using the provided username
-    const customerQuery = 'SELECT CustomerID FROM Customers WHERE Username = ?';
+    const customerQuery = `SELECT GetCustomerIDByUsername(?) AS customerID`;
     const [customerResult] = await db.promise().query(customerQuery, [username]);
 
-    if (customerResult.length === 0) {
+    if (customerResult.length === 0 || customerResult[0].customerID === null) {
       return res.status(404).json({ message: 'Customer not found.' });
     }
 
-    const customerID = customerResult[0].CustomerID;
+    const customerID = customerResult[0].customerID; // Use 'customerID' from the result
 
     // Step 2: Check if the customer already has this product in the cart
     const selectQuery = 'SELECT Number FROM Cart WHERE CustomerID = ? AND ProductID = ?';
@@ -34,7 +33,7 @@ router.post('/add', async (req, res) => {
     if (existingItems.length > 0) {
       // Step 3: If the product already exists, update the quantity
       const existingNumber = existingItems[0].Number;
-      const newNumber = existingNumber + parseInt(number, 10);
+      const newNumber = existingNumber + parseInt(number, 10); 
 
       const updateQuery = 'UPDATE Cart SET Number = ? WHERE CustomerID = ? AND ProductID = ?';
       await db.promise().query(updateQuery, [newNumber, customerID, productID]);
@@ -50,6 +49,7 @@ router.post('/add', async (req, res) => {
     return res.status(500).json({ message: 'Server error.' });
   }
 });
+
 
 router.post('/cartitems', async (req, res) => {
     const { username } = req.body;
