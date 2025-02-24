@@ -97,3 +97,10 @@ To start the all servers concurrently at once, use the following command from th
 ```bash
 npm start
 ```
+
+## Contributors
+- [Parishith Ragumar](https://github.com/ragupari)
+- [Chamoda Pramudika](https://github.com/ChamoDa01)
+- [Praneeth Anjana](https://github.com/fernandonpa)
+- [Ravindu Ridmal Kodisinghe](https://github.com/RavinduRidmal)
+- [Madhawa](https://github.com/Madhawa2001)
